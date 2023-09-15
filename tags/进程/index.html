@@ -23,14 +23,14 @@
   <meta name="description" content="鼠鼠我呀要努力啦">
 <meta property="og:type" content="website">
 <meta property="og:title" content="鼠鼠我不做人了">
-<meta property="og:url" content="http://example.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E5%8D%8F%E7%A8%8B/index.html">
+<meta property="og:url" content="http://example.com/tags/%E8%BF%9B%E7%A8%8B/index.html">
 <meta property="og:site_name" content="鼠鼠我不做人了">
 <meta property="og:description" content="鼠鼠我呀要努力啦">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="yxh">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E5%8D%8F%E7%A8%8B/">
+<link rel="canonical" href="http://example.com/tags/%E8%BF%9B%E7%A8%8B/">
 
 
 <script id="page-configurations">
@@ -43,7 +43,7 @@
   };
 </script>
 
-  <title>标签: 操作系统 进程 线程 协程 | 鼠鼠我不做人了</title>
+  <title>标签: 进程 | 鼠鼠我不做人了</title>
   
 
 
@@ -150,7 +150,7 @@
   <div class="post-block">
     <div class="posts-collapse">
       <div class="collection-title">
-        <h2 class="collection-header">操作系统 进程 线程 协程
+        <h2 class="collection-header">进程
           <small>标签</small>
         </h2>
       </div>
@@ -257,8 +257,13 @@
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
-      <div class="site-state-item site-state-tags">
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
         <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -344,6 +349,35 @@
   
 
   
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'aXkNqUKnMUGvI43o5733DET4-MdYXbMMI',
+      appKey     : '9cXqMO3WNRAbkxYpxyHQILyb',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
 
 </body>
 </html>
