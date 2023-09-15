@@ -170,10 +170,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-09-14 21:11:55 / 修改时间：21:57:36" itemprop="dateCreated datePublished" datetime="2023-09-14T21:11:55+08:00">2023-09-14</time>
+              <time title="创建时间：2023-09-14 21:11:55" itemprop="dateCreated datePublished" datetime="2023-09-14T21:11:55+08:00">2023-09-14</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-15 11:01:37" itemprop="dateModified" datetime="2023-09-15T11:01:37+08:00">2023-09-15</time>
+              </span>
 
           
 
@@ -213,6 +219,78 @@
 <li>阻塞挂起状态：进程在硬盘中等待，只要进入内存就能立即就绪</li>
 </ul>
 <p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/10-%E8%BF%9B%E7%A8%8B%E4%B8%83%E4%B8%AD%E7%8A%B6%E6%80%81.jpg" alt="新增的状态"></p>
+<h2 id="进程的控制结构"><a href="#进程的控制结构" class="headerlink" title="进程的控制结构"></a>进程的控制结构</h2><h3 id="进程在操作系统中是怎么被控制的呢？"><a href="#进程在操作系统中是怎么被控制的呢？" class="headerlink" title="进程在操作系统中是怎么被控制的呢？"></a>进程在操作系统中是怎么被控制的呢？</h3><p>是通过PCB 进程控制块描述进程的。其数据结构就是线性链表</p>
+<h3 id="PCB包含什么信息？"><a href="#PCB包含什么信息？" class="headerlink" title="PCB包含什么信息？"></a>PCB包含什么信息？</h3><p>进程描述信息</p>
+<ul>
+<li>进程标识符： 标识进程</li>
+<li>用户标识符： 标识进行归属的用户</li>
+</ul>
+<p>进程控制及管理信息：</p>
+<ul>
+<li>进程当前的状态</li>
+<li>进程的优先级 （调度算法中所必须的）</li>
+</ul>
+<p>资源分配清单</p>
+<ul>
+<li>内存地址或虚拟地址的信息，所打开文件的列表和所使用的I&#x2F;O设备信息</li>
+</ul>
+<p>CPU相关信息</p>
+<ul>
+<li>CPU寄存器的信息。当进程切换时，为了保证下次能知道CPU的状态。所以需要将CPU当时的状态信息存到PCB中，下次执行就能准确无误的到断点执行</li>
+</ul>
+<h3 id="PCB队列如何组织的？"><a href="#PCB队列如何组织的？" class="headerlink" title="PCB队列如何组织的？"></a>PCB队列如何组织的？</h3><p>一般来说是通过链表进行组织的。其次要按照进程的不同状态进行分类。比如就绪状态单独做一个队列，阻塞单独做一个阻塞队列。多种状态同时构建。这样就能很轻松的实现前面所说的进程状态转换问题了。<strong>多核CPU用几个核就要用创建几个队列</strong></p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/12-PCB%E7%8A%B6%E6%80%81%E9%93%BE%E8%A1%A8%E7%BB%84%E7%BB%87.jpg" alt="PCB组织"></p>
+<p>一般情况下会选择链表去实现，因为要考虑到怎么去处理进程的取消、创建、状态转换。所以一定要实现灵活的插入和删除。</p>
+<h2 id="进程的控制"><a href="#进程的控制" class="headerlink" title="进程的控制"></a>进程的控制</h2><p>维护进程队列的结构一般为链表。那进程状态的转换要怎么实现？</p>
+<p>创建进程</p>
+<p>操作系统允许一个进程创建一个子进程。子进程会继承父进程的所拥有资源</p>
+<ul>
+<li>创建一个空白PCB，填写进程信息</li>
+<li>分配运行时的资源</li>
+<li>插入就绪队列，等待运行</li>
+</ul>
+<p>终止进程</p>
+<p>一般来说一个进程的终止有三种状态。</p>
+<ol>
+<li>正常终止</li>
+<li>异常终止</li>
+<li>kill</li>
+</ol>
+<p>当进程要结束后。其继承的资源要还给父进程（通过系统回收：回收内存，关闭文件描述符等等）。当父进程被终止时，子进程就会变成孤儿进程，就需要交给1号进程进行回收。否则子进程就会变成僵尸进程</p>
+<ul>
+<li>查找PCB</li>
+<li>终止执行</li>
+<li>有子进程交给1号进程收养</li>
+<li>将进程资源交给系统回收</li>
+<li>PCB删除</li>
+</ul>
+<p>阻塞进程</p>
+<p>当进程需要等待某个事件的发生，就需要把自己阻塞。一旦进入阻塞状态，就必须让其他进程唤醒</p>
+<ul>
+<li>根据标识号找到PCB</li>
+<li>如果为运行态，就把当前的上下文存到PCB里，再转为阻塞态</li>
+<li>加入到阻塞队列中</li>
+</ul>
+<p>唤醒进程</p>
+<p>当阻塞进程在事件发生后，被其他进程唤醒，类似接班人。只有CPU的运行才能有进程的进入</p>
+<ul>
+<li>找到PCB</li>
+<li>移除阻塞队列，转入就绪队列</li>
+<li>等待调度</li>
+</ul>
+<h2 id="进程的上下文切换"><a href="#进程的上下文切换" class="headerlink" title="进程的上下文切换"></a>进程的上下文切换</h2><p>当不同进程切换时，进程进行切换时，就会出现上下文切换</p>
+<h3 id="什么是CPU上下文切换？"><a href="#什么是CPU上下文切换？" class="headerlink" title="什么是CPU上下文切换？"></a>什么是CPU上下文切换？</h3><p>所谓的上下文就是CPU寄存器和程序计数器在执行任务前所必须的依赖环境。需要知道上次进程执行的状态</p>
+<p>所以CPU上下文切换就是将CPU寄存器和程序计数器中的内容在切换时保存到PCB中，加载时从PCB中加载到寄存器和程序计数器中。实现任务原封不动的切换。</p>
+<h3 id="进程上下文切换是什么？"><a href="#进程上下文切换是什么？" class="headerlink" title="进程上下文切换是什么？"></a>进程上下文切换是什么？</h3><p>进程是由内核调度的，进程的切换只能发生在内核态。</p>
+<p>进程的上下文切换不仅包含了虚拟内存、栈、全局变量等用户空间的资源，还包括了内核堆栈、寄存器等内核空间的资源。</p>
+<p>注意：进程的上下文切换比较大，所以接下来提出了线程切换</p>
+<h3 id="发生进程上下文切换有哪些场景？"><a href="#发生进程上下文切换有哪些场景？" class="headerlink" title="发生进程上下文切换有哪些场景？"></a>发生进程上下文切换有哪些场景？</h3><ul>
+<li>系统的自动调度，根据CPU时间片自动切换</li>
+<li>进程资源不足，挂起等待资源充足</li>
+<li>Sleep主动挂起</li>
+<li>高优先级进程插队</li>
+<li>硬中断（外设、错误、时钟、外部信号、通知）</li>
+</ul>
 
       
     </div>
