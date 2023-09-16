@@ -22,9 +22,9 @@
 
   <meta name="description" content="鼠鼠我呀要努力啦">
 <meta property="og:type" content="website">
-<meta property="og:title" content="鼠鼠我不做人了">
+<meta property="og:title" content="鼠鼠的随笔">
 <meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="鼠鼠我不做人了">
+<meta property="og:site_name" content="鼠鼠的随笔">
 <meta property="og:description" content="鼠鼠我呀要努力啦">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="yxh">
@@ -43,7 +43,7 @@
   };
 </script>
 
-  <title>鼠鼠我不做人了</title>
+  <title>鼠鼠的随笔</title>
   
 
 
@@ -94,7 +94,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">鼠鼠我不做人了</h1>
+      <h1 class="site-title">鼠鼠的随笔</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -113,6 +113,16 @@
         <li class="menu-item menu-item-home">
 
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
@@ -156,7 +166,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠我不做人了">
+      <meta itemprop="name" content="鼠鼠的随笔">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -178,7 +188,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-16 12:34:35" itemprop="dateModified" datetime="2023-09-16T12:34:35+08:00">2023-09-16</time>
+                <time title="修改时间：2023-09-16 13:41:04" itemprop="dateModified" datetime="2023-09-16T13:41:04+08:00">2023-09-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,8 +236,23 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unlock tables</span><br></pre></td></tr></table></figure>
 
 <p>还有一种解锁方法，是命令发起者的会话断开</p>
-<h3 id="全局锁的应用场景是什么？"><a href="#全局锁的应用场景是什么？" class="headerlink" title="全局锁的应用场景是什么？"></a>全局锁的应用场景是什么？</h3><p>全局锁一般用在全局备份上</p>
-<p>测试一下</p>
+<h3 id="全局锁的应用场景是什么？"><a href="#全局锁的应用场景是什么？" class="headerlink" title="全局锁的应用场景是什么？"></a>全局锁的应用场景是什么？</h3><p>全局锁一般用在全局备份上, 因为此时数据在备份是无法在一瞬间备份的。万一头尾数据存在一致性关联。可能会出现头备份完成，尾部修改导致的数据不一致</p>
+<h3 id="加全局锁的缺点是什么？"><a href="#加全局锁的缺点是什么？" class="headerlink" title="加全局锁的缺点是什么？"></a>加全局锁的缺点是什么？</h3><p>全局锁，意味着整个数据库是只读状态。这样只能读不能写，一定情况下会影响业务。</p>
+<h3 id="除了加全局锁备份，还有其他备份方式吗？"><a href="#除了加全局锁备份，还有其他备份方式吗？" class="headerlink" title="除了加全局锁备份，还有其他备份方式吗？"></a>除了加全局锁备份，还有其他备份方式吗？</h3><p><code>MVCC</code>后面会介绍到，<code>Mysql</code>的灵魂。通过<code>ReadView</code>进行备份</p>
+<p>如何操作？</p>
+<p>使用<code>mysqldump</code>工具，在使用<code>mysqldump</code>时加上<code>–single-transaction</code> 参数的时候，就会在备份数据库之前先开启事务。</p>
+<h2 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h2><h3 id="Mysql表级锁有哪些？具体怎么用的"><a href="#Mysql表级锁有哪些？具体怎么用的" class="headerlink" title="Mysql表级锁有哪些？具体怎么用的"></a>Mysql表级锁有哪些？具体怎么用的</h3><p>Mysql表级锁大概有四个</p>
+<ul>
+<li>表锁</li>
+<li>元数据锁</li>
+<li>意向锁</li>
+<li>AUTO-INC锁</li>
+</ul>
+<h4 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h4><p>表锁就是加在整个表的锁</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 读锁</span><br><span class="line">lock table t_student read;</span><br><span class="line">// 写锁</span><br><span class="line">lock table t_student write;</span><br><span class="line"></span><br><span class="line">// 释放当前会话的锁</span><br><span class="line">unlock tables</span><br></pre></td></tr></table></figure>
+
+<h4 id="元数据锁"><a href="#元数据锁" class="headerlink" title="元数据锁"></a>元数据锁</h4><p>首先要知道什么是元数据呢？</p>
+<p>元数据（Metadata）是关于数据的数据，它提供了关于数据的描述、定义和管理信息。元数据通常用于帮助组织、理解、搜索和管理数据（数据库对象结构、表、索引等）</p>
 
       
     </div>
@@ -256,7 +281,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠我不做人了">
+      <meta itemprop="name" content="鼠鼠的随笔">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -344,7 +369,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠我不做人了">
+      <meta itemprop="name" content="鼠鼠的随笔">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -641,7 +666,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠我不做人了">
+      <meta itemprop="name" content="鼠鼠的随笔">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -786,12 +811,15 @@
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
+          
         <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">9</span>
-        <span class="site-state-item-name">标签</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>

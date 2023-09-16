@@ -24,11 +24,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="分类">
 <meta property="og:url" content="http://example.com/tags/index.html">
-<meta property="og:site_name" content="鼠鼠我不做人了">
+<meta property="og:site_name" content="鼠鼠的随笔">
 <meta property="og:description" content="鼠鼠我呀要努力啦">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-15T13:10:16.000Z">
-<meta property="article:modified_time" content="2023-09-15T13:11:07.662Z">
+<meta property="article:modified_time" content="2023-09-16T05:44:37.217Z">
 <meta property="article:author" content="yxh">
 <meta name="twitter:card" content="summary">
 
@@ -45,7 +45,7 @@
   };
 </script>
 
-  <title>分类 | 鼠鼠我不做人了
+  <title>分类 | 鼠鼠的随笔
 </title>
   
 
@@ -97,7 +97,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">鼠鼠我不做人了</h1>
+      <h1 class="site-title">鼠鼠的随笔</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -116,6 +116,16 @@
         <li class="menu-item menu-item-home">
 
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
@@ -169,12 +179,12 @@
       
       
       <div class="post-body">
-          <div class="category-all-page">
-            <div class="category-all-title">
-              目前共计 2 个分类
+          <div class="tag-cloud">
+            <div class="tag-cloud-title">
+              目前共计 9 个标签
             </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%94%E8%AF%95/">笔试</a><span class="category-list-count">1</span></li></ul>
+            <div class="tag-cloud-tags">
+              <a href="/tags/funPlus/" style="font-size: 12px; color: #ccc">funPlus</a> <a href="/tags/mysql/" style="font-size: 12px; color: #ccc">mysql</a> <a href="/tags/%E5%8D%8F%E7%A8%8B/" style="font-size: 12px; color: #ccc">协程</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8/" style="font-size: 12px; color: #ccc">并发安全</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 12px; color: #ccc">操作系统</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 12px; color: #ccc">笔试</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 12px; color: #ccc">线程</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 12px; color: #ccc">进程</a> <a href="/tags/%E9%94%81/" style="font-size: 12px; color: #ccc">锁</a>
             </div>
           </div>
         
@@ -192,6 +202,7 @@
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -259,12 +270,15 @@
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
+          
         <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">9</span>
-        <span class="site-state-item-name">标签</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
