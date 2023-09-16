@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Mysql日志系统mysql的三大日志  undo log（回滚日志）： 是innodb存储引擎层生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC redo log（重做日志）: 将命令依次记录，用来实现事务的持久性。主要用于掉电等故障恢复 bin log（归档日志）：是Server层生成的日志，主要用于数据备份和主从复制  undo logundo log 是什么？ 为什么要有undo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql 日志系统">
+<meta property="og:url" content="http://example.com/2023/09/16/mysql-log/index.html">
+<meta property="og:site_name" content="鼠鼠的随笔">
+<meta property="og:description" content="Mysql日志系统mysql的三大日志  undo log（回滚日志）： 是innodb存储引擎层生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC redo log（重做日志）: 将命令依次记录，用来实现事务的持久性。主要用于掉电等故障恢复 bin log（归档日志）：是Server层生成的日志，主要用于数据备份和主从复制  undo logundo log 是什么？ 为什么要有undo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%89%88%E6%9C%AC%E9%93%BE.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/innodb/%E7%BC%93%E5%86%B2%E6%B1%A0.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/innodb/bufferpool%E5%86%85%E5%AE%B9.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/wal.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/redologbuf.webp">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/innodb_flush_log_at_trx_commit.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0">
+<meta property="article:published_time" content="2023-09-16T08:03:52.000Z">
+<meta property="article:modified_time" content="2023-09-16T13:58:11.866Z">
+<meta property="article:author" content="yxh">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="日志">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%89%88%E6%9C%AC%E9%93%BE.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0">
+
+<link rel="canonical" href="http://example.com/2023/09/16/mysql-log/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mysql 日志系统 | 鼠鼠的随笔</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">鼠鼠的随笔</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/16/mysql-log/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql 日志系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-16 16:03:52 / 修改时间：21:58:11" itemprop="dateCreated datePublished" datetime="2023-09-16T16:03:52+08:00">2023-09-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/16/mysql-log/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/16/mysql-log/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Mysql日志系统"><a href="#Mysql日志系统" class="headerlink" title="Mysql日志系统"></a>Mysql日志系统</h1><p>mysql的三大日志</p>
+<ul>
+<li>undo log（回滚日志）： 是innodb存储引擎层生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC</li>
+<li>redo log（重做日志）: 将命令依次记录，用来实现事务的持久性。主要用于掉电等故障恢复</li>
+<li>bin log（归档日志）：是Server层生成的日志，主要用于数据备份和主从复制</li>
+</ul>
+<h2 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h2><h3 id="undo-log-是什么？-为什么要有undo-log？"><a href="#undo-log-是什么？-为什么要有undo-log？" class="headerlink" title="undo log 是什么？ 为什么要有undo log？"></a>undo log 是什么？ 为什么要有undo log？</h3><p><code>undo log</code> 就是反着的<code>sql</code>命令。你删除了我增。你加我删。保证一会能回滚。<br>因为在<code>mysql</code>中执行增删改的命令时，是隐式的开启事务的。事务如果开启出现了异常也能够正常的回滚。保证了<code>mysql</code>的 <code>A</code> 原子性</p>
+<p>MVCC的实现。mysql多版本并发控制的必须需要<code>undo log</code> 和 <code>ReadView</code>这两个。</p>
+<p>一个<code>undo log</code>的格式日志如下</p>
+<ul>
+<li>通过<code>trx_id</code>可以知道该记录被哪个事务修改</li>
+<li>通过<code>roll_pointer</code>指针来将这些undo log串联在一起</li>
+</ul>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%89%88%E6%9C%AC%E9%93%BE.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="undo log版本链"></p>
+<p>通过这个版本链可以很好完成MVCC的多版本。同时mysql的两个隔离级别可重复读和读已提交则是由ReadView的方式决定的</p>
+<ul>
+<li>读已提交： 隔离级别第二。实现方法是每次Select时都是生成一个新的ReadView。别的线程在更新数据后，下次的ReadView都不会相同</li>
+<li>可重复读：隔离级别第三。与读已提交不同的是，是以事务进行划分的，在一个事务里，第一次Select生成的ReadView，在接下来不操作数据的情况下会进行继续使用</li>
+</ul>
+<p>undo log的两大作用</p>
+<ol>
+<li>实现事务回滚，保障事务的原子性</li>
+<li>结合ReadView实现MVCC，实现高并发</li>
+</ol>
+<h3 id="undo-log-如何持久化"><a href="#undo-log-如何持久化" class="headerlink" title="undo log 如何持久化"></a>undo log 如何持久化</h3><p>undo log 的数据在buffer pool里会记录到redo log 中，在通过redo log 刷盘实现持久化</p>
+<h3 id="undo-log-怎么记录的"><a href="#undo-log-怎么记录的" class="headerlink" title="undo log 怎么记录的"></a>undo log 怎么记录的</h3><p>开启事务后，如果使用了更新命令，就会把旧值记录下来。生成一个undo log, 然后写入buffer pool</p>
+<h2 id="buffer-pool"><a href="#buffer-pool" class="headerlink" title="buffer pool"></a>buffer pool</h2><h3 id="buffer-pool-是什么？为什么需要它？"><a href="#buffer-pool-是什么？为什么需要它？" class="headerlink" title="buffer pool 是什么？为什么需要它？"></a>buffer pool 是什么？为什么需要它？</h3><p>buffer pool 是一个缓冲池， 通过建立在Server 和 磁盘之间的一个缓冲池。确保高频不需要重复的查询磁盘。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/innodb/%E7%BC%93%E5%86%B2%E6%B1%A0.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="缓冲池"></p>
+<p>Buffer pool的好处:</p>
+<ul>
+<li>读取数据可以直接从缓冲池里读，加快时间</li>
+<li>如果数据修改后，不会很快的进行磁盘I&#x2F;O会有一个合适的时机刷进磁盘</li>
+</ul>
+<h3 id="buffer-pool-的缓冲结构？"><a href="#buffer-pool-的缓冲结构？" class="headerlink" title="buffer pool 的缓冲结构？"></a>buffer pool 的缓冲结构？</h3><p>InnoDB中数据的存储是使用16K的页进行存储的。为了方便对应。buffer pool中的数据也是以相同大小的页进行对应</p>
+<p>在mysql刚启动时，会为buffer pool 分配多个16k大小的页。这些页作为即为缓存页</p>
+<p>刚开始这些缓存页都是空闲的，只有真正要用的时候，就会出现缺页补充了</p>
+<p>缓存页不仅仅会作为主要的数据页和索引页还有其他的一些页， 如：插入缓存页、undo页、自适应哈希索引、锁信息</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/innodb/bufferpool%E5%86%85%E5%AE%B9.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="buffer pool页表示"></p>
+<h3 id="查询一条记录，-就只需要缓冲一条记录吗？"><a href="#查询一条记录，-就只需要缓冲一条记录吗？" class="headerlink" title="查询一条记录， 就只需要缓冲一条记录吗？"></a>查询一条记录， 就只需要缓冲一条记录吗？</h3><p>肯定不是，刚才我们也说了，缓冲页对应着磁盘页的大小，所以每次查询一条记录，会把整个页都拿过来缓冲，再通过目录去查询记录</p>
+<h2 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h2><h3 id="为什么需要redo-log"><a href="#为什么需要redo-log" class="headerlink" title="为什么需要redo log?"></a>为什么需要redo log?</h3><p>刚才提到了在<code>Server</code>层和磁盘之间加上一个<code>buffer pool</code>，写进去的数据会先缓冲一下。看着似乎没什么问题，但是如果出现断电或者一些其他情况导致服务器宕机。那这个<code>buffer pool</code>缓冲的数据不都全寄了吗。</p>
+<p>所以为了保证数据不会丢失，当有一条记录需要更新的时候，<code>InnoDB</code>会把<code>buffer pool</code>的数据页进行修改，并标记为脏页。然后用<code>redo log</code> 记录一下命令。更新才算完成。之后<code>InnoDB</code> 会用后台线程将<code>Buffer pool</code>的数据写到磁盘中 即<code>WAL</code>技术</p>
+<p><code>WAL</code>技术即Write-Ahead-Logging。兵马未动粮草先行。先把日志写好，之后在后台将缓冲数据写入。这样即使是断点了，redo log 也已经保存在物理盘里了。下次启动redo 就行了</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/wal.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="WAL技术流程"></p>
+<h3 id="redo-log-是什么？"><a href="#redo-log-是什么？" class="headerlink" title="redo log 是什么？"></a>redo log 是什么？</h3><p>redo log 就是物理日志，它直接记录了怎么操作表空间的哪些记录。在事务提交时，只要先将redo log 持久化，就不需要去等buffer pool的内容持久化了</p>
+<p>如果系统不幸断电，redo log 也已经持久化，在重启mysql后就会进行恢复</p>
+<h3 id="被修改-Undo-页面，需要记录对应-redo-log-吗？"><a href="#被修改-Undo-页面，需要记录对应-redo-log-吗？" class="headerlink" title="被修改 Undo 页面，需要记录对应 redo log 吗？"></a>被修改 Undo 页面，需要记录对应 redo log 吗？</h3><p>需要的，任何从Server进入buffer pool中数据，都要生成redo log</p>
+<h3 id="redo-log-和-undo-log-区别在哪？"><a href="#redo-log-和-undo-log-区别在哪？" class="headerlink" title="redo log 和 undo log 区别在哪？"></a>redo log 和 undo log 区别在哪？</h3><p>redo log 是记录了完成后的记录状态。是为了持久化<br>undo log 是记录了更新前的记录状态。是为了原子性</p>
+<h3 id="redo-log-要写到磁盘，数据也要写磁盘，为什么要多此一举？"><a href="#redo-log-要写到磁盘，数据也要写磁盘，为什么要多此一举？" class="headerlink" title="redo log 要写到磁盘，数据也要写磁盘，为什么要多此一举？"></a>redo log 要写到磁盘，数据也要写磁盘，为什么要多此一举？</h3><p>redo log 是追加写，所以磁盘操作时顺序写，而直接写到磁盘，需要查各种偏移地址来让找写的位置。磁盘操作就是随机读写。这样的读写肯定效率低。会拖累mysql整体的性能，写入数据慢，而且极大的增加还出现断电数据丢失的可能性</p>
+<h3 id="redo-log-是直接写入数据的吗？"><a href="#redo-log-是直接写入数据的吗？" class="headerlink" title="redo log 是直接写入数据的吗？"></a>redo log 是直接写入数据的吗？</h3><p>并不是，redo log 本身也会使用一个buffer，每产生一个数据都会先加入buffer中，最后在写入到磁盘中</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/redologbuf.webp" alt="redo log buffer"></p>
+<h3 id="redo-log-什么时候刷盘？"><a href="#redo-log-什么时候刷盘？" class="headerlink" title="redo log 什么时候刷盘？"></a>redo log 什么时候刷盘？</h3><p>redo log什么时候写入到磁盘中</p>
+<ul>
+<li><code>Mysql</code>正常关闭</li>
+<li><code>redo log buffer</code> 记录大于<code>buffer</code>内存关键的一半时</li>
+<li>每隔一秒刷新一次</li>
+<li>事务提交会将<code>redo log</code> 存入（由<code>innodb_flush_log_at_trx_commit</code>控制）</li>
+</ul>
+<h4 id="innodb-flush-log-at-trx-commit-怎么进行控制的"><a href="#innodb-flush-log-at-trx-commit-怎么进行控制的" class="headerlink" title="innodb_flush_log_at_trx_commit 怎么进行控制的"></a>innodb_flush_log_at_trx_commit 怎么进行控制的</h4><p>三种模式</p>
+<ul>
+<li>0 事务提交后不刷入</li>
+<li>1 事务提交后直接存入并刷盘</li>
+<li>2 事务提交后交给写入redo log 文件，等待系统自动提交</li>
+</ul>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/innodb_flush_log_at_trx_commit.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="redo log 事务提交刷盘策略"></p>
+<h4 id="这三个参数的应用场景是什么？"><a href="#这三个参数的应用场景是什么？" class="headerlink" title="这三个参数的应用场景是什么？"></a>这三个参数的应用场景是什么？</h4><ul>
+<li>数据安全性：参数 1 &gt; 参数 2 &gt; 参数 0</li>
+<li>写入性能：参数 0 &gt; 参数 2&gt; 参数 1</li>
+</ul>
+<p>所以，数据安全性和写入性能是熊掌不可得兼的，要不追求数据安全性，牺牲性能；要不追求性能，牺牲数据安全性。</p>
+<h3 id="redoLog-会写满吗？"><a href="#redoLog-会写满吗？" class="headerlink" title="redoLog 会写满吗？"></a>redoLog 会写满吗？</h3><p>高并发的情况下是会的。redo log 默认情况是由两个文件循环写实现。如果buffer太多没有刷盘，会让redo log 写满整个环，这时候mysql 就会阻塞来把脏页数据给持久化。这时就可以清理redo log里的不需要的数据了</p>
+<h2 id="bin-log"><a href="#bin-log" class="headerlink" title="bin log"></a>bin log</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+              <a href="/tags/%E6%97%A5%E5%BF%97/" rel="tag"># 日志</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/15/Mysql-Lock/" rel="prev" title="mysql锁介绍">
+      <i class="fa fa-chevron-left"></i> mysql锁介绍
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">Mysql日志系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undo-log"><span class="nav-number">1.1.</span> <span class="nav-text">undo log</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undo-log-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89undo-log%EF%BC%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">undo log 是什么？ 为什么要有undo log？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undo-log-%E5%A6%82%E4%BD%95%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.1.2.</span> <span class="nav-text">undo log 如何持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undo-log-%E6%80%8E%E4%B9%88%E8%AE%B0%E5%BD%95%E7%9A%84"><span class="nav-number">1.1.3.</span> <span class="nav-text">undo log 怎么记录的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buffer-pool"><span class="nav-number">1.2.</span> <span class="nav-text">buffer pool</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#buffer-pool-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%AE%83%EF%BC%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">buffer pool 是什么？为什么需要它？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#buffer-pool-%E7%9A%84%E7%BC%93%E5%86%B2%E7%BB%93%E6%9E%84%EF%BC%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">buffer pool 的缓冲结构？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E4%B8%80%E6%9D%A1%E8%AE%B0%E5%BD%95%EF%BC%8C-%E5%B0%B1%E5%8F%AA%E9%9C%80%E8%A6%81%E7%BC%93%E5%86%B2%E4%B8%80%E6%9D%A1%E8%AE%B0%E5%BD%95%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.3.</span> <span class="nav-text">查询一条记录， 就只需要缓冲一条记录吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redo-log"><span class="nav-number">1.3.</span> <span class="nav-text">redo log</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81redo-log"><span class="nav-number">1.3.1.</span> <span class="nav-text">为什么需要redo log?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redo-log-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.3.2.</span> <span class="nav-text">redo log 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A2%AB%E4%BF%AE%E6%94%B9-Undo-%E9%A1%B5%E9%9D%A2%EF%BC%8C%E9%9C%80%E8%A6%81%E8%AE%B0%E5%BD%95%E5%AF%B9%E5%BA%94-redo-log-%E5%90%97%EF%BC%9F"><span class="nav-number">1.3.3.</span> <span class="nav-text">被修改 Undo 页面，需要记录对应 redo log 吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redo-log-%E5%92%8C-undo-log-%E5%8C%BA%E5%88%AB%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="nav-number">1.3.4.</span> <span class="nav-text">redo log 和 undo log 区别在哪？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redo-log-%E8%A6%81%E5%86%99%E5%88%B0%E7%A3%81%E7%9B%98%EF%BC%8C%E6%95%B0%E6%8D%AE%E4%B9%9F%E8%A6%81%E5%86%99%E7%A3%81%E7%9B%98%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%A4%9A%E6%AD%A4%E4%B8%80%E4%B8%BE%EF%BC%9F"><span class="nav-number">1.3.5.</span> <span class="nav-text">redo log 要写到磁盘，数据也要写磁盘，为什么要多此一举？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redo-log-%E6%98%AF%E7%9B%B4%E6%8E%A5%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%90%97%EF%BC%9F"><span class="nav-number">1.3.6.</span> <span class="nav-text">redo log 是直接写入数据的吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redo-log-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%88%B7%E7%9B%98%EF%BC%9F"><span class="nav-number">1.3.7.</span> <span class="nav-text">redo log 什么时候刷盘？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#innodb-flush-log-at-trx-commit-%E6%80%8E%E4%B9%88%E8%BF%9B%E8%A1%8C%E6%8E%A7%E5%88%B6%E7%9A%84"><span class="nav-number">1.3.7.1.</span> <span class="nav-text">innodb_flush_log_at_trx_commit 怎么进行控制的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E4%B8%89%E4%B8%AA%E5%8F%82%E6%95%B0%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.3.7.2.</span> <span class="nav-text">这三个参数的应用场景是什么？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redoLog-%E4%BC%9A%E5%86%99%E6%BB%A1%E5%90%97%EF%BC%9F"><span class="nav-number">1.3.8.</span> <span class="nav-text">redoLog 会写满吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bin-log"><span class="nav-number">1.4.</span> <span class="nav-text">bin log</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yxh"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">yxh</p>
+  <div class="site-description" itemprop="description">鼠鼠我呀要努力啦</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yxh</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'aXkNqUKnMUGvI43o5733DET4-MdYXbMMI',
+      appKey     : '9cXqMO3WNRAbkxYpxyHQILyb',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
