@@ -276,10 +276,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-09-16 16:03:52 / 修改时间：22:18:33" itemprop="dateCreated datePublished" datetime="2023-09-16T16:03:52+08:00">2023-09-16</time>
+              <time title="创建时间：2023-09-16 16:03:52" itemprop="dateCreated datePublished" datetime="2023-09-16T16:03:52+08:00">2023-09-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-17 11:25:48" itemprop="dateModified" datetime="2023-09-17T11:25:48+08:00">2023-09-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -385,7 +391,64 @@
 </ul>
 <p>所以，数据安全性和写入性能是熊掌不可得兼的，要不追求数据安全性，牺牲性能；要不追求性能，牺牲数据安全性。</p>
 <h3 id="redoLog-会写满吗？"><a href="#redoLog-会写满吗？" class="headerlink" title="redoLog 会写满吗？"></a>redoLog 会写满吗？</h3><p>高并发的情况下是会的。redo log 默认情况是由两个文件循环写实现。如果buffer太多没有刷盘，会让redo log 写满整个环，这时候mysql 就会阻塞来把脏页数据给持久化。这时就可以清理redo log里的不需要的数据了</p>
-<h2 id="bin-log"><a href="#bin-log" class="headerlink" title="bin log"></a>bin log</h2>
+<h2 id="bin-log"><a href="#bin-log" class="headerlink" title="bin log"></a>bin log</h2><h3 id="什么是bin-log"><a href="#什么是bin-log" class="headerlink" title="什么是bin log?"></a>什么是bin log?</h3><p>undo log 和 redo log 都是innoDB引擎生成的。undo 保证原子性，redo 保证持久化</p>
+<p>bin log是做什么的呢。首先bin log 是在Server层中生成的。bin log会记录所有数据表结构变更及数据修改的情况, 但不会记录查询日志。</p>
+<h3 id="为什么有了bin-log-还要redo-log"><a href="#为什么有了bin-log-还要redo-log" class="headerlink" title="为什么有了bin log 还要redo log"></a>为什么有了bin log 还要redo log</h3><p>bin log 是mysql 以前版本留下来的，用来存储命令的。用来进行归档的日志存储系统。没有cache-safe的能力。所以在innoDB提出的时候就增加redo log</p>
+<h3 id="redo-log-和bin-log-的区别"><a href="#redo-log-和bin-log-的区别" class="headerlink" title="redo log 和bin log 的区别"></a>redo log 和bin log 的区别</h3><ol>
+<li><p>实现层不同</p>
+<ul>
+<li>bin log是在server层实现，所有Mysql版本都能使用</li>
+<li>redo log 仅在innoDB中使用</li>
+</ul>
+</li>
+<li><p>记录内容不同</p>
+<ul>
+<li>bin log 记录的是命令</li>
+<li>redo log 记录的直接修改某个位置的日志</li>
+</ul>
+</li>
+<li><p>读写方式不同</p>
+<ul>
+<li>bin log 是直接读写在文件中， 文件满了就换个文件读</li>
+<li>redo log 是循环读，需要不断刷新旧的日志</li>
+</ul>
+</li>
+<li><p>用途不同</p>
+<ul>
+<li>bin log 用于备份恢复，和主从复制， 保护整体数据</li>
+<li>redo log 用于掉电故障的恢复， 保护cache级数据</li>
+</ul>
+</li>
+</ol>
+<h3 id="如果不小心整个数据库的数据被删除了，能使用-redo-log-文件恢复数据吗？"><a href="#如果不小心整个数据库的数据被删除了，能使用-redo-log-文件恢复数据吗？" class="headerlink" title="如果不小心整个数据库的数据被删除了，能使用 redo log 文件恢复数据吗？"></a>如果不小心整个数据库的数据被删除了，能使用 redo log 文件恢复数据吗？</h3><p>不是redo log，应该是bin log</p>
+<p>redo log可能会擦除旧日志（因为它要保护的主要目标是buffer pool），bin log保存全量日志，且不会主动擦除</p>
+<h3 id="主从复制如何实现？"><a href="#主从复制如何实现？" class="headerlink" title="主从复制如何实现？"></a>主从复制如何实现？</h3><p>主从复制依赖于bin log。这个过程是异步的。主服务器不会管从服务器有没有写上。它只管用<code>log dump</code>线程发送就行</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="主从服务"></p>
+<p>简单说一下就是：</p>
+<ul>
+<li>写入binlog： 主服务在收到提交事务的请求后，会先写日志，在提交事务。更新存储引擎的数据，事务提交完成后，返回客户端操作成功</li>
+<li>同步binlog: 从库从I&#x2F;O线程连接log dump中的数据，接受binlog 日志，写入到自己的relay log日志中，并给主库返回一个响应</li>
+<li>回放binlog： 从库的SQL线程会进行一个回放，将relay log中的操作，重新执行一遍实现主从数据的一致性</li>
+</ul>
+<p>一般来说主从服务的部署是：<strong>主服务器写，从服务器读</strong><br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="主从复制"></p>
+<h4 id="从库越多越好吗？"><a href="#从库越多越好吗？" class="headerlink" title="从库越多越好吗？"></a>从库越多越好吗？</h4><p>不是， 从库越多，主库需要分担更多log dump线程去发送，资源消耗高</p>
+<h4 id="MySql-主从复制还有哪些模型"><a href="#MySql-主从复制还有哪些模型" class="headerlink" title="MySql 主从复制还有哪些模型?"></a>MySql 主从复制还有哪些模型?</h4><ul>
+<li>同步复制： 主服务器等待从服务器同步完成。性能较差，可能会影响业务的使用</li>
+<li>异步复制：默认情况，主库不管从库的数据拷贝情况，可能出现主库宕机，丢失数据的风险</li>
+<li>半同步复制：只要有一部分同步成功返回响应了，就可以保证同步成功了，结合了两者的优点</li>
+</ul>
+<h3 id="binlog-什么时候刷盘？"><a href="#binlog-什么时候刷盘？" class="headerlink" title="binlog 什么时候刷盘？"></a>binlog 什么时候刷盘？</h3><p>因为mysql 有事务的存在，一个事务的bin log是不能拆开的，所以mysql给每个线程都分配一个bin log cache 来记录事务的日志。这样每个事务就会隔离出来</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/binlogcache.drawio.png" alt="bin log 刷盘"></p>
+<p>这里write 是缓存，fsync 是存入磁盘。</p>
+<p>既然又有write又有fsync，同样的也存在性能和风险共存的情况</p>
+<p>mysql提供sync_binlog参数进行选择</p>
+<ul>
+<li>0： 只write， 由fsync决定什么时候写入</li>
+<li>n &gt; 0： 每次提交n个事务，进行fsync</li>
+</ul>
+<p>mysql 默认是0， 性能最高，风险最大</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://xiaolincoding.com/mysql/log">小林coding</a></p>
+
       
     </div>
 
