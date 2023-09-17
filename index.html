@@ -157,6 +157,193 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/17/redis-data-structure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/17/redis-data-structure/" class="post-title-link" itemprop="url">Redis数据结构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-17 16:49:33 / 修改时间：22:02:26" itemprop="dateCreated datePublished" datetime="2023-09-17T16:49:33+08:00">2023-09-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/17/redis-data-structure/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/17/redis-data-structure/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Redis-数据类型"><a href="#Redis-数据类型" class="headerlink" title="Redis 数据类型"></a>Redis 数据类型</h2><ul>
+<li>String  字符串 </li>
+<li>List  列表</li>
+<li>Set   集合</li>
+<li>Zset  有序集合</li>
+<li>Hash  哈希</li>
+<li>BitMap</li>
+<li>HyperLogLog</li>
+<li>GEO</li>
+<li>Stream</li>
+</ul>
+<p>结合一张图可以大致了解使用情况</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/redis/%E5%85%AB%E8%82%A1%E6%96%87/key.png" alt="Redis 数据类型"></p>
+<h2 id="各个数据类型的场景"><a href="#各个数据类型的场景" class="headerlink" title="各个数据类型的场景"></a>各个数据类型的场景</h2><table>
+<thead>
+<tr>
+<th>结构体类型</th>
+<th>结构体存储的值</th>
+<th>结构体的读写能力</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String</td>
+<td>字符串、整数、浮点数</td>
+<td>对整个字符串或字符串的一部分进行操作，对数进行自增或自减的操作</td>
+<td>缓存对象、常规计数、分布式锁、共享session信息</td>
+</tr>
+<tr>
+<td>List</td>
+<td>一个链表，每个节点都包含一个字符串</td>
+<td>对链表的两端进行push和pop操作，根据值查找和删除元素</td>
+<td>消息队列（需要自己生成全局ID，不能以消费组的形式消费数据）</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td>包含键值对的无序散列表</td>
+<td>添加、获取、删除操作</td>
+<td>缓存对象、购物车等</td>
+</tr>
+<tr>
+<td>Set</td>
+<td>包含字符串的无序集合</td>
+<td>字符串的集合，包含添加、删除、获取。包含计算交集、并集、差集</td>
+<td>聚合计算场景如：点赞、共同关注、抽奖活动</td>
+</tr>
+<tr>
+<td>Zset</td>
+<td>和散列一样，用于存储键值对</td>
+<td>字符串成员与浮点分数的有序映射，元素排列由分数的大小决定，包含方法有添加、获取、删除单个元素及以分值范围或成员来获取元素</td>
+<td>排行榜、电话、姓名排序</td>
+</tr>
+<tr>
+<td>BitMap</td>
+<td>一串连续的二进制字节数组</td>
+<td>对每个bit都利用起来，设置值、获取值、指定范围的值</td>
+<td>二值统计场景如 签到打卡</td>
+</tr>
+<tr>
+<td>HyperLogLog</td>
+<td>提供元素</td>
+<td>添加、返回计算估值、合并，根据元素概率提供不精确的去重计数</td>
+<td>UV计数、WordCount等</td>
+</tr>
+<tr>
+<td>GEO</td>
+<td>存储地理位置信息，实现位置计算</td>
+<td>存储、返回位置、返回两点位置、根据位置查询范围</td>
+<td>滴滴打车</td>
+</tr>
+<tr>
+<td>Stream</td>
+<td>消息流和消费者组。消息流是一个有序的消息集合，每个消息都有一个唯一的 ID。消费者组包含多个消费者，它们可以协作地消费消息流中的消息，并通过应答来跟踪处理进度。</td>
+<td>命令比较多，之后总结</td>
+<td>消息队列</td>
+</tr>
+</tbody></table>
+<h2 id="五种常见的数据类型怎么底层实现？"><a href="#五种常见的数据类型怎么底层实现？" class="headerlink" title="五种常见的数据类型怎么底层实现？"></a>五种常见的数据类型怎么底层实现？</h2><h3 id="string-实现"><a href="#string-实现" class="headerlink" title="string 实现"></a>string 实现</h3><p>String底层类型是动态字符串SDS。其特点</p>
+<ul>
+<li>不仅可以保存字符还能保存二进制</li>
+<li>SDS 获取字符串长度的时间复杂度为O(1),存在一个len属性</li>
+<li>Redis 的SDS API是安全二点，拼接字符串不会造成缓冲区溢出，会自动进行扩容</li>
+</ul>
+<h3 id="List-内部实现"><a href="#List-内部实现" class="headerlink" title="List 内部实现"></a>List 内部实现</h3><p>List的底层是双向链表和压缩列表实现</p>
+<ul>
+<li>当链表数量小于512个，列表元素的值都小于64字节，redis会使用压缩列表作为List类型的底层数据结构</li>
+<li>当列表不满足上面要求时，会使用双向链表作为List的底层数据结构</li>
+</ul>
+<p>3.2版本之后统一使用了quickList</p>
+<h3 id="Hash-内部实现"><a href="#Hash-内部实现" class="headerlink" title="Hash 内部实现"></a>Hash 内部实现</h3><p>Hash的底层由压缩列表或哈希表实现</p>
+<ul>
+<li>如果哈希类型元素小于512个，所有字节都小于64KB，Redis会使用压缩列表作为存储方法</li>
+<li>否则会使用hash表实现</li>
+</ul>
+<p>7.0版本之后统一使用listquick实现</p>
+<h3 id="Set-类型内部实现"><a href="#Set-类型内部实现" class="headerlink" title="Set 类型内部实现"></a>Set 类型内部实现</h3><p>Set 类型是由hash表或整数集合实现</p>
+<ul>
+<li>如果set中都是整数且数量小于512则使用整数集合</li>
+<li>否则使用hash表实现</li>
+</ul>
+<h3 id="Zset-类型内部实现"><a href="#Zset-类型内部实现" class="headerlink" title="Zset 类型内部实现"></a>Zset 类型内部实现</h3><p>Zset 内部由压缩列表和跳表实现</p>
+<ul>
+<li>元素小于128个且每个小于64字节使用压缩列表</li>
+<li>否则使用跳表实现</li>
+</ul>
+<p>7.0版本后由listpack实现</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/17/quick-sort/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -182,7 +369,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-09-17 09:54:38 / 修改时间：10:30:21" itemprop="dateCreated datePublished" datetime="2023-09-17T09:54:38+08:00">2023-09-17</time>
+              <time title="创建时间：2023-09-17 09:54:38 / 修改时间：16:58:28" itemprop="dateCreated datePublished" datetime="2023-09-17T09:54:38+08:00">2023-09-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +420,25 @@
 </ul>
 <p><code>quickSort</code>中的<code>l&lt;r</code>的作用是递归出口也表示某个分支排序的结束。知道的key就不用参与排序了</p>
 <h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><p>快排是原地排序算法, 因为要设计到哨兵元素的选取。如果有和哨兵元素相同的值。不一定能保证原有的顺序，所以是不稳定排序</p>
-<p>评价标准 | 平均| 最坏<br>—| —| —| — |<br>时间复杂度|o(nlogn)|o(n^2)<br>空间复杂度|o(logn)|o(n)</p>
+<table>
+<thead>
+<tr>
+<th>评价标准</th>
+<th>平均</th>
+<th>最坏</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时间复杂度</td>
+<td>o(nlogn)</td>
+<td>o(n^2)</td>
+</tr>
+<tr>
+<td>空间复杂度</td>
+<td>o(logn)</td>
+<td>o(n)</td>
+</tr>
+</tbody></table>
 
       
     </div>
@@ -656,10 +861,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-09-15 20:37:18 / 修改时间：21:31:08" itemprop="dateCreated datePublished" datetime="2023-09-15T20:37:18+08:00">2023-09-15</time>
+              <time title="创建时间：2023-09-15 20:37:18" itemprop="dateCreated datePublished" datetime="2023-09-15T20:37:18+08:00">2023-09-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-17 17:00:35" itemprop="dateModified" datetime="2023-09-17T17:00:35+08:00">2023-09-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -695,13 +906,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="FunPlus笔试题"><a href="#FunPlus笔试题" class="headerlink" title="FunPlus笔试题"></a>FunPlus笔试题</h1><p>今天笔了一个FunPlus，属实麻了。看着题不难，怎么就A不了啊</p>
-<p>记录一下题目和解答</p>
+          <h1 id="FunPlus笔试题"><a href="#FunPlus笔试题" class="headerlink" title="FunPlus笔试题"></a>FunPlus笔试题</h1><p>记录一下题目和解答</p>
 <h2 id="第一题"><a href="#第一题" class="headerlink" title="第一题"></a>第一题</h2><p>趣小加非常喜爱玩扑克，现在需要从若干副扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2~10为数字本身，A为1，J为11，Q为12，K为13；而大、小王为0，可以看成任意牌。另外，“10， J(11), Q(12), K(13), A(1)”也是顺子，请你帮助趣小加实现上述功能</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;sort&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">isStraight</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="comment">// 把A当1时</span></span><br><span class="line">	joker := <span class="number">0</span></span><br><span class="line">	sort.Ints(nums)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">4</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] == <span class="number">0</span> &#123;</span><br><span class="line">			joker++</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> nums[i] == nums[i+<span class="number">1</span>] &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	flag := nums[<span class="number">4</span>]-nums[joker] &lt; <span class="number">5</span></span><br><span class="line">	joker = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">4</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] == <span class="number">1</span> &#123;</span><br><span class="line">			nums[i] = <span class="number">14</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	sort.Ints(nums)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">4</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] == <span class="number">0</span> &#123;</span><br><span class="line">			joker++</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> nums[i] == nums[i+<span class="number">1</span>] &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> nums[<span class="number">4</span>]-nums[joker] &lt; <span class="number">5</span> || flag</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 测试用例</span></span><br><span class="line">	cards1 := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;   <span class="comment">// 是顺子</span></span><br><span class="line">	cards2 := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>&#125;   <span class="comment">// 是顺子，0作为3</span></span><br><span class="line">	cards3 := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">6</span>&#125;   <span class="comment">// 不是顺子，0作为3和4</span></span><br><span class="line">	cards4 := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>&#125;   <span class="comment">// 不是顺子，有重复的牌</span></span><br><span class="line">	cards5 := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">11</span>&#125; <span class="comment">// 顺子 0 作为12和13</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(isStraight(cards1)) <span class="comment">// 输出 true</span></span><br><span class="line">	fmt.Println(isStraight(cards2)) <span class="comment">// 输出 true</span></span><br><span class="line">	fmt.Println(isStraight(cards3)) <span class="comment">// 输出 false</span></span><br><span class="line">	fmt.Println(isStraight(cards4)) <span class="comment">// 输出 false</span></span><br><span class="line">	fmt.Println(isStraight(cards5)) <span class="comment">// 输出 true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>本地测试了一下发现结果是正确的，可以没有时间了。<br>鼠鼠要气死啦T-T</p>
-<p>又寄了一门笔试</p>
+<p>本地测试了一下发现结果是正确的。</p>
 
       
     </div>
@@ -1166,7 +1375,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1179,7 +1388,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
