@@ -149,3 +149,85 @@ redo log什么时候写入到磁盘中
 
 ## bin log
 
+### 什么是bin log?
+
+undo log 和 redo log 都是innoDB引擎生成的。undo 保证原子性，redo 保证持久化
+
+bin log是做什么的呢。首先bin log 是在Server层中生成的。bin log会记录所有数据表结构变更及数据修改的情况, 但不会记录查询日志。
+
+### 为什么有了bin log 还要redo log
+
+bin log 是mysql 以前版本留下来的，用来存储命令的。用来进行归档的日志存储系统。没有cache-safe的能力。所以在innoDB提出的时候就增加redo log
+
+### redo log 和bin log 的区别
+
+1. 实现层不同
+
+    - bin log是在server层实现，所有Mysql版本都能使用
+    - redo log 仅在innoDB中使用
+2. 记录内容不同
+
+    - bin log 记录的是命令
+    - redo log 记录的直接修改某个位置的日志
+
+3. 读写方式不同
+
+    - bin log 是直接读写在文件中， 文件满了就换个文件读
+    - redo log 是循环读，需要不断刷新旧的日志
+
+4. 用途不同
+
+    - bin log 用于备份恢复，和主从复制， 保护整体数据
+    - redo log 用于掉电故障的恢复， 保护cache级数据
+
+### 如果不小心整个数据库的数据被删除了，能使用 redo log 文件恢复数据吗？
+
+不是redo log，应该是bin log
+
+redo log可能会擦除旧日志（因为它要保护的主要目标是buffer pool），bin log保存全量日志，且不会主动擦除
+
+### 主从复制如何实现？
+
+主从复制依赖于bin log。这个过程是异步的。主服务器不会管从服务器有没有写上。它只管用`log dump`线程发送就行
+
+![主从服务](https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0)
+
+简单说一下就是：
+
+- 写入binlog： 主服务在收到提交事务的请求后，会先写日志，在提交事务。更新存储引擎的数据，事务提交完成后，返回客户端操作成功
+- 同步binlog: 从库从I/O线程连接log dump中的数据，接受binlog 日志，写入到自己的relay log日志中，并给主库返回一个响应
+- 回放binlog： 从库的SQL线程会进行一个回放，将relay log中的操作，重新执行一遍实现主从数据的一致性
+
+一般来说主从服务的部署是：**主服务器写，从服务器读**
+![主从复制](https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0)
+
+#### 从库越多越好吗？
+
+不是， 从库越多，主库需要分担更多log dump线程去发送，资源消耗高
+
+#### MySql 主从复制还有哪些模型?
+
+- 同步复制： 主服务器等待从服务器同步完成。性能较差，可能会影响业务的使用
+- 异步复制：默认情况，主库不管从库的数据拷贝情况，可能出现主库宕机，丢失数据的风险
+- 半同步复制：只要有一部分同步成功返回响应了，就可以保证同步成功了，结合了两者的优点
+
+### binlog 什么时候刷盘？
+
+因为mysql 有事务的存在，一个事务的bin log是不能拆开的，所以mysql给每个线程都分配一个bin log cache 来记录事务的日志。这样每个事务就会隔离出来
+
+![bin log 刷盘](https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/binlogcache.drawio.png)
+
+这里write 是缓存，fsync 是存入磁盘。
+
+既然又有write又有fsync，同样的也存在性能和风险共存的情况
+
+mysql提供sync_binlog参数进行选择
+
+- 0： 只write， 由fsync决定什么时候写入
+- n > 0： 每次提交n个事务，进行fsync
+
+mysql 默认是0， 性能最高，风险最大
+
+## 参考
+
+[小林coding](https://xiaolincoding.com/mysql/log)
