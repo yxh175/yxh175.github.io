@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="学习Redis的记录，参考自小林coding AOF日志AOF日志简单来讲，就是把所有写操作Redis内容全部在执行后马上追加的AOF日志里。如果下次Redis重新启动，想要恢复，只需要按顺序执行它就能恢复整个记录。  Redis默认情况下是不开启AOF日志的，需要修改redis.conf配置文件的参数修改 AOF日志是普通的文本文件，但是它通过一种自己的规则来记录的  为什么redis要执行命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis持久化实现">
+<meta property="og:url" content="http://example.com/2023/09/18/redis-aof-rdb/index.html">
+<meta property="og:site_name" content="鼠鼠的随笔">
+<meta property="og:description" content="学习Redis的记录，参考自小林coding AOF日志AOF日志简单来讲，就是把所有写操作Redis内容全部在执行后马上追加的AOF日志里。如果下次Redis重新启动，想要恢复，只需要按顺序执行它就能恢复整个记录。  Redis默认情况下是不开启AOF日志的，需要修改redis.conf配置文件的参数修改 AOF日志是普通的文本文件，但是它通过一种自己的规则来记录的  为什么redis要执行命令">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/6f0ab40396b7fc2c15e6f4487d3a0ad7.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/337021a153944fd0f964ca834e34d0f2.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/28afd536c57a46447ddab0a2062abe84.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/4eeef4dd1bedd2ffe0b84d4eaa0dbdea.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/f64829ffc2e9e006b090f9aae51035ee.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/723d6c580c05400b3841bc69566dd61b.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/5a1f2a90b5f3821c19bea3b7a5f27fa1.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/d4cfac545377b54dd035c775603b4936.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0ODI3Njc0,size_16,color_FFFFFF,t_70-20230309231944807.png">
+<meta property="article:published_time" content="2023-09-18T08:33:06.000Z">
+<meta property="article:modified_time" content="2023-09-18T12:15:00.421Z">
+<meta property="article:author" content="yxh">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="持久化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.xiaolincoding.com//mysql/other/6f0ab40396b7fc2c15e6f4487d3a0ad7.png">
+
+<link rel="canonical" href="http://example.com/2023/09/18/redis-aof-rdb/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis持久化实现 | 鼠鼠的随笔</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">鼠鼠的随笔</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/18/redis-aof-rdb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis持久化实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-18 16:33:06 / 修改时间：20:15:00" itemprop="dateCreated datePublished" datetime="2023-09-18T16:33:06+08:00">2023-09-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/18/redis-aof-rdb/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/18/redis-aof-rdb/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>学习Redis的记录，参考自<a target="_blank" rel="noopener" href="https://xiaolincoding.com/redis/storage/aof.html#aof-%E6%97%A5%E5%BF%97">小林coding</a></p>
+<h2 id="AOF日志"><a href="#AOF日志" class="headerlink" title="AOF日志"></a>AOF日志</h2><p>AOF日志简单来讲，就是把所有写操作Redis内容全部在执行后马上追加的AOF日志里。如果下次Redis重新启动，想要恢复，只需要按顺序执行它就能恢复整个记录。</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/6f0ab40396b7fc2c15e6f4487d3a0ad7.png" alt="AOF日志流程"></p>
+<p>Redis默认情况下是不开启AOF日志的，需要修改<code>redis.conf</code>配置文件的参数修改</p>
+<p>AOF日志是普通的文本文件，但是它通过一种自己的规则来记录的</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/337021a153944fd0f964ca834e34d0f2.png" alt="AOF日志内容"></p>
+<h3 id="为什么redis要执行命令后写日志？"><a href="#为什么redis要执行命令后写日志？" class="headerlink" title="为什么redis要执行命令后写日志？"></a>为什么redis要执行命令后写日志？</h3><ol>
+<li>避免额外的检查开销，如果执行的语句有问题，那么也会被写到AOF中。</li>
+<li>不会阻塞当前写操作命令的执行</li>
+</ol>
+<h3 id="这样做有什么风险吗？"><a href="#这样做有什么风险吗？" class="headerlink" title="这样做有什么风险吗？"></a>这样做有什么风险吗？</h3><ol>
+<li>因为执行命令和日志记录是分开进行的，如果执行了命令，在写日志的时候宕机，就会导致数据丢失了</li>
+<li>虽然AOF在执行命令后进行追加，不会阻塞当前的命令，但会阻塞之后命令， 因为写日志也是主线程实现的。</li>
+</ol>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/28afd536c57a46447ddab0a2062abe84.png" alt="AOF日志写盘时机"><br>‘<br>如果I&#x2F;O硬盘的压力过大，导致写入阻塞，那么AOF写入阻塞，进而导致整个redis阻塞，所以AOF的写回策略也就比较重要了</p>
+<h2 id="AOF写回策略"><a href="#AOF写回策略" class="headerlink" title="AOF写回策略"></a>AOF写回策略</h2><p>Redis 写入AOF日志的流程如下</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/4eeef4dd1bedd2ffe0b84d4eaa0dbdea.png" alt="AOF日志写入"></p>
+<p>跟Redis类似，也是增加一个缓冲区。然后设置一个参数，来保证刷盘速率</p>
+<p>在<code>redis.conf</code>配置文件中的<code>appendfsync</code>配置项中可以有一下三个参数可选</p>
+<ul>
+<li>Always 每次执行完命令都会将AOF日志写入到数据中</li>
+<li>EverySec 先将命令写入到<code>page cache</code>内核缓冲区，每秒执行依次</li>
+<li>No 不由Redis控制，写回硬盘的时机，转交给操作系统控制写回的时机，先将AOF文件的内核缓冲区，再由操作系统决定何时将缓冲区内容写回硬盘</li>
+</ul>
+<h3 id="各个策略的特点"><a href="#各个策略的特点" class="headerlink" title="各个策略的特点"></a>各个策略的特点</h3><p>以上三种策略都无法完美解决主进程阻塞和减少数据丢失的问题，这就是鱼与熊掌不可兼得。性能和安全无法都顾全</p>
+<ul>
+<li>Always 策略的话，可以最大程度保证数据不丢失，但是由于它每执行一条写操作命令就同步将 AOF 内容写回硬盘，所以是不可避免会影响主进程的性能；</li>
+<li>No 策略的话，是交由操作系统来决定何时将 AOF 日志内容写回硬盘，相比于 Always 策略性能较好，但是操作系统写回硬盘的时机是不可预知的，如果 AOF 日志内容没有写回硬盘，一旦服务器宕机，就会丢失不定数量的数据。</li>
+<li>Everysec 策略的话，是折中的一种方式，避免了 Always 策略的性能开销，也比 No 策略更能避免数据丢失，当然如果上一秒的写操作命令日志没有写回到硬盘，发生了宕机，这一秒内的数据自然也会丢失。</li>
+</ul>
+<p>一般需要根据业务场景进行自己的选择</p>
+<ul>
+<li>高性能 no</li>
+<li>高安全 always</li>
+<li>折中 everysec</li>
+</ul>
+<h3 id="如何实现这三个策略"><a href="#如何实现这三个策略" class="headerlink" title="如何实现这三个策略"></a>如何实现这三个策略</h3><p>实际就是调用刷盘函数的时机</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/f64829ffc2e9e006b090f9aae51035ee.png" alt="AOF刷盘流程"></p>
+<p>通过控制sync() 操作系统内核进行刷盘</p>
+<h2 id="AOF-重写机制"><a href="#AOF-重写机制" class="headerlink" title="AOF 重写机制"></a>AOF 重写机制</h2><p>AOF是追加日志，如果不断的追加，只会让文件变得越来越冗余。所以提出AOF重写机制。</p>
+<h3 id="机制怎实现减小文档大小？"><a href="#机制怎实现减小文档大小？" class="headerlink" title="机制怎实现减小文档大小？"></a>机制怎实现减小文档大小？</h3><p><img src="https://cdn.xiaolincoding.com//mysql/other/723d6c580c05400b3841bc69566dd61b.png" alt="AOF重写机制"></p>
+<p>当使用重写机制时，就会读取最新的键值对。然后用新的AOF文件记录。按照这样的思路，对重写文件进行缩小，就能生成一个更小的AOF文件去覆盖旧的文件。</p>
+<h4 id="为什么不直接复用文件？"><a href="#为什么不直接复用文件？" class="headerlink" title="为什么不直接复用文件？"></a>为什么不直接复用文件？</h4><p>如果出现宕机，那么AOF文件就被污染了， 所以要新建一个文件</p>
+<h3 id="AOF后台重写"><a href="#AOF后台重写" class="headerlink" title="AOF后台重写"></a>AOF后台重写</h3><p>Redis得重写AOF过程是由后台子进程<code>bgrewriteof</code>完成的</p>
+<h4 id="AOF后台重写有什么好处？"><a href="#AOF后台重写有什么好处？" class="headerlink" title="AOF后台重写有什么好处？"></a>AOF后台重写有什么好处？</h4><ul>
+<li>子进程重写，不影响主进程的业务</li>
+<li>子进程拿到的是主进程AOF日志的共享内存，如果出现修改内存数据，操作系统会自动触发写时复制，两者的数据副本就独立了</li>
+</ul>
+<h4 id="子进程如何获得一样的数据副本？"><a href="#子进程如何获得一样的数据副本？" class="headerlink" title="子进程如何获得一样的数据副本？"></a>子进程如何获得一样的数据副本？</h4><p>主进程进行<code>fork</code>可以为子进程复制一个页表，两者都指向一个物理内存。</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/5a1f2a90b5f3821c19bea3b7a5f27fa1.png" alt="fork复制页表"></p>
+<p>这样子进程就共享了父进程的物理内存。这样就可以节约物理内存的资源，页表对应的页表项的属性会标记该物理内存的权限为只读。</p>
+<p>如果主进程向这内存里发起写操作，CPU会触发写保护中断，然后操作系统就会把物理内存的值进行复制，最后才会对内存进行写操作。这个过程称为写时复制</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/d4cfac545377b54dd035c775603b4936.png" alt="写时复制"></p>
+<h4 id="为什么用fork创建子进程，只复制页表？"><a href="#为什么用fork创建子进程，只复制页表？" class="headerlink" title="为什么用fork创建子进程，只复制页表？"></a>为什么用fork创建子进程，只复制页表？</h4><p>因为页表相对于实际的物理内存要更小，这样更小的可能导致父进程因为无法操作内存发生阻塞。</p>
+<h4 id="后台重写时发生阻塞的时机？"><a href="#后台重写时发生阻塞的时机？" class="headerlink" title="后台重写时发生阻塞的时机？"></a>后台重写时发生阻塞的时机？</h4><ul>
+<li>fork子进程，页表过大，可能会发生阻塞</li>
+<li>在重写AOF的过程中，主进程修改了内存也会导致阻塞，因为这时会发生写时复制</li>
+</ul>
+<p>需要注意的如果主进程修改的是Key-Value，就会发生写时复制，但是只会复制主进程修改的物理内存数据，没修改的物理内存还是与子进程共享的</p>
+<p>如果主进程修改了key-value，会导致主子进程的内存数据不一致，这时要怎么解决呢。</p>
+<p>Redis设置了一个AOF重写缓冲区，在创建<code>bgwriteaof</code>子进程时，会开始使用</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0ODI3Njc0,size_16,color_FFFFFF,t_70-20230309231944807.png" alt="AOF内存一致性"></p>
+<p>在重写 AOF 期间，当 Redis 执行完一个写命令之后，它会同时将这个写命令写入到 「AOF 缓冲区」和 「AOF 重写缓冲区」。</p>
+<p>也就是说，在主进程在此期间要同时执行三个动作</p>
+<ul>
+<li>操作指令</li>
+<li>追加命令 AOF缓存区</li>
+<li>追加命令 AOF重写缓存区</li>
+</ul>
+<p>等子进程完成AOF重写任务后，会向主进程发送一条信号。主进程收到信号后，会调用一个信号处理函数做如下两个内容</p>
+<ul>
+<li>将AOF重写缓存区的数据追加到新的AOF文件中</li>
+<li>覆盖旧的AOF文件</li>
+</ul>
+<p>执行完成后，主进程就可以继续像往常一样处理命令了</p>
+<p>在整个 AOF 后台重写过程中，除了fork、发生写时复制会对主进程造成阻塞，还有信号处理函数执行时也会对主进程造成阻塞，在其他时候，AOF 后台重写都不会阻塞主进程。</p>
+<h2 id="RDB-快照"><a href="#RDB-快照" class="headerlink" title="RDB 快照"></a>RDB 快照</h2><h3 id="什么是RDB快照？"><a href="#什么是RDB快照？" class="headerlink" title="什么是RDB快照？"></a>什么是RDB快照？</h3><p>快照即记录一瞬间的东西，RDB快照就是把当前Redis中的数据都存储起来，恢复起来也更快</p>
+<h3 id="快照怎么用？"><a href="#快照怎么用？" class="headerlink" title="快照怎么用？"></a>快照怎么用？</h3><p>Redis 提供两个命令去执行快照读</p>
+<ul>
+<li><code>save</code> 在主线程中创建快照</li>
+<li><code>bgsave</code> 创建子进程生成RDB，可以防止阻塞主线程</li>
+</ul>
+<p>当然还可以通过修改配置文件的选项来实现每隔一段时间，自动执行一次的bgsave命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br></pre></td></tr></table></figure>
+
+<p>即为每多少秒至少修改n次会触发快照，</p>
+<p>每 900秒内 修改1次会触发快照</p>
+<p>注意是Redis是全量快照，每一次执行都会把内存中所有的数据都加入到硬盘中去。所以这里又涉及到了数据安全性和性能的抉择了</p>
+<h3 id="执行快照时，数据能被修改吗？"><a href="#执行快照时，数据能被修改吗？" class="headerlink" title="执行快照时，数据能被修改吗？"></a>执行快照时，数据能被修改吗？</h3><p>如果是<code>save</code>指令，那么执行快照时，会出现主进程阻塞想修改也没法修改。如果时<code>bgsave</code>命令的话，那么就创建子进程fork页表，修改时会触发写时复制。写时复制也只是修改了修改的一部分。<br>比如说，bgsave进程正在执行的时候，有一个key-val值在主进程被改了，那么这个时候会触发写时复制，系统会把物理内存相关部分的数据在拷贝一份，然后将页表指向那个位置。之后子进程就是原本的值，主进程也是主进程的值</p>
+<h4 id="修改的数据能被快照记录下来吗？"><a href="#修改的数据能被快照记录下来吗？" class="headerlink" title="修改的数据能被快照记录下来吗？"></a>修改的数据能被快照记录下来吗？</h4><p>不能，只能等到下一次快照</p>
+<h2 id="RDB-和AOF合体"><a href="#RDB-和AOF合体" class="headerlink" title="RDB 和AOF合体"></a>RDB 和AOF合体</h2><p>redis 可以通过rdb和aof结合来让redis的恢复速度更快。</p>
+<p>通过修改<code>aof-use-rdb-preamble</code>为<code>yes</code>即可以持久化。<br>这样的话即解决了频繁RDB导致主进程阻塞，和AOF日志过的问题。<br>在下次加载redis时，会先加载RDB，然后执行aof。恢复数据</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/redis/" rel="tag"># redis</a>
+              <a href="/tags/%E6%8C%81%E4%B9%85%E5%8C%96/" rel="tag"># 持久化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/17/redis-data-structure/" rel="prev" title="Redis数据结构">
+      <i class="fa fa-chevron-left"></i> Redis数据结构
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF%E6%97%A5%E5%BF%97"><span class="nav-number">1.</span> <span class="nav-text">AOF日志</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88redis%E8%A6%81%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E5%90%8E%E5%86%99%E6%97%A5%E5%BF%97%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么redis要执行命令后写日志？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%99%E6%A0%B7%E5%81%9A%E6%9C%89%E4%BB%80%E4%B9%88%E9%A3%8E%E9%99%A9%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">这样做有什么风险吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF%E5%86%99%E5%9B%9E%E7%AD%96%E7%95%A5"><span class="nav-number">2.</span> <span class="nav-text">AOF写回策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E4%B8%AA%E7%AD%96%E7%95%A5%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">各个策略的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%BF%99%E4%B8%89%E4%B8%AA%E7%AD%96%E7%95%A5"><span class="nav-number">2.2.</span> <span class="nav-text">如何实现这三个策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF-%E9%87%8D%E5%86%99%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">AOF 重写机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%88%B6%E6%80%8E%E5%AE%9E%E7%8E%B0%E5%87%8F%E5%B0%8F%E6%96%87%E6%A1%A3%E5%A4%A7%E5%B0%8F%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">机制怎实现减小文档大小？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%9B%B4%E6%8E%A5%E5%A4%8D%E7%94%A8%E6%96%87%E4%BB%B6%EF%BC%9F"><span class="nav-number">3.1.1.</span> <span class="nav-text">为什么不直接复用文件？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF%E5%90%8E%E5%8F%B0%E9%87%8D%E5%86%99"><span class="nav-number">3.2.</span> <span class="nav-text">AOF后台重写</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E5%90%8E%E5%8F%B0%E9%87%8D%E5%86%99%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E5%A4%84%EF%BC%9F"><span class="nav-number">3.2.1.</span> <span class="nav-text">AOF后台重写有什么好处？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97%E4%B8%80%E6%A0%B7%E7%9A%84%E6%95%B0%E6%8D%AE%E5%89%AF%E6%9C%AC%EF%BC%9F"><span class="nav-number">3.2.2.</span> <span class="nav-text">子进程如何获得一样的数据副本？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8fork%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B%EF%BC%8C%E5%8F%AA%E5%A4%8D%E5%88%B6%E9%A1%B5%E8%A1%A8%EF%BC%9F"><span class="nav-number">3.2.3.</span> <span class="nav-text">为什么用fork创建子进程，只复制页表？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E9%87%8D%E5%86%99%E6%97%B6%E5%8F%91%E7%94%9F%E9%98%BB%E5%A1%9E%E7%9A%84%E6%97%B6%E6%9C%BA%EF%BC%9F"><span class="nav-number">3.2.4.</span> <span class="nav-text">后台重写时发生阻塞的时机？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB-%E5%BF%AB%E7%85%A7"><span class="nav-number">4.</span> <span class="nav-text">RDB 快照</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRDB%E5%BF%AB%E7%85%A7%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">什么是RDB快照？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E7%85%A7%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">快照怎么用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%BF%AB%E7%85%A7%E6%97%B6%EF%BC%8C%E6%95%B0%E6%8D%AE%E8%83%BD%E8%A2%AB%E4%BF%AE%E6%94%B9%E5%90%97%EF%BC%9F"><span class="nav-number">4.3.</span> <span class="nav-text">执行快照时，数据能被修改吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E7%9A%84%E6%95%B0%E6%8D%AE%E8%83%BD%E8%A2%AB%E5%BF%AB%E7%85%A7%E8%AE%B0%E5%BD%95%E4%B8%8B%E6%9D%A5%E5%90%97%EF%BC%9F"><span class="nav-number">4.3.1.</span> <span class="nav-text">修改的数据能被快照记录下来吗？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB-%E5%92%8CAOF%E5%90%88%E4%BD%93"><span class="nav-number">5.</span> <span class="nav-text">RDB 和AOF合体</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yxh"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">yxh</p>
+  <div class="site-description" itemprop="description">鼠鼠我呀要努力啦</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yxh</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'aXkNqUKnMUGvI43o5733DET4-MdYXbMMI',
+      appKey     : '9cXqMO3WNRAbkxYpxyHQILyb',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
