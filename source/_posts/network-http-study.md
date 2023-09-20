@@ -54,3 +54,16 @@ HTTP/2 通过Stream的并发能力，虽然解决了HTTP/1队头阻塞的问题�
 所以，一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的所有的 HTTP 请求都必须等待这个丢了的包被重传回来。
 
 ## HTTP/3 做了哪些优化？
+
+我们看到HTTP/2做了很大的努力，让HTTP层面不出现队头阻塞，但是还是在TCP层上折了腰。
+所以HTTP/3将底层修改为UDP协议。
+
+![HTTP各版本](https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/27-HTTP3.png)
+
+基于UDP的quick协议可以实现可靠传输。
+
+那么HTTP/3的三个优点就是
+
+- 无队头阻塞：同样是多路复用但是不会像HTTP/2那样当stream某个出现丢失时阻塞。UDP中多个Stream之间没有依赖
+- 更快的建立连接：因为QUIC协议里包含了TLS协议。所以直接握手就可以了
+- 连接迁移：

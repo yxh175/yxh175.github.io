@@ -1,5 +1,5 @@
 ---
-title: quick-sort
+title: GO：quick-sort实现
 date: 2023-09-17 09:54:38
 categories:
 - 算法
