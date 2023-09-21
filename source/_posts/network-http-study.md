@@ -66,4 +66,41 @@ HTTP/2 通过Stream的并发能力，虽然解决了HTTP/1队头阻塞的问题�
 
 - 无队头阻塞：同样是多路复用但是不会像HTTP/2那样当stream某个出现丢失时阻塞。UDP中多个Stream之间没有依赖
 - 更快的建立连接：因为QUIC协议里包含了TLS协议。所以直接握手就可以了
-- 连接迁移：
+- 连接迁移：基于TCP的连接，强调了地址和端口号。如果二者有一点变化就需要重新连接，代价很高。而基于UDP的不需要
+
+
+## quick协议怎么让UDP实现可靠传输的？
+
+HTTP/3的整体视角是这样的
+
+![HTTP/3整体情况](https://cdn.xiaolincoding.com//mysql/other/http3-over-quic-protocol-works.png)
+
+- Packet Header  分别包含了Long Packet Header 和 Short Packet Header两种实现方法，前者在首次连接时使用，后者用于日常传输
+- QUIC FrameHeader 在一个Packet中会存放多个Frame数据， 这个Frame数据内容大致如下
+![Frame内容](https://cdn.xiaolincoding.com//mysql/other/536298d2c54a43b699026bffe0f85010.png)
+
+通过StreamID、Offset保证数据的有序性，length指明了Frame数据的长度
+
+### quic ID 是什么样的，和TCP一样吗？
+
+不是，quicID 在UDP中严格递增的，为了保证RTT（往返延时时间的无歧义测量）,所以让它严格递增，这也顺便解决了TCP中RTT歧义性导致重发事件概率增大
+
+### 为什么QUIC 不会队头阻塞？
+
+HTTP/2 队头阻塞的原因是因为TCP, 虽然在应用层的层面上解决队头阻塞问题，但是在其Stream是基于TCP的，TCP滑动窗口的阻塞会导致队头阻塞。而HTTP/3是基于UDP的，UDP会为每个Stream单独弄一个窗口。这样各个Stream之间是不会互相影响的
+
+### QUIC 如何做到流量控制？
+
+和TCP原理类似，TCP流量控制是通过接收方告诉发送方，它的接收窗口有多大，从而让发送方计算发送速率
+
+QUIC 实现流量控制的方式
+
+- 通过window_update 帧告知窗口大小
+- 通过BlockFrame 帧告知阻塞
+
+同时和HTTP/2不同的是Stream每个都是单独的窗口，所以要进行两个流量控制
+
+- Stream流量控制， 对每个Stream的窗口进行限制
+- Connection 连接控制，对Stream总的连接大小进行限制，防止超过缓存
+
+
