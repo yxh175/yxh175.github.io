@@ -269,10 +269,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-09-20 16:35:47 / 修改时间：18:37:01" itemprop="dateCreated datePublished" datetime="2023-09-20T16:35:47+08:00">2023-09-20</time>
+              <time title="创建时间：2023-09-20 16:35:47" itemprop="dateCreated datePublished" datetime="2023-09-20T16:35:47+08:00">2023-09-20</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-21 11:02:10" itemprop="dateModified" datetime="2023-09-21T11:02:10+08:00">2023-09-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -336,7 +342,36 @@
 <p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/network/quic/http2%E9%98%BB%E5%A1%9E.jpeg" alt="stream丢失片段"></p>
 <p>当通过TCP发送多个包的时候，如果有一个包在网络中丢失，那么就会导致之后的内容会在内核中缓存。直到丢失的包收到。应用层才能在内核中取到结果<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/%E7%BD%91%E7%BB%9C/http3/tcp%E9%98%9F%E5%A4%B4%E9%98%BB%E5%A1%9E.gif" alt="内核运行图"></p>
 <p>所以，一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的所有的 HTTP 请求都必须等待这个丢了的包被重传回来。</p>
-<h2 id="HTTP-3-做了哪些优化？"><a href="#HTTP-3-做了哪些优化？" class="headerlink" title="HTTP&#x2F;3 做了哪些优化？"></a>HTTP&#x2F;3 做了哪些优化？</h2>
+<h2 id="HTTP-3-做了哪些优化？"><a href="#HTTP-3-做了哪些优化？" class="headerlink" title="HTTP&#x2F;3 做了哪些优化？"></a>HTTP&#x2F;3 做了哪些优化？</h2><p>我们看到HTTP&#x2F;2做了很大的努力，让HTTP层面不出现队头阻塞，但是还是在TCP层上折了腰。<br>所以HTTP&#x2F;3将底层修改为UDP协议。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/27-HTTP3.png" alt="HTTP各版本"></p>
+<p>基于UDP的quick协议可以实现可靠传输。</p>
+<p>那么HTTP&#x2F;3的三个优点就是</p>
+<ul>
+<li>无队头阻塞：同样是多路复用但是不会像HTTP&#x2F;2那样当stream某个出现丢失时阻塞。UDP中多个Stream之间没有依赖</li>
+<li>更快的建立连接：因为QUIC协议里包含了TLS协议。所以直接握手就可以了</li>
+<li>连接迁移：基于TCP的连接，强调了地址和端口号。如果二者有一点变化就需要重新连接，代价很高。而基于UDP的不需要</li>
+</ul>
+<h2 id="quick协议怎么让UDP实现可靠传输的？"><a href="#quick协议怎么让UDP实现可靠传输的？" class="headerlink" title="quick协议怎么让UDP实现可靠传输的？"></a>quick协议怎么让UDP实现可靠传输的？</h2><p>HTTP&#x2F;3的整体视角是这样的</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/http3-over-quic-protocol-works.png" alt="HTTP/3整体情况"></p>
+<ul>
+<li>Packet Header  分别包含了Long Packet Header 和 Short Packet Header两种实现方法，前者在首次连接时使用，后者用于日常传输</li>
+<li>QUIC FrameHeader 在一个Packet中会存放多个Frame数据， 这个Frame数据内容大致如下<br><img src="https://cdn.xiaolincoding.com//mysql/other/536298d2c54a43b699026bffe0f85010.png" alt="Frame内容"></li>
+</ul>
+<p>通过StreamID、Offset保证数据的有序性，length指明了Frame数据的长度</p>
+<h3 id="quic-ID-是什么样的，和TCP一样吗？"><a href="#quic-ID-是什么样的，和TCP一样吗？" class="headerlink" title="quic ID 是什么样的，和TCP一样吗？"></a>quic ID 是什么样的，和TCP一样吗？</h3><p>不是，quicID 在UDP中严格递增的，为了保证RTT（往返延时时间的无歧义测量）,所以让它严格递增，这也顺便解决了TCP中RTT歧义性导致重发事件概率增大</p>
+<h3 id="为什么QUIC-不会队头阻塞？"><a href="#为什么QUIC-不会队头阻塞？" class="headerlink" title="为什么QUIC 不会队头阻塞？"></a>为什么QUIC 不会队头阻塞？</h3><p>HTTP&#x2F;2 队头阻塞的原因是因为TCP, 虽然在应用层的层面上解决队头阻塞问题，但是在其Stream是基于TCP的，TCP滑动窗口的阻塞会导致队头阻塞。而HTTP&#x2F;3是基于UDP的，UDP会为每个Stream单独弄一个窗口。这样各个Stream之间是不会互相影响的</p>
+<h3 id="QUIC-如何做到流量控制？"><a href="#QUIC-如何做到流量控制？" class="headerlink" title="QUIC 如何做到流量控制？"></a>QUIC 如何做到流量控制？</h3><p>和TCP原理类似，TCP流量控制是通过接收方告诉发送方，它的接收窗口有多大，从而让发送方计算发送速率</p>
+<p>QUIC 实现流量控制的方式</p>
+<ul>
+<li>通过window_update 帧告知窗口大小</li>
+<li>通过BlockFrame 帧告知阻塞</li>
+</ul>
+<p>同时和HTTP&#x2F;2不同的是Stream每个都是单独的窗口，所以要进行两个流量控制</p>
+<ul>
+<li>Stream流量控制， 对每个Stream的窗口进行限制</li>
+<li>Connection 连接控制，对Stream总的连接大小进行限制，防止超过缓存</li>
+</ul>
+
       
     </div>
 
@@ -975,7 +1010,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/17/quick-sort/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/17/go-quick-sort/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -989,7 +1024,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/09/17/quick-sort/" class="post-title-link" itemprop="url">quick-sort</a>
+            <a href="/2023/09/17/go-quick-sort/" class="post-title-link" itemprop="url">GO：quick-sort实现</a>
         </h2>
 
         <div class="post-meta">
@@ -998,10 +1033,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-09-17 09:54:38 / 修改时间：16:58:28" itemprop="dateCreated datePublished" datetime="2023-09-17T09:54:38+08:00">2023-09-17</time>
+              <time title="创建时间：2023-09-17 09:54:38" itemprop="dateCreated datePublished" datetime="2023-09-17T09:54:38+08:00">2023-09-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-20 21:58:34" itemprop="dateModified" datetime="2023-09-20T21:58:34+08:00">2023-09-20</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -1021,8 +1062,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/09/17/quick-sort/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/17/quick-sort/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/09/17/go-quick-sort/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/17/go-quick-sort/" itemprop="commentCount"></span>
     </a>
   </span>
   
