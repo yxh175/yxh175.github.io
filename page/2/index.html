@@ -157,6 +157,506 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/17/go-quick-sort/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/17/go-quick-sort/" class="post-title-link" itemprop="url">GO：quick-sort实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-17 09:54:38" itemprop="dateCreated datePublished" datetime="2023-09-17T09:54:38+08:00">2023-09-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-20 21:58:34" itemprop="dateModified" datetime="2023-09-20T21:58:34+08:00">2023-09-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/17/go-quick-sort/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/17/go-quick-sort/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="快排"><a href="#快排" class="headerlink" title="快排"></a>快排</h1><h2 id="快排思想"><a href="#快排思想" class="headerlink" title="快排思想"></a>快排思想</h2><p>快速排序: 每次排序会定位出一个位置，左右两边在分别排序。思路大致是这样的。但是不知道网上很多博客里用go实现的都很奇怪。所以决定自己捋捋。强化一下记忆</p>
+<p><img src="https://img1.imgtp.com/2023/09/17/Rbq8rX3b.png" alt="快排思路"></p>
+<p>为了方便起见，每次都取最右边的进行排序（这样不用额外的判断是否是key值）。哨兵元素的选取可能会导致排序退化成冒泡排序</p>
+<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><p>代码如下</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	s := []<span class="type">int</span>&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>&#125;</span><br><span class="line">	quickSort(s, <span class="number">0</span>, <span class="built_in">len</span>(s)<span class="number">-1</span>)</span><br><span class="line">	fmt.Println(s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">quickSort</span><span class="params">(nums []<span class="type">int</span>, l, r <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> l &lt; r &#123;</span><br><span class="line">		pivot := partition(nums, l, r)</span><br><span class="line">		quickSort(nums, l, pivot<span class="number">-1</span>)</span><br><span class="line">		quickSort(nums, pivot+<span class="number">1</span>, r)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">partition</span><span class="params">(nums []<span class="type">int</span>, l, r <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	key := nums[r]</span><br><span class="line">	<span class="comment">// i 左边表示小于key， i右边表示大于key</span></span><br><span class="line">	i := l</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 通过j进行遍历</span></span><br><span class="line">	<span class="keyword">for</span> j := l; j &lt; r; j++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[j] &lt; key &#123;</span><br><span class="line">			nums[i], nums[j] = nums[j], nums[i]</span><br><span class="line">			i++</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 最后i的位置即为key所在的位置</span></span><br><span class="line">	nums[i], nums[r] = nums[r], nums[i]</span><br><span class="line">	<span class="keyword">return</span> i</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果理解了，还可以尝试把<code>partition</code>也塞到<code>quickSort</code>中，去减少栈内存的使用的压力</p>
+<p><code>partition</code>是定位<code>key</code>的函数。通过i和j两个指针去查询</p>
+<ul>
+<li><code>i</code>的作用: <code>i</code>之前的所有数都小于<code>key</code>，不包括<code>i</code></li>
+<li><code>j</code>的作用：单纯用来进行遍历，查到小于<code>key</code>的要放到<code>i</code>的位置，并让<code>i++</code></li>
+</ul>
+<p><code>quickSort</code>中的<code>l&lt;r</code>的作用是递归出口也表示某个分支排序的结束。知道的key就不用参与排序了</p>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><p>快排是原地排序算法, 因为要设计到哨兵元素的选取。如果有和哨兵元素相同的值。不一定能保证原有的顺序，所以是不稳定排序</p>
+<table>
+<thead>
+<tr>
+<th>评价标准</th>
+<th>平均</th>
+<th>最坏</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时间复杂度</td>
+<td>o(nlogn)</td>
+<td>o(n^2)</td>
+</tr>
+<tr>
+<td>空间复杂度</td>
+<td>o(logn)</td>
+<td>o(n)</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/16/mysql-log/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/16/mysql-log/" class="post-title-link" itemprop="url">Mysql 日志系统</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-16 16:03:52" itemprop="dateCreated datePublished" datetime="2023-09-16T16:03:52+08:00">2023-09-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-17 11:25:48" itemprop="dateModified" datetime="2023-09-17T11:25:48+08:00">2023-09-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/16/mysql-log/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/16/mysql-log/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Mysql日志系统"><a href="#Mysql日志系统" class="headerlink" title="Mysql日志系统"></a>Mysql日志系统</h1><p>mysql的三大日志</p>
+<ul>
+<li>undo log（回滚日志）： 是innodb存储引擎层生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC</li>
+<li>redo log（重做日志）: 将命令依次记录，用来实现事务的持久性。主要用于掉电等故障恢复</li>
+<li>bin log（归档日志）：是Server层生成的日志，主要用于数据备份和主从复制</li>
+</ul>
+<h2 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h2><h3 id="undo-log-是什么？-为什么要有undo-log？"><a href="#undo-log-是什么？-为什么要有undo-log？" class="headerlink" title="undo log 是什么？ 为什么要有undo log？"></a>undo log 是什么？ 为什么要有undo log？</h3><p><code>undo log</code> 就是反着的<code>sql</code>命令。你删除了我增。你加我删。保证一会能回滚。<br>因为在<code>mysql</code>中执行增删改的命令时，是隐式的开启事务的。事务如果开启出现了异常也能够正常的回滚。保证了<code>mysql</code>的 <code>A</code> 原子性</p>
+<p>MVCC的实现。mysql多版本并发控制的必须需要<code>undo log</code> 和 <code>ReadView</code>这两个。</p>
+<p>一个<code>undo log</code>的格式日志如下</p>
+<ul>
+<li>通过<code>trx_id</code>可以知道该记录被哪个事务修改</li>
+<li>通过<code>roll_pointer</code>指针来将这些undo log串联在一起</li>
+</ul>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%89%88%E6%9C%AC%E9%93%BE.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="undo log版本链"></p>
+<p>通过这个版本链可以很好完成MVCC的多版本。同时mysql的两个隔离级别可重复读和读已提交则是由ReadView的方式决定的</p>
+<ul>
+<li>读已提交： 隔离级别第二。实现方法是每次Select时都是生成一个新的ReadView。别的线程在更新数据后，下次的ReadView都不会相同</li>
+<li>可重复读：隔离级别第三。与读已提交不同的是，是以事务进行划分的，在一个事务里，第一次Select生成的ReadView，在接下来不操作数据的情况下会进行继续使用</li>
+</ul>
+<p>undo log的两大作用</p>
+<ol>
+<li>实现事务回滚，保障事务的原子性</li>
+<li>结合ReadView实现MVCC，实现高并发</li>
+</ol>
+<h3 id="undo-log-如何持久化"><a href="#undo-log-如何持久化" class="headerlink" title="undo log 如何持久化"></a>undo log 如何持久化</h3><p>undo log 的数据在buffer pool里会记录到redo log 中，在通过redo log 刷盘实现持久化</p>
+<h3 id="undo-log-怎么记录的"><a href="#undo-log-怎么记录的" class="headerlink" title="undo log 怎么记录的"></a>undo log 怎么记录的</h3><p>开启事务后，如果使用了更新命令，就会把旧值记录下来。生成一个undo log, 然后写入buffer pool</p>
+<h2 id="buffer-pool"><a href="#buffer-pool" class="headerlink" title="buffer pool"></a>buffer pool</h2><h3 id="buffer-pool-是什么？为什么需要它？"><a href="#buffer-pool-是什么？为什么需要它？" class="headerlink" title="buffer pool 是什么？为什么需要它？"></a>buffer pool 是什么？为什么需要它？</h3><p>buffer pool 是一个缓冲池， 通过建立在Server 和 磁盘之间的一个缓冲池。确保高频不需要重复的查询磁盘。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/innodb/%E7%BC%93%E5%86%B2%E6%B1%A0.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="缓冲池"></p>
+<p>Buffer pool的好处:</p>
+<ul>
+<li>读取数据可以直接从缓冲池里读，加快时间</li>
+<li>如果数据修改后，不会很快的进行磁盘I&#x2F;O会有一个合适的时机刷进磁盘</li>
+</ul>
+<h3 id="buffer-pool-的缓冲结构？"><a href="#buffer-pool-的缓冲结构？" class="headerlink" title="buffer pool 的缓冲结构？"></a>buffer pool 的缓冲结构？</h3><p>InnoDB中数据的存储是使用16K的页进行存储的。为了方便对应。buffer pool中的数据也是以相同大小的页进行对应</p>
+<p>在mysql刚启动时，会为buffer pool 分配多个16k大小的页。这些页作为即为缓存页</p>
+<p>刚开始这些缓存页都是空闲的，只有真正要用的时候，就会出现缺页补充了</p>
+<p>缓存页不仅仅会作为主要的数据页和索引页还有其他的一些页， 如：插入缓存页、undo页、自适应哈希索引、锁信息</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/innodb/bufferpool%E5%86%85%E5%AE%B9.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="buffer pool页表示"></p>
+<h3 id="查询一条记录，-就只需要缓冲一条记录吗？"><a href="#查询一条记录，-就只需要缓冲一条记录吗？" class="headerlink" title="查询一条记录， 就只需要缓冲一条记录吗？"></a>查询一条记录， 就只需要缓冲一条记录吗？</h3><p>肯定不是，刚才我们也说了，缓冲页对应着磁盘页的大小，所以每次查询一条记录，会把整个页都拿过来缓冲，再通过目录去查询记录</p>
+<h2 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h2><h3 id="为什么需要redo-log"><a href="#为什么需要redo-log" class="headerlink" title="为什么需要redo log?"></a>为什么需要redo log?</h3><p>刚才提到了在<code>Server</code>层和磁盘之间加上一个<code>buffer pool</code>，写进去的数据会先缓冲一下。看着似乎没什么问题，但是如果出现断电或者一些其他情况导致服务器宕机。那这个<code>buffer pool</code>缓冲的数据不都全寄了吗。</p>
+<p>所以为了保证数据不会丢失，当有一条记录需要更新的时候，<code>InnoDB</code>会把<code>buffer pool</code>的数据页进行修改，并标记为脏页。然后用<code>redo log</code> 记录一下命令。更新才算完成。之后<code>InnoDB</code> 会用后台线程将<code>Buffer pool</code>的数据写到磁盘中 即<code>WAL</code>技术</p>
+<p><code>WAL</code>技术即Write-Ahead-Logging。兵马未动粮草先行。先把日志写好，之后在后台将缓冲数据写入。这样即使是断点了，redo log 也已经保存在物理盘里了。下次启动redo 就行了</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/wal.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="WAL技术流程"></p>
+<h3 id="redo-log-是什么？"><a href="#redo-log-是什么？" class="headerlink" title="redo log 是什么？"></a>redo log 是什么？</h3><p>redo log 就是物理日志，它直接记录了怎么操作表空间的哪些记录。在事务提交时，只要先将redo log 持久化，就不需要去等buffer pool的内容持久化了</p>
+<p>如果系统不幸断电，redo log 也已经持久化，在重启mysql后就会进行恢复</p>
+<h3 id="被修改-Undo-页面，需要记录对应-redo-log-吗？"><a href="#被修改-Undo-页面，需要记录对应-redo-log-吗？" class="headerlink" title="被修改 Undo 页面，需要记录对应 redo log 吗？"></a>被修改 Undo 页面，需要记录对应 redo log 吗？</h3><p>需要的，任何从Server进入buffer pool中数据，都要生成redo log</p>
+<h3 id="redo-log-和-undo-log-区别在哪？"><a href="#redo-log-和-undo-log-区别在哪？" class="headerlink" title="redo log 和 undo log 区别在哪？"></a>redo log 和 undo log 区别在哪？</h3><p>redo log 是记录了完成后的记录状态。是为了持久化<br>undo log 是记录了更新前的记录状态。是为了原子性</p>
+<h3 id="redo-log-要写到磁盘，数据也要写磁盘，为什么要多此一举？"><a href="#redo-log-要写到磁盘，数据也要写磁盘，为什么要多此一举？" class="headerlink" title="redo log 要写到磁盘，数据也要写磁盘，为什么要多此一举？"></a>redo log 要写到磁盘，数据也要写磁盘，为什么要多此一举？</h3><p>redo log 是追加写，所以磁盘操作时顺序写，而直接写到磁盘，需要查各种偏移地址来让找写的位置。磁盘操作就是随机读写。这样的读写肯定效率低。会拖累mysql整体的性能，写入数据慢，而且极大的增加还出现断电数据丢失的可能性</p>
+<h3 id="redo-log-是直接写入数据的吗？"><a href="#redo-log-是直接写入数据的吗？" class="headerlink" title="redo log 是直接写入数据的吗？"></a>redo log 是直接写入数据的吗？</h3><p>并不是，redo log 本身也会使用一个buffer，每产生一个数据都会先加入buffer中，最后在写入到磁盘中</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/redologbuf.webp" alt="redo log buffer"></p>
+<h3 id="redo-log-什么时候刷盘？"><a href="#redo-log-什么时候刷盘？" class="headerlink" title="redo log 什么时候刷盘？"></a>redo log 什么时候刷盘？</h3><p>redo log什么时候写入到磁盘中</p>
+<ul>
+<li><code>Mysql</code>正常关闭</li>
+<li><code>redo log buffer</code> 记录大于<code>buffer</code>内存关键的一半时</li>
+<li>每隔一秒刷新一次</li>
+<li>事务提交会将<code>redo log</code> 存入（由<code>innodb_flush_log_at_trx_commit</code>控制）</li>
+</ul>
+<h4 id="innodb-flush-log-at-trx-commit-怎么进行控制的"><a href="#innodb-flush-log-at-trx-commit-怎么进行控制的" class="headerlink" title="innodb_flush_log_at_trx_commit 怎么进行控制的"></a>innodb_flush_log_at_trx_commit 怎么进行控制的</h4><p>三种模式</p>
+<ul>
+<li>0 事务提交后不刷入</li>
+<li>1 事务提交后直接存入并刷盘</li>
+<li>2 事务提交后交给写入redo log 文件，等待系统自动提交</li>
+</ul>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/innodb_flush_log_at_trx_commit.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="redo log 事务提交刷盘策略"></p>
+<h4 id="这三个参数的应用场景是什么？"><a href="#这三个参数的应用场景是什么？" class="headerlink" title="这三个参数的应用场景是什么？"></a>这三个参数的应用场景是什么？</h4><ul>
+<li>数据安全性：参数 1 &gt; 参数 2 &gt; 参数 0</li>
+<li>写入性能：参数 0 &gt; 参数 2&gt; 参数 1</li>
+</ul>
+<p>所以，数据安全性和写入性能是熊掌不可得兼的，要不追求数据安全性，牺牲性能；要不追求性能，牺牲数据安全性。</p>
+<h3 id="redoLog-会写满吗？"><a href="#redoLog-会写满吗？" class="headerlink" title="redoLog 会写满吗？"></a>redoLog 会写满吗？</h3><p>高并发的情况下是会的。redo log 默认情况是由两个文件循环写实现。如果buffer太多没有刷盘，会让redo log 写满整个环，这时候mysql 就会阻塞来把脏页数据给持久化。这时就可以清理redo log里的不需要的数据了</p>
+<h2 id="bin-log"><a href="#bin-log" class="headerlink" title="bin log"></a>bin log</h2><h3 id="什么是bin-log"><a href="#什么是bin-log" class="headerlink" title="什么是bin log?"></a>什么是bin log?</h3><p>undo log 和 redo log 都是innoDB引擎生成的。undo 保证原子性，redo 保证持久化</p>
+<p>bin log是做什么的呢。首先bin log 是在Server层中生成的。bin log会记录所有数据表结构变更及数据修改的情况, 但不会记录查询日志。</p>
+<h3 id="为什么有了bin-log-还要redo-log"><a href="#为什么有了bin-log-还要redo-log" class="headerlink" title="为什么有了bin log 还要redo log"></a>为什么有了bin log 还要redo log</h3><p>bin log 是mysql 以前版本留下来的，用来存储命令的。用来进行归档的日志存储系统。没有cache-safe的能力。所以在innoDB提出的时候就增加redo log</p>
+<h3 id="redo-log-和bin-log-的区别"><a href="#redo-log-和bin-log-的区别" class="headerlink" title="redo log 和bin log 的区别"></a>redo log 和bin log 的区别</h3><ol>
+<li><p>实现层不同</p>
+<ul>
+<li>bin log是在server层实现，所有Mysql版本都能使用</li>
+<li>redo log 仅在innoDB中使用</li>
+</ul>
+</li>
+<li><p>记录内容不同</p>
+<ul>
+<li>bin log 记录的是命令</li>
+<li>redo log 记录的直接修改某个位置的日志</li>
+</ul>
+</li>
+<li><p>读写方式不同</p>
+<ul>
+<li>bin log 是直接读写在文件中， 文件满了就换个文件读</li>
+<li>redo log 是循环读，需要不断刷新旧的日志</li>
+</ul>
+</li>
+<li><p>用途不同</p>
+<ul>
+<li>bin log 用于备份恢复，和主从复制， 保护整体数据</li>
+<li>redo log 用于掉电故障的恢复， 保护cache级数据</li>
+</ul>
+</li>
+</ol>
+<h3 id="如果不小心整个数据库的数据被删除了，能使用-redo-log-文件恢复数据吗？"><a href="#如果不小心整个数据库的数据被删除了，能使用-redo-log-文件恢复数据吗？" class="headerlink" title="如果不小心整个数据库的数据被删除了，能使用 redo log 文件恢复数据吗？"></a>如果不小心整个数据库的数据被删除了，能使用 redo log 文件恢复数据吗？</h3><p>不是redo log，应该是bin log</p>
+<p>redo log可能会擦除旧日志（因为它要保护的主要目标是buffer pool），bin log保存全量日志，且不会主动擦除</p>
+<h3 id="主从复制如何实现？"><a href="#主从复制如何实现？" class="headerlink" title="主从复制如何实现？"></a>主从复制如何实现？</h3><p>主从复制依赖于bin log。这个过程是异步的。主服务器不会管从服务器有没有写上。它只管用<code>log dump</code>线程发送就行</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="主从服务"></p>
+<p>简单说一下就是：</p>
+<ul>
+<li>写入binlog： 主服务在收到提交事务的请求后，会先写日志，在提交事务。更新存储引擎的数据，事务提交完成后，返回客户端操作成功</li>
+<li>同步binlog: 从库从I&#x2F;O线程连接log dump中的数据，接受binlog 日志，写入到自己的relay log日志中，并给主库返回一个响应</li>
+<li>回放binlog： 从库的SQL线程会进行一个回放，将relay log中的操作，重新执行一遍实现主从数据的一致性</li>
+</ul>
+<p>一般来说主从服务的部署是：<strong>主服务器写，从服务器读</strong><br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="主从复制"></p>
+<h4 id="从库越多越好吗？"><a href="#从库越多越好吗？" class="headerlink" title="从库越多越好吗？"></a>从库越多越好吗？</h4><p>不是， 从库越多，主库需要分担更多log dump线程去发送，资源消耗高</p>
+<h4 id="MySql-主从复制还有哪些模型"><a href="#MySql-主从复制还有哪些模型" class="headerlink" title="MySql 主从复制还有哪些模型?"></a>MySql 主从复制还有哪些模型?</h4><ul>
+<li>同步复制： 主服务器等待从服务器同步完成。性能较差，可能会影响业务的使用</li>
+<li>异步复制：默认情况，主库不管从库的数据拷贝情况，可能出现主库宕机，丢失数据的风险</li>
+<li>半同步复制：只要有一部分同步成功返回响应了，就可以保证同步成功了，结合了两者的优点</li>
+</ul>
+<h3 id="binlog-什么时候刷盘？"><a href="#binlog-什么时候刷盘？" class="headerlink" title="binlog 什么时候刷盘？"></a>binlog 什么时候刷盘？</h3><p>因为mysql 有事务的存在，一个事务的bin log是不能拆开的，所以mysql给每个线程都分配一个bin log cache 来记录事务的日志。这样每个事务就会隔离出来</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/binlogcache.drawio.png" alt="bin log 刷盘"></p>
+<p>这里write 是缓存，fsync 是存入磁盘。</p>
+<p>既然又有write又有fsync，同样的也存在性能和风险共存的情况</p>
+<p>mysql提供sync_binlog参数进行选择</p>
+<ul>
+<li>0： 只write， 由fsync决定什么时候写入</li>
+<li>n &gt; 0： 每次提交n个事务，进行fsync</li>
+</ul>
+<p>mysql 默认是0， 性能最高，风险最大</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://xiaolincoding.com/mysql/log">小林coding</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/Mysql-Lock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/15/Mysql-Lock/" class="post-title-link" itemprop="url">mysql锁介绍</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-15 21:32:56" itemprop="dateCreated datePublished" datetime="2023-09-15T21:32:56+08:00">2023-09-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-16 19:39:50" itemprop="dateModified" datetime="2023-09-16T19:39:50+08:00">2023-09-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/15/Mysql-Lock/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/15/Mysql-Lock/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Mysql-锁"><a href="#Mysql-锁" class="headerlink" title="Mysql 锁"></a>Mysql 锁</h1><p>现在后端对高并发的要求很高。当时暑期实习面腾讯云智、小米都被问到Redis怎么实现分布式锁。我当时寻思我写的是了解啊。</p>
+<p>不吹水了，看看Mysql的锁机制怎么实现（内容参考小林Coding）</p>
+<h2 id="全局锁"><a href="#全局锁" class="headerlink" title="全局锁"></a>全局锁</h2><p>全局锁就是将mysql整个数据库锁住（很暴力）</p>
+<h3 id="全局锁怎么用的？"><a href="#全局锁怎么用的？" class="headerlink" title="全局锁怎么用的？"></a>全局锁怎么用的？</h3><p>要使用全局锁，需要执行这个命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush tables with read lock</span><br></pre></td></tr></table></figure>
+
+<p>整个数据库会进入只读状态<br>任何增、删、改的操作都会被阻塞</p>
+<p>解锁使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unlock tables</span><br></pre></td></tr></table></figure>
+
+<p>还有一种解锁方法，是命令发起者的会话断开</p>
+<h3 id="全局锁的应用场景是什么？"><a href="#全局锁的应用场景是什么？" class="headerlink" title="全局锁的应用场景是什么？"></a>全局锁的应用场景是什么？</h3><p>全局锁一般用在全局备份上, 因为此时数据在备份是无法在一瞬间备份的。万一头尾数据存在一致性关联。可能会出现头备份完成，尾部修改导致的数据不一致</p>
+<h3 id="加全局锁的缺点是什么？"><a href="#加全局锁的缺点是什么？" class="headerlink" title="加全局锁的缺点是什么？"></a>加全局锁的缺点是什么？</h3><p>全局锁，意味着整个数据库是只读状态。这样只能读不能写，一定情况下会影响业务。</p>
+<h3 id="除了加全局锁备份，还有其他备份方式吗？"><a href="#除了加全局锁备份，还有其他备份方式吗？" class="headerlink" title="除了加全局锁备份，还有其他备份方式吗？"></a>除了加全局锁备份，还有其他备份方式吗？</h3><p><code>MVCC</code>后面会介绍到，<code>Mysql</code>的灵魂。通过<code>ReadView</code>进行备份</p>
+<p>如何操作？</p>
+<p>使用<code>mysqldump</code>工具，在使用<code>mysqldump</code>时加上<code>–single-transaction</code> 参数的时候，就会在备份数据库之前先开启事务。</p>
+<h2 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h2><h3 id="Mysql表级锁有哪些？具体怎么用的"><a href="#Mysql表级锁有哪些？具体怎么用的" class="headerlink" title="Mysql表级锁有哪些？具体怎么用的"></a>Mysql表级锁有哪些？具体怎么用的</h3><p>Mysql表级锁大概有四个</p>
+<ul>
+<li>表锁</li>
+<li>元数据锁</li>
+<li>意向锁</li>
+<li>AUTO-INC锁</li>
+</ul>
+<h4 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h4><p>表锁就是加在整个表的锁</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 读锁</span><br><span class="line">lock table t_student read;</span><br><span class="line">// 写锁</span><br><span class="line">lock table t_student write;</span><br><span class="line"></span><br><span class="line">// 释放当前会话的锁</span><br><span class="line">unlock tables</span><br></pre></td></tr></table></figure>
+
+<h4 id="元数据锁"><a href="#元数据锁" class="headerlink" title="元数据锁"></a>元数据锁</h4><p>首先要知道什么是元数据呢？</p>
+<p>元数据（Metadata）是关于数据的数据，它提供了关于数据的描述、定义和管理信息。元数据通常用于帮助组织、理解、搜索和管理数据（数据库对象结构、表、索引等）</p>
+<p>所以元数据锁的出现就是为了保证用户在对表执行CRUD操作时，防止其他线程对这个表结构进行了更改</p>
+<p>一般来说，我们不需要显示的去调用</p>
+<ul>
+<li>变更结构 加写锁</li>
+<li>CRUD 加读锁</li>
+</ul>
+<p>当执行Select时语句时会加MDL读锁，接下来所有结构更变操作都会被阻塞<br>当执行结构更变操作时，所有的CRUD也会被阻塞</p>
+<h4 id="MDL不会显示调用，那什么时候会释放？"><a href="#MDL不会显示调用，那什么时候会释放？" class="headerlink" title="MDL不会显示调用，那什么时候会释放？"></a>MDL不会显示调用，那什么时候会释放？</h4><p>MDL 是在事务提交后释放，事务执行期间，MDL是一直持续的</p>
+<p>但是事务过长可能也会导致一些异常</p>
+<p>举个例子</p>
+<ol>
+<li>线程A启动事务，执行一个Select语句，此时开启了读锁，且不提交事务，所也就不会释放</li>
+<li>线程B这时候执行Select语句则不会被阻塞</li>
+<li>线程C修改表字段，此时又要加写锁，但又申请不到写锁，就会阻塞</li>
+<li>此时C的写锁阻塞会导致之后不管是写锁还是读锁都会阻塞</li>
+</ol>
+<h4 id="为什么线程-C-因为申请不到-MDL-写锁，而导致后续的申请读锁的查询操作也会被阻塞？"><a href="#为什么线程-C-因为申请不到-MDL-写锁，而导致后续的申请读锁的查询操作也会被阻塞？" class="headerlink" title="为什么线程 C 因为申请不到 MDL 写锁，而导致后续的申请读锁的查询操作也会被阻塞？"></a>为什么线程 C 因为申请不到 MDL 写锁，而导致后续的申请读锁的查询操作也会被阻塞？</h4><p>因为申请MDL锁的操作是一个队列，且队列中写锁的优先级更高，一旦申请不到写锁，按照排序来说，必须要等到写锁申请到后面的读锁才能申请。这里设计到一些饥饿锁的知识</p>
+<p>所以安全的操作结构的方法，是在做表结构更变时看看是不是存在长事务MDL锁，有的话可以Kill掉。让它一会再查</p>
+<h3 id="意向锁"><a href="#意向锁" class="headerlink" title="意向锁"></a>意向锁</h3><h4 id="意向锁是什么？"><a href="#意向锁是什么？" class="headerlink" title="意向锁是什么？"></a>意向锁是什么？</h4><p>当执行插入、更新、删除操作，需要先对表加上一个意向锁。</p>
+<p>注意Select一般情况下是不会加锁的，因为Select走的是MVCC</p>
+<p>也可以强行操作让Select走意向锁</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//先在表上加上意向共享锁，然后对读取的记录加共享锁</span><br><span class="line">select ... lock in share mode;</span><br><span class="line"></span><br><span class="line">//先表上加上意向独占锁，然后对读取的记录加独占锁</span><br><span class="line">select ... for update;</span><br></pre></td></tr></table></figure>
+
+<h4 id="为什么设置意向锁？"><a href="#为什么设置意向锁？" class="headerlink" title="为什么设置意向锁？"></a>为什么设置意向锁？</h4><p>意向锁主要是和表锁发生冲突，mysql为了判断一个表内有没有加锁，使用意向锁进行快速查找</p>
+<h4 id="AUTO-INC锁"><a href="#AUTO-INC锁" class="headerlink" title="AUTO-INC锁"></a>AUTO-INC锁</h4><p>innoDB早期版本，使用的这种锁，在<code>AUTO_INCREMENT</code>字段自增时会加入进去，会在整个语句执行完毕后释放锁</p>
+<p>现在版本使用的是一种轻量锁，这种轻量的锁会在自增字段值赋值完毕后，马上就释放了</p>
+<p>但是这种方法虽然更快一点。也会有些缺点。在主从复制模式下。如果出现下面这个场景就会出现异常</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/innodb_autoinc_lock_mode=2.png" alt="主从复制异常"></p>
+<p>看最后一行，可能出现如下情况</p>
+<ul>
+<li>sessionB 加入两个值</li>
+<li>此时sessionA 也加入了一个值</li>
+<li>sessionB 把剩余的值加入</li>
+</ul>
+<p>可以看到这个id是不连续的。如果<code>binlog</code>记录的是原始语句那么这个自增字段可能就会不一样。解决方法是将<code>inlog_format</code>设置为row，binlog就会记录主库分配的自增值</p>
+<h2 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h2><p><code>InnoDB</code> 引擎是支持行级锁的，而 <code>MyISAM</code> 引擎并不支持行级锁。</p>
+<p>如果加行锁了后，同时也会在表级加意向锁</p>
+<ul>
+<li>Record Lock 记录锁</li>
+<li>Gap Lock 间隙锁</li>
+<li>Next-Key Lock 临键锁</li>
+</ul>
+<h3 id="Record-Lock"><a href="#Record-Lock" class="headerlink" title="Record Lock"></a>Record Lock</h3><p>就是X和S两种情况的兼容，比较容易理解</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/%E8%AE%B0%E5%BD%95%E9%94%81.drawio.png" alt="记录锁"></p>
+<h3 id="Gap-Lock"><a href="#Gap-Lock" class="headerlink" title="Gap Lock"></a>Gap Lock</h3><p>间隙锁为了防止出现幻读。二者不互斥</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/gap%E9%94%81.drawio.png" alt="间隙锁"></p>
+<h3 id="Next-Key-Lock-临键锁"><a href="#Next-Key-Lock-临键锁" class="headerlink" title="Next-Key Lock 临键锁"></a>Next-Key Lock 临键锁</h3><p>是 Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/%E4%B8%B4%E9%94%AE%E9%94%81.drawio.png" alt="临键锁"></p>
+<p>会出现XS兼容问题</p>
+<h3 id="插入意向锁"><a href="#插入意向锁" class="headerlink" title="插入意向锁"></a>插入意向锁</h3><p>一个事务在插入一条记录的时候，需要判断插入位置是否已被其他事务加了间隙锁（next-key lock 也包含间隙锁）。<br>如果有的话，插入操作就会发生阻塞，直到拥有间隙锁的那个事务提交为止（释放间隙锁的时刻），在此期间会生成一个插入意向锁，表明有事务想在某个区间插入新记录，但是现在处于等待状态。（车票中的候补票。）</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://xiaolincoding.com/mysql/lock/mysql_lock.html#%E5%85%A8%E5%B1%80%E9%94%81">小林coding</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/funplus-exam/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -697,20 +1197,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

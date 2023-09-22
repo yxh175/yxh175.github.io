@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一面总共分为三个环节  自我介绍 简历提问 算法考查  自我介绍首先自我介绍了一下 提问环节先是问一下比较基础的八股，然后逐渐变难的 IP层有哪些协议？ DNS 用来根据域名进行网络查询 ARP 根据IP查询点之间的mac地址 DHCP 自动分配IP地址 NAT 私有地址转换为外网地址 ICMP 确认IP包是否成功送达到目标地址 IGMP  讲一下TCP的三次握手TCP三次握手即客户端和服务端连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面经：金山办公服务端开发">
+<meta property="og:url" content="http://example.com/2023/09/22/Interview-experience-KingSoft-WPS/index.html">
+<meta property="og:site_name" content="鼠鼠的随笔">
+<meta property="og:description" content="一面总共分为三个环节  自我介绍 简历提问 算法考查  自我介绍首先自我介绍了一下 提问环节先是问一下比较基础的八股，然后逐渐变难的 IP层有哪些协议？ DNS 用来根据域名进行网络查询 ARP 根据IP查询点之间的mac地址 DHCP 自动分配IP地址 NAT 私有地址转换为外网地址 ICMP 确认IP包是否成功送达到目标地址 IGMP  讲一下TCP的三次握手TCP三次握手即客户端和服务端连接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3df5d4f14311450dada8f4d6da82b896~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5b7c21037ed401292ec01aadfd906ea~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp">
+<meta property="article:published_time" content="2023-09-22T04:56:12.000Z">
+<meta property="article:modified_time" content="2023-09-22T10:59:53.600Z">
+<meta property="article:author" content="yxh">
+<meta property="article:tag" content="面经">
+<meta property="article:tag" content="服务端开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3df5d4f14311450dada8f4d6da82b896~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp">
+
+<link rel="canonical" href="http://example.com/2023/09/22/Interview-experience-KingSoft-WPS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>面经：金山办公服务端开发 | 鼠鼠的随笔</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">鼠鼠的随笔</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/22/Interview-experience-KingSoft-WPS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          面经：金山办公服务端开发
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-22 12:56:12 / 修改时间：18:59:53" itemprop="dateCreated datePublished" datetime="2023-09-22T12:56:12+08:00">2023-09-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%A2%E7%BB%8F/" itemprop="url" rel="index"><span itemprop="name">面经</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/22/Interview-experience-KingSoft-WPS/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/22/Interview-experience-KingSoft-WPS/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一面"><a href="#一面" class="headerlink" title="一面"></a>一面</h2><p>总共分为三个环节</p>
+<ul>
+<li>自我介绍</li>
+<li>简历提问</li>
+<li>算法考查</li>
+</ul>
+<h3 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h3><p>首先自我介绍了一下</p>
+<h3 id="提问环节"><a href="#提问环节" class="headerlink" title="提问环节"></a>提问环节</h3><p>先是问一下比较基础的八股，然后逐渐变难的</p>
+<h4 id="IP层有哪些协议？"><a href="#IP层有哪些协议？" class="headerlink" title="IP层有哪些协议？"></a>IP层有哪些协议？</h4><ul>
+<li>DNS 用来根据域名进行网络查询</li>
+<li>ARP 根据IP查询点之间的mac地址</li>
+<li>DHCP 自动分配IP地址</li>
+<li>NAT 私有地址转换为外网地址</li>
+<li>ICMP 确认IP包是否成功送达到目标地址</li>
+<li>IGMP</li>
+</ul>
+<h4 id="讲一下TCP的三次握手"><a href="#讲一下TCP的三次握手" class="headerlink" title="讲一下TCP的三次握手"></a>讲一下TCP的三次握手</h4><p>TCP三次握手即客户端和服务端连接时，两个者进行三次沟通的过程</p>
+<ul>
+<li>客户端发送SYNC + 随机seq序列号X</li>
+<li>服务端监听到后回复ACK+SYNC ACK num&#x3D; X+1 SeqNum &#x3D; Y </li>
+<li>客户端收到后， 回复ACK Ack num &#x3D; Y+1</li>
+</ul>
+<h4 id="为什么TCP连接要有seq序列号？"><a href="#为什么TCP连接要有seq序列号？" class="headerlink" title="为什么TCP连接要有seq序列号？"></a>为什么TCP连接要有seq序列号？</h4><ul>
+<li>在TCP三次握手中保证了三次握手检查，不会有历史连接干扰</li>
+<li>在传输时能进行报文的控制，方便进行拥塞控制、丢失重传、流量控制</li>
+</ul>
+<h4 id="讲一下四次挥手"><a href="#讲一下四次挥手" class="headerlink" title="讲一下四次挥手"></a>讲一下四次挥手</h4><p>TCP 四次挥手是客户端和服务端断开，进行的一个操作，保证TCP连接的正常断开</p>
+<p>假设客户端主动关闭的时候</p>
+<ul>
+<li>客户端发送FIN请求 seq &#x3D; x、ack &#x3D; y</li>
+<li>服务端收到FIN请求，回复ACK seq &#x3D; y 、ack &#x3D; x+1，进入Close_Wait并结束进程，进行最后的资源释放</li>
+<li>等资源处理完毕后，发送FIN seq &#x3D; y、ack &#x3D; x + 1</li>
+<li>此时客户端会进入Time_Wait状态发送ACK  seq &#x3D; x + 1， ack &#x3D; y + 1</li>
+</ul>
+<p>发送成功后，两者就进行了正常关闭</p>
+<h4 id="为什么要有Time-Wait状态？"><a href="#为什么要有Time-Wait状态？" class="headerlink" title="为什么要有Time_Wait状态？"></a>为什么要有Time_Wait状态？</h4><ul>
+<li>防止历史连接的数据影响新的连接，要让本次报文中的数据尽可能的在网络中消失掉。</li>
+<li>保证被关闭的一方能够正确的关闭，多次监听服务端的消息，如果服务端再次发送关闭请求到客户端，说明自己的发送失败了。需要确保对方成功关闭</li>
+</ul>
+<h4 id="HTTP协议中一般有哪些状态码"><a href="#HTTP协议中一般有哪些状态码" class="headerlink" title="HTTP协议中一般有哪些状态码"></a>HTTP协议中一般有哪些状态码</h4><ul>
+<li>1XX 属于提示信息，协议处理的中间态，一般用到的比较少</li>
+<li>2XX 表示成功处理客户端的请求，是我们最想看到的如：200、204</li>
+<li>3XX 表示资源发生了变动，如：301、302、304</li>
+<li>4XX 表示客户端发送的报文有误如 404 资源不存在</li>
+<li>5XX 表示服务端内部异常 如 500、501、502、503</li>
+</ul>
+<h4 id="499-状态码是做什么的有了解吗？"><a href="#499-状态码是做什么的有了解吗？" class="headerlink" title="499 状态码是做什么的有了解吗？"></a>499 状态码是做什么的有了解吗？</h4><p>这个没答上来。回答了说平时只了解过40x左右的。开发的时候没怎么见过</p>
+<p>随后搜索：<br>499， Client Closed Request<br>这个表示客户端主动断开连接<br>是指一次http请求在客户端指定的时间内没有返回响应，此时客户端会主动断开连接，此时表象为客户端无响应返回，而nginx的日志会status code 499</p>
+<h4 id="讲一下HTTPS的协议？"><a href="#讲一下HTTPS的协议？" class="headerlink" title="讲一下HTTPS的协议？"></a>讲一下HTTPS的协议？</h4><p>HTTPS 是基于HTTP的明文传输与不安全。所以在TCP三次握手后增加了TSL层作数据安全性的保证，通过TSL四次握手进行对称密钥的生成，实现对话过程中的加密。HTTPS可以保证主要用来保证信息的机密性、摘要算法的方式实现完整性、数字证书解决被冒充的方法</p>
+<h4 id="HTTPS-能被抓包吗？"><a href="#HTTPS-能被抓包吗？" class="headerlink" title="HTTPS 能被抓包吗？"></a>HTTPS 能被抓包吗？</h4><p>我理解错了他的意思，以为问的是HTTPS能被窃听吗，所以回答成了：在保证对话密钥不被窃取，证书没有伪造的情况下。是不会被抓包的</p>
+<p>理论答案：<br>可以通过抓包调试，通过抓包工具，并在手机中放好证书。保证系统能使用这个证书的情况下，就可以抓取到Https的内容</p>
+<h4 id="有没有用过HTTPS抓包？"><a href="#有没有用过HTTPS抓包？" class="headerlink" title="有没有用过HTTPS抓包？"></a>有没有用过HTTPS抓包？</h4><p>当时脑子抽抽了，以为把抓包的意思理解错了，说没有T-T 实际上还是有的</p>
+<p>正确回答：<br>通过抓包工具，把证书下载好，设置拦截端口号并拦截所发送的请求。即可得到解密后的包</p>
+<h4 id="Golang-的GMP调度模式？"><a href="#Golang-的GMP调度模式？" class="headerlink" title="Golang 的GMP调度模式？"></a>Golang 的GMP调度模式？</h4><p>可以参考这篇文档<a target="_blank" rel="noopener" href="https://juejin.cn/post/7044741465930465311">Go GMP</a>的图解，讲的非常清楚。为了方便，我就直接用他的图了</p>
+<p>golang 的GMP调度老生常谈了</p>
+<ul>
+<li>G goroutine 代表程序中的协程</li>
+<li>M machine 代表内核线程</li>
+<li>P process 代表处理器</li>
+</ul>
+<p>P 会有一些本地队列，根据MAXPROCES 确定P的数量，P本地有个本地队列，用来存放协程。通过调用M来使用协程能够在M上运行。这样能保证M的线程能够多次复用，而且更加轻量。<br>为了保证协程资源分配的均匀提出了两个机制</p>
+<ul>
+<li>hand off 机制当本地线程M1因为G进行的系统调用阻塞时，线程释放绑定的P， 把P转移给其他空闲的M0执行</li>
+</ul>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3df5d4f14311450dada8f4d6da82b896~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt="hand off 机制"></p>
+<ul>
+<li>work stealing 机制</li>
+</ul>
+<p>当本线程无G可运行时，从其他线程绑定的P窃取G，而不是直接销毁线程</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5b7c21037ed401292ec01aadfd906ea~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt="work stealing 机制"></p>
+<h4 id="怎么保证一个协程能一直占用一个CPU？"><a href="#怎么保证一个协程能一直占用一个CPU？" class="headerlink" title="怎么保证一个协程能一直占用一个CPU？"></a>怎么保证一个协程能一直占用一个CPU？</h4><p>加自旋锁让协程一直占用CPU。</p>
+<h4 id="golang-怎么保证多个协程对int64进行增加不异常？"><a href="#golang-怎么保证多个协程对int64进行增加不异常？" class="headerlink" title="golang 怎么保证多个协程对int64进行增加不异常？"></a>golang 怎么保证多个协程对int64进行增加不异常？</h4><ul>
+<li>sync.Mutex 互斥锁</li>
+<li>sync.RWMutex 读写锁</li>
+<li>Atomic.AddInt64() CAS锁</li>
+</ul>
+<h4 id="看你写了JAVA，-问你一点JAVA？"><a href="#看你写了JAVA，-问你一点JAVA？" class="headerlink" title="看你写了JAVA， 问你一点JAVA？"></a>看你写了JAVA， 问你一点JAVA？</h4><p>直接说不会T-T，学的皮毛，遂跳过</p>
+<h4 id="Mysql-索引结构是什么样的？"><a href="#Mysql-索引结构是什么样的？" class="headerlink" title="Mysql 索引结构是什么样的？"></a>Mysql 索引结构是什么样的？</h4><p>B+树，是一种m度的树。它的特点就是在非叶子节点不会存放值。并且所有的值都会存放在叶子节点上，并用双向链表进行连接</p>
+<h4 id="为什么要用B-树做索引"><a href="#为什么要用B-树做索引" class="headerlink" title="为什么要用B+树做索引"></a>为什么要用B+树做索引</h4><ul>
+<li>插入和删除效率</li>
+<li>范围查询更加方便</li>
+</ul>
+<h4 id="怎么用redis实现一个分布式锁？"><a href="#怎么用redis实现一个分布式锁？" class="headerlink" title="怎么用redis实现一个分布式锁？"></a>怎么用redis实现一个分布式锁？</h4><p>通过Set NX PX&#x2F;EX 两个字段保证分布式锁只有一个能加和超时自动清楚</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET lock_key unique_value NX PX 10000 </span><br></pre></td></tr></table></figure>
+
+<h4 id="怎么删除这个分布式锁？"><a href="#怎么删除这个分布式锁？" class="headerlink" title="怎么删除这个分布式锁？"></a>怎么删除这个分布式锁？</h4><p>通过判断lock_key value 是否是一个客户端。要保证执行操作的客户端就是加锁的客户端，所以解锁的时候要先判断 unique_value是否是当前客户端，是的话就删除锁</p>
+<h4 id="怎么保证原子性？"><a href="#怎么保证原子性？" class="headerlink" title="怎么保证原子性？"></a>怎么保证原子性？</h4><p>通过Lua脚本实现</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 释放锁时，先比较 unique_value 是否相等，避免锁的误释放</span><br><span class="line"><span class="keyword">if</span> redis.call(<span class="string">&quot;get&quot;</span>,KEYS[<span class="number">1</span>]) == ARGV[<span class="number">1</span>] <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> redis.call(<span class="string">&quot;del&quot;</span>,KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Redis-有Stop-The-World的发生吗？"><a href="#Redis-有Stop-The-World的发生吗？" class="headerlink" title="Redis 有Stop The World的发生吗？"></a>Redis 有Stop The World的发生吗？</h4><p>刚开始听说STW以为是听错了。我说Redis没有STW的发生。他问一下我确定吗，Redis毕竟是一个单线程的。我一听就问他说的是不是主线程阻塞的问题。他说是就开始回答正常八股了</p>
+<p>Redis 主线程会被大Key：Value阻塞主线程。因为在写日志的时候，大Key 导致的刷盘时间长，从而阻塞了主进程。这里<a target="_blank" rel="noopener" href="https://xiaolincoding.com/redis/storage/bigkey_aof_rdb.html#%E5%A4%A7-key-%E5%AF%B9-aof-%E9%87%8D%E5%86%99%E5%92%8C-rdb-%E7%9A%84%E5%BD%B1%E5%93%8D">小林coding</a>讲的很详细</p>
+<hr>
+<p>这里八股就问差不多了，然后就问一些简单的算法题，只需要说思路就行</p>
+<h4 id="100-个-10万数据的顺序表，怎么合并成一个新的顺序表？"><a href="#100-个-10万数据的顺序表，怎么合并成一个新的顺序表？" class="headerlink" title="100 个 10万数据的顺序表，怎么合并成一个新的顺序表？"></a>100 个 10万数据的顺序表，怎么合并成一个新的顺序表？</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/merge-sorted-array/">合并两个有序数组</a>，直接说了，问是什么时间复杂度<br>O（100n） ？</p>
+<p>不是太确定，说是对的</p>
+<h4 id="长URL-映射到短URL"><a href="#长URL-映射到短URL" class="headerlink" title="长URL 映射到短URL"></a>长URL 映射到短URL</h4><p>刚开始不知道问的什么意思，说了半天也没理解，最后问了答案才知道是啥意思。<br>就是一个长URL通过62位编码转换成短URL，网上有相关的解释，不放了</p>
+<h4 id="问项目、问实习"><a href="#问项目、问实习" class="headerlink" title="问项目、问实习"></a>问项目、问实习</h4><p>这里还行，挖的不是很深，感觉面试官只要觉得这里你是懂得就不深究，很松。</p>
+<h3 id="反问"><a href="#反问" class="headerlink" title="反问"></a>反问</h3><h4 id="第二题是什么意思？答案是什么"><a href="#第二题是什么意思？答案是什么" class="headerlink" title="第二题是什么意思？答案是什么"></a>第二题是什么意思？答案是什么</h4><h4 id="部门的技术栈是Golang吗？"><a href="#部门的技术栈是Golang吗？" class="headerlink" title="部门的技术栈是Golang吗？"></a>部门的技术栈是Golang吗？</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E7%BB%8F/" rel="tag"># 面经</a>
+              <a href="/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%BC%80%E5%8F%91/" rel="tag"># 服务端开发</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/21/go-complicate-interview-key-point/" rel="prev" title="GO：并发编程 面试重点">
+      <i class="fa fa-chevron-left"></i> GO：并发编程 面试重点
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">一面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">自我介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E9%97%AE%E7%8E%AF%E8%8A%82"><span class="nav-number">1.2.</span> <span class="nav-text">提问环节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E5%B1%82%E6%9C%89%E5%93%AA%E4%BA%9B%E5%8D%8F%E8%AE%AE%EF%BC%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">IP层有哪些协议？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%B2%E4%B8%80%E4%B8%8BTCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">讲一下TCP的三次握手</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E8%BF%9E%E6%8E%A5%E8%A6%81%E6%9C%89seq%E5%BA%8F%E5%88%97%E5%8F%B7%EF%BC%9F"><span class="nav-number">1.2.3.</span> <span class="nav-text">为什么TCP连接要有seq序列号？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%B2%E4%B8%80%E4%B8%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">1.2.4.</span> <span class="nav-text">讲一下四次挥手</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89Time-Wait%E7%8A%B6%E6%80%81%EF%BC%9F"><span class="nav-number">1.2.5.</span> <span class="nav-text">为什么要有Time_Wait状态？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E4%B8%80%E8%88%AC%E6%9C%89%E5%93%AA%E4%BA%9B%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-number">1.2.6.</span> <span class="nav-text">HTTP协议中一般有哪些状态码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#499-%E7%8A%B6%E6%80%81%E7%A0%81%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84%E6%9C%89%E4%BA%86%E8%A7%A3%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.7.</span> <span class="nav-text">499 状态码是做什么的有了解吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%B2%E4%B8%80%E4%B8%8BHTTPS%E7%9A%84%E5%8D%8F%E8%AE%AE%EF%BC%9F"><span class="nav-number">1.2.8.</span> <span class="nav-text">讲一下HTTPS的协议？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS-%E8%83%BD%E8%A2%AB%E6%8A%93%E5%8C%85%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.9.</span> <span class="nav-text">HTTPS 能被抓包吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E6%B2%A1%E6%9C%89%E7%94%A8%E8%BF%87HTTPS%E6%8A%93%E5%8C%85%EF%BC%9F"><span class="nav-number">1.2.10.</span> <span class="nav-text">有没有用过HTTPS抓包？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Golang-%E7%9A%84GMP%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%BC%8F%EF%BC%9F"><span class="nav-number">1.2.11.</span> <span class="nav-text">Golang 的GMP调度模式？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E4%B8%80%E4%B8%AA%E5%8D%8F%E7%A8%8B%E8%83%BD%E4%B8%80%E7%9B%B4%E5%8D%A0%E7%94%A8%E4%B8%80%E4%B8%AACPU%EF%BC%9F"><span class="nav-number">1.2.12.</span> <span class="nav-text">怎么保证一个协程能一直占用一个CPU？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#golang-%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E5%A4%9A%E4%B8%AA%E5%8D%8F%E7%A8%8B%E5%AF%B9int64%E8%BF%9B%E8%A1%8C%E5%A2%9E%E5%8A%A0%E4%B8%8D%E5%BC%82%E5%B8%B8%EF%BC%9F"><span class="nav-number">1.2.13.</span> <span class="nav-text">golang 怎么保证多个协程对int64进行增加不异常？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%8B%E4%BD%A0%E5%86%99%E4%BA%86JAVA%EF%BC%8C-%E9%97%AE%E4%BD%A0%E4%B8%80%E7%82%B9JAVA%EF%BC%9F"><span class="nav-number">1.2.14.</span> <span class="nav-text">看你写了JAVA， 问你一点JAVA？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mysql-%E7%B4%A2%E5%BC%95%E7%BB%93%E6%9E%84%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="nav-number">1.2.15.</span> <span class="nav-text">Mysql 索引结构是什么样的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8B-%E6%A0%91%E5%81%9A%E7%B4%A2%E5%BC%95"><span class="nav-number">1.2.16.</span> <span class="nav-text">为什么要用B+树做索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%94%A8redis%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%9F"><span class="nav-number">1.2.17.</span> <span class="nav-text">怎么用redis实现一个分布式锁？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%88%A0%E9%99%A4%E8%BF%99%E4%B8%AA%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%9F"><span class="nav-number">1.2.18.</span> <span class="nav-text">怎么删除这个分布式锁？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%9F"><span class="nav-number">1.2.19.</span> <span class="nav-text">怎么保证原子性？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-%E6%9C%89Stop-The-World%E7%9A%84%E5%8F%91%E7%94%9F%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.20.</span> <span class="nav-text">Redis 有Stop The World的发生吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#100-%E4%B8%AA-10%E4%B8%87%E6%95%B0%E6%8D%AE%E7%9A%84%E9%A1%BA%E5%BA%8F%E8%A1%A8%EF%BC%8C%E6%80%8E%E4%B9%88%E5%90%88%E5%B9%B6%E6%88%90%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E9%A1%BA%E5%BA%8F%E8%A1%A8%EF%BC%9F"><span class="nav-number">1.2.21.</span> <span class="nav-text">100 个 10万数据的顺序表，怎么合并成一个新的顺序表？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%BFURL-%E6%98%A0%E5%B0%84%E5%88%B0%E7%9F%ADURL"><span class="nav-number">1.2.22.</span> <span class="nav-text">长URL 映射到短URL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A1%B9%E7%9B%AE%E3%80%81%E9%97%AE%E5%AE%9E%E4%B9%A0"><span class="nav-number">1.2.23.</span> <span class="nav-text">问项目、问实习</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E9%97%AE"><span class="nav-number">1.3.</span> <span class="nav-text">反问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F%E7%AD%94%E6%A1%88%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.1.</span> <span class="nav-text">第二题是什么意思？答案是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E9%97%A8%E7%9A%84%E6%8A%80%E6%9C%AF%E6%A0%88%E6%98%AFGolang%E5%90%97%EF%BC%9F"><span class="nav-number">1.3.2.</span> <span class="nav-text">部门的技术栈是Golang吗？</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yxh"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">yxh</p>
+  <div class="site-description" itemprop="description">鼠鼠我呀要努力啦</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yxh</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'aXkNqUKnMUGvI43o5733DET4-MdYXbMMI',
+      appKey     : '9cXqMO3WNRAbkxYpxyHQILyb',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
