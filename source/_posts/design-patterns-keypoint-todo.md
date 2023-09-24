@@ -16,3 +16,69 @@ tags:
 
 - 饿汉式： 程序启动时就`init()`中创建好实例，不用考虑多线程下并发调用的问题
 - 懒汉式： 等需要调用时，在创建实例，需要**考虑多线程的会创建多个实例的异常情况**
+
+
+所以不难看出难点在于懒汉式的实现。在go中有很优雅的实现方法`sync.Once` 实现单例模式
+
+创建文件
+`instance.go` 
+```go
+package pattern_test
+
+import "sync"
+
+type Instance struct {
+	Core string
+}
+
+var instance *Instance
+var once sync.Once
+
+func GetInstance() *Instance {
+	once.Do(func() {
+		instance = &Instance{
+			Core: "first heart",
+		}
+	})
+	return instance
+}
+
+```
+
+`sync.Once` 保证可以保证全局中只使用一次
+
+创建文件
+`instance_test.go` 用来测试
+
+```go
+package pattern_test
+
+import (
+	"fmt"
+	"testing"
+)
+
+func TestInstance(t *testing.T) {
+	instance := GetInstance()
+
+	fmt.Println(instance.Core)
+	instance.Core = "second heart"
+
+	instance = GetInstance()
+	fmt.Println(instance.Core)
+}
+
+```
+
+运行测试符合预期
+
+```txt
+=== RUN   TestInstance
+first heart
+second heart
+--- PASS: TestInstance (0.00s)
+PASS
+ok      go_study/pattern_test   0.248s
+```
+
+所以`go`实现懒汉模式还是很方便的
