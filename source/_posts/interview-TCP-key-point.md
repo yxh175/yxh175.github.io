@@ -101,3 +101,16 @@ TCP 是有可选选项字段的
 可以，操作系统存在两种传输协议，两种协议在内核种使用了两种软件模块
 
 ![传输层](https://cdn.xiaolincoding.com/gh/xiaolincoder/network/port/tcp%E5%92%8Cudp%E6%A8%A1%E5%9D%97.jpeg)
+
+网络层会根据报文的头按照两种协议，分别传给UDP模块和TCP模块，两者最后传输给两类端口
+
+## TCP连接建立
+
+### TCP 怎么建立三次握手？
+
+![三次握手](https://img1.imgtp.com/2023/09/26/brzne9QG.png)
+
+- 客户端发送SYN 及序列号 X， 进入SYN_SENT 此时不收到ACK就会超时重传
+- 服务端收到后回复 ACK 及 seq = Y 及 Ack NUM = X+1 进入 SYN_RCVD
+- 客服端收到后，会发送ACK ack = Y + 1 创建完成， 服务端收到后也会创建完成
+
