@@ -780,7 +780,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-26 21:39:01" itemprop="dateModified" datetime="2023-09-26T21:39:01+08:00">2023-09-26</time>
+                <time title="修改时间：2023-09-26 21:54:27" itemprop="dateModified" datetime="2023-09-26T21:54:27+08:00">2023-09-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -877,6 +877,13 @@
 <h4 id="为什么TCP-有首部长度，UDP没有？"><a href="#为什么TCP-有首部长度，UDP没有？" class="headerlink" title="为什么TCP 有首部长度，UDP没有？"></a>为什么TCP 有首部长度，UDP没有？</h4><p>UDP是固定的<br>TCP 是有可选选项字段的</p>
 <h3 id="TCP-和UDP-能共用字段吗？-为什么？"><a href="#TCP-和UDP-能共用字段吗？-为什么？" class="headerlink" title="TCP 和UDP 能共用字段吗？ 为什么？"></a>TCP 和UDP 能共用字段吗？ 为什么？</h3><p>可以，操作系统存在两种传输协议，两种协议在内核种使用了两种软件模块</p>
 <p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/network/port/tcp%E5%92%8Cudp%E6%A8%A1%E5%9D%97.jpeg" alt="传输层"></p>
+<p>网络层会根据报文的头按照两种协议，分别传给UDP模块和TCP模块，两者最后传输给两类端口</p>
+<h2 id="TCP连接建立"><a href="#TCP连接建立" class="headerlink" title="TCP连接建立"></a>TCP连接建立</h2><h3 id="TCP-怎么建立三次握手？"><a href="#TCP-怎么建立三次握手？" class="headerlink" title="TCP 怎么建立三次握手？"></a>TCP 怎么建立三次握手？</h3><p><img src="https://img1.imgtp.com/2023/09/26/brzne9QG.png" alt="三次握手"></p>
+<ul>
+<li>客户端发送SYN 及序列号 X， 进入SYN_SENT 此时不收到ACK就会超时重传</li>
+<li>服务端收到后回复 ACK 及 seq &#x3D; Y 及 Ack NUM &#x3D; X+1 进入 SYN_RCVD</li>
+<li>客服端收到后，会发送ACK ack &#x3D; Y + 1 创建完成， 服务端收到后也会创建完成</li>
+</ul>
 
       
     </div>
