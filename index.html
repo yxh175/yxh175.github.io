@@ -780,7 +780,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-26 21:54:27" itemprop="dateModified" datetime="2023-09-26T21:54:27+08:00">2023-09-26</time>
+                <time title="修改时间：2023-09-27 14:20:50" itemprop="dateModified" datetime="2023-09-27T14:20:50+08:00">2023-09-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -884,6 +884,55 @@
 <li>服务端收到后回复 ACK 及 seq &#x3D; Y 及 Ack NUM &#x3D; X+1 进入 SYN_RCVD</li>
 <li>客服端收到后，会发送ACK ack &#x3D; Y + 1 创建完成， 服务端收到后也会创建完成</li>
 </ul>
+<p>注意：第三次握手可以携带数据，前两次握手不可以携带</p>
+<h3 id="如何在Linux系统中查看TCP状态？"><a href="#如何在Linux系统中查看TCP状态？" class="headerlink" title="如何在Linux系统中查看TCP状态？"></a>如何在Linux系统中查看TCP状态？</h3><p>TCP 连接状态，在Linux可以通过<code>netstat -napt</code>查看</p>
+<h3 id="为什么是三次握手，不是两次或者四次？"><a href="#为什么是三次握手，不是两次或者四次？" class="headerlink" title="为什么是三次握手，不是两次或者四次？"></a>为什么是三次握手，不是两次或者四次？</h3><ul>
+<li>避免历史连接：如果每次都相同的话，会导致</li>
+<li>同步双方初始序列号</li>
+<li>避免资源浪费</li>
+</ul>
+<p>两次握手：无法避免历史连接的建立，会造成双方资源的消费，也无法可靠的同步双方序列号<br>四次握手：三次握手就可以实现了，不需要冗余的通信次数</p>
+<h3 id="为什么每次建立TCP连接时，初始化序列号要求不一样？"><a href="#为什么每次建立TCP连接时，初始化序列号要求不一样？" class="headerlink" title="为什么每次建立TCP连接时，初始化序列号要求不一样？"></a>为什么每次建立TCP连接时，初始化序列号要求不一样？</h3><ul>
+<li>防止历史报文被下一个相同四元组连接接收</li>
+<li>为了安全性，随机的序列号不易被黑客攻击</li>
+</ul>
+<h3 id="初始序列号-ISN-是如何随机产生的？"><a href="#初始序列号-ISN-是如何随机产生的？" class="headerlink" title="初始序列号 ISN 是如何随机产生的？"></a>初始序列号 ISN 是如何随机产生的？</h3><p>ISN 基于时钟产生的</p>
+<p>ISN &#x3D; M + F(四元组)</p>
+<ul>
+<li>M 是计时器 每隔4微妙+1</li>
+<li>F 是HASH算法，根据四元组生成一个随机值</li>
+</ul>
+<h3 id="IP层会分片了，为什么还要TCP层进行分片"><a href="#IP层会分片了，为什么还要TCP层进行分片" class="headerlink" title="IP层会分片了，为什么还要TCP层进行分片"></a>IP层会分片了，为什么还要TCP层进行分片</h3><p>TCP头部要每次都传，不然如果进行整个的切分，会导致数据丢失无法被定位</p>
+<h3 id="第一次握手丢失了，会发生什么？"><a href="#第一次握手丢失了，会发生什么？" class="headerlink" title="第一次握手丢失了，会发生什么？"></a>第一次握手丢失了，会发生什么？</h3><p>第一次握手丢失，此时客户端已经发送SYN请求，进入SYN_SENT 状态。这种状态下会在一定时间下进行重试，每次重试时间是上一次的两倍。直到超过默认的最大时间。此时如果发送成功，就继续TCP连接，否则重复发送直到TCP连接断开</p>
+<h3 id="第二次握手丢失了，会发生什么？"><a href="#第二次握手丢失了，会发生什么？" class="headerlink" title="第二次握手丢失了，会发生什么？"></a>第二次握手丢失了，会发生什么？</h3><p>第二次握手丢失时，此时客户端在SYN_SENT状态，服务端在SYN_RCYD状态。这个时候，客户端是不知道服务端已经收到了消息，所以客户端会进行多次SYN_SENT的请求，同时服务端也会进行多次SYN_ACK。两者都会不断的发送消息。</p>
+<h3 id="第三次握手丢失了，会发送什么？"><a href="#第三次握手丢失了，会发送什么？" class="headerlink" title="第三次握手丢失了，会发送什么？"></a>第三次握手丢失了，会发送什么？</h3><p>ACK报文不会重传，此时会等待服务端重复发送SYN_ACK 每次发送后，客户端接收到都会发送一个ACK。如果没有丢失就进入连接，否则就会进入堵塞</p>
+<h3 id="什么是SYN攻击？如何避免SYN攻击？"><a href="#什么是SYN攻击？如何避免SYN攻击？" class="headerlink" title="什么是SYN攻击？如何避免SYN攻击？"></a>什么是SYN攻击？如何避免SYN攻击？</h3><p>TCP 连接会有一个半连接队列，用来记录接收客户端SYN的报文</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/format,png-20230309230622886.png" alt="TCP连接队列"></p>
+<p>正常流程：</p>
+<ol>
+<li>服务端接收客户端的SYN报文，会创建一个半连接对象，然后加入到SYN队列（半连接队列）中</li>
+<li>发送SYN+ACK给客户端</li>
+<li>接收到客户端ACK后，从半连接队列中取出一个，根据其创建一个全连接对象，放入到Accept队列中</li>
+<li>应用调用accept()的socket接口，从Accept队列中取出对象使用</li>
+</ol>
+<p>SYN攻击方式最直接的方式就是把半连接队列打满，这样更容易实现，客户端只需要提出连接就可。多次提交都没有问题。导致半连接队列满了后，就没法在接收之后的连接请求了</p>
+<p>如何避免：</p>
+<ul>
+<li>调大消息缓存队列</li>
+<li>增大TCP半连接队列</li>
+<li>开启syncookies</li>
+<li>减少SYN_ACK的重传次数</li>
+</ul>
+<h2 id="TCP连接断开"><a href="#TCP连接断开" class="headerlink" title="TCP连接断开"></a>TCP连接断开</h2><h3 id="TCP的四次挥手过程"><a href="#TCP的四次挥手过程" class="headerlink" title="TCP的四次挥手过程"></a>TCP的四次挥手过程</h3><p><img src="https://img1.imgtp.com/2023/09/27/gEbtacy0.png" alt="四次挥手"></p>
+<ul>
+<li>客户端申请关闭， 发送<code>FIN</code>进入<code>FIN_WAIT_1</code></li>
+<li>服务端收到请求后，发送<code>ACK</code>，进入<code>CLOSE_WAIT</code>进行资源结束，客户端收到<code>ACK</code>进入<code>FIN_WAIT_1</code></li>
+<li><code>CLOSE_WAIT</code>结束后，表示服务端已经正确的关闭了所有资源。发送<code>FIN</code>，进入<code>LAST_ACK</code></li>
+<li>客服端收到<code>FIN</code> 后发送<code>ACK</code>。此时进入<code>TIME_Wait</code> 等待<code>2MS</code>后进入<code>CLOSE</code>态。服务端在收到<code>ACK</code>后进入<code>CLOSE</code>态</li>
+</ul>
+<h3 id="为什么挥手四次？"><a href="#为什么挥手四次？" class="headerlink" title="为什么挥手四次？"></a>为什么挥手四次？</h3><p>需要去进行一个资源的关闭，这一个资源的关闭导致了ACK和FIN是分开发送的。</p>
+<h3 id="第一次挥手丢失了，会发生什么？"><a href="#第一次挥手丢失了，会发生什么？" class="headerlink" title="第一次挥手丢失了，会发生什么？"></a>第一次挥手丢失了，会发生什么？</h3><p>第一次挥手丢失，服务端是无感知的，所以客户端会执行超时重传</p>
+<h3 id="第二次挥手丢失了，会发生什么？"><a href="#第二次挥手丢失了，会发生什么？" class="headerlink" title="第二次挥手丢失了，会发生什么？"></a>第二次挥手丢失了，会发生什么？</h3><p>第二次挥手丢失，此时服务端已经进入了CLOSED_WAIT， 客户端在FIN_WAIT_1阶段。在客户端的视角，它还是无法感知是否已经发送过去，所以它会进行FIN的持续发送。</p>
 
       
     </div>
