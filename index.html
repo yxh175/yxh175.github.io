@@ -780,7 +780,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-27 14:20:50" itemprop="dateModified" datetime="2023-09-27T14:20:50+08:00">2023-09-27</time>
+                <time title="修改时间：2023-09-27 15:04:20" itemprop="dateModified" datetime="2023-09-27T15:04:20+08:00">2023-09-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -932,7 +932,9 @@
 </ul>
 <h3 id="为什么挥手四次？"><a href="#为什么挥手四次？" class="headerlink" title="为什么挥手四次？"></a>为什么挥手四次？</h3><p>需要去进行一个资源的关闭，这一个资源的关闭导致了ACK和FIN是分开发送的。</p>
 <h3 id="第一次挥手丢失了，会发生什么？"><a href="#第一次挥手丢失了，会发生什么？" class="headerlink" title="第一次挥手丢失了，会发生什么？"></a>第一次挥手丢失了，会发生什么？</h3><p>第一次挥手丢失，服务端是无感知的，所以客户端会执行超时重传</p>
-<h3 id="第二次挥手丢失了，会发生什么？"><a href="#第二次挥手丢失了，会发生什么？" class="headerlink" title="第二次挥手丢失了，会发生什么？"></a>第二次挥手丢失了，会发生什么？</h3><p>第二次挥手丢失，此时服务端已经进入了CLOSED_WAIT， 客户端在FIN_WAIT_1阶段。在客户端的视角，它还是无法感知是否已经发送过去，所以它会进行FIN的持续发送。</p>
+<h3 id="第二次挥手丢失了，会发生什么？"><a href="#第二次挥手丢失了，会发生什么？" class="headerlink" title="第二次挥手丢失了，会发生什么？"></a>第二次挥手丢失了，会发生什么？</h3><p>第二次挥手丢失，此时服务端已经进入了CLOSED_WAIT， 客户端在FIN_WAIT_1阶段。在客户端的视角，它还是无法感知是否已经发送过去，所以它会进行FIN的多次重传。每次重传都会回一个ACK。直到ACK被接收</p>
+<h3 id="第三次挥手丢失了，会发送什么？"><a href="#第三次挥手丢失了，会发送什么？" class="headerlink" title="第三次挥手丢失了，会发送什么？"></a>第三次挥手丢失了，会发送什么？</h3><p>第三次挥手，是服务端结束本地资源向客户端发送FIN的一个过程，此时客户端进入了一个FIN_WAIT_2劫夺，如果得不到ACK，客户端会一直四等，但是会在<code>60s</code>结束等待直接进入close。而服务端会进行多次重传，直到重传次数被用完。</p>
+<h3 id="第四次挥手丢失了，会发送什么？"><a href="#第四次挥手丢失了，会发送什么？" class="headerlink" title="第四次挥手丢失了，会发送什么？"></a>第四次挥手丢失了，会发送什么？</h3><p>第四次挥手，是客户端收到服务端发送FIN请求后回的ACK进入2MS的TIME_WAIT。此时服务端在LAST_ACK中，此时服务端如果没有收到ACK会多次重传向客户端发送FIN请求。每一次重置请求都会让TIME_WAIT的计时器重置。</p>
 
       
     </div>
