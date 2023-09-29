@@ -257,5 +257,25 @@ tcp_tw_reuse 功能只能用客户端（连接发起方），因为开启了该�
 
 使用此选项会直接跳过`TIME_WAIT`，不过并不是太推荐
 
+### 服务器出现大量TIME_WAIT的原因有哪些？
 
+- HTTP没有使用长连接
+- HTTP长连接超时
+- HTTP长连接请求数量达到上限
+
+#### 客户端禁用Keep-Alive，服务端开启 HTTP Keep-Alive，谁是主动关闭方？
+
+服务端会主动关闭
+
+当客户端禁用了 `HTTP Keep-Alive`，这时候 `HTTP` 请求的 `header` 就会有 `Connection:close` 信息，这时服务端在发完 `HTTP` 响应后，就会主动关闭连接。
+
+其实也很容易理解：发起方是客户端，客户端的要求不能拒绝，所以就不开启Keep-Alive
+
+#### 客户端开启了 HTTP Keep-Alive，服务端禁用了 HTTP Keep-Alive，谁是主动关闭方？
+
+服务端主动关闭
+
+当客户端开启了 `HTTP Keep-Alive`，而服务端禁用了 `HTTP Keep-Alive`，这时服务端在发完 `HTTP` 响应后，服务端也会主动关闭连接。
+
+也很好理解，客服端的要求服务端无法满足也只能不`Keep-Alive`
 
