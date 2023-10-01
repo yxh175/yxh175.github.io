@@ -5,7 +5,7 @@
 # Site
 title: 鼠鼠的随笔
 subtitle: ''
-description: 鼠鼠我呀要努力啦
+description: Go开发弱鸡，沉淀ing
 keywords:
 author: yxh
 language: zh-CN
@@ -93,7 +93,6 @@ pagination_dir: page
 include:
 exclude:
 ignore:
-
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
