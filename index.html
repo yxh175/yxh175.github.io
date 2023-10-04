@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="鼠鼠我呀要努力啦">
+  <meta name="description" content="Go开发弱鸡，沉淀ing">
 <meta property="og:type" content="website">
 <meta property="og:title" content="鼠鼠的随笔">
 <meta property="og:url" content="http://example.com/index.html">
 <meta property="og:site_name" content="鼠鼠的随笔">
-<meta property="og:description" content="鼠鼠我呀要努力啦">
+<meta property="og:description" content="Go开发弱鸡，沉淀ing">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="yxh">
 <meta name="twitter:card" content="summary">
@@ -157,12 +157,415 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/04/go-reflect-try/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/10/04/go-reflect-try/" class="post-title-link" itemprop="url">GO：反射实战编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-04 09:34:45 / 修改时间：20:18:16" itemprop="dateCreated datePublished" datetime="2023-10-04T09:34:45+08:00">2023-10-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/" itemprop="url" rel="index"><span itemprop="name">编程实战</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/10/04/go-reflect-try/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/10/04/go-reflect-try/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><code>reflect</code>包在<code>Golang</code>语言中有重要的作用。反射在计算机科学领域中，是指一个应用能够进行自描述、自控制。Golang中实现了反射，反射机制就是在运行时动态的调用对象的属性和方法。</p>
+<p>reflect中有两个重要的函数和类型</p>
+<p>两个函数</p>
+<ul>
+<li>reflect.TypeOf  获取类型信息</li>
+<li>reflect.ValueOf  获取数据的运行时表示</li>
+</ul>
+<p>两个类型</p>
+<ul>
+<li>reflect.Type</li>
+<li>reflect.Value</li>
+</ul>
+<p>reflect.Type是反射包定义的一个接口，其中定义了一些不错的方法。这里列举出来一些，如果感兴趣可以翻一下源码。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Type <span class="keyword">interface</span> &#123;</span><br><span class="line">	Align() <span class="type">int</span></span><br><span class="line">	FieldAlign() <span class="type">int</span></span><br><span class="line">	Method(<span class="type">int</span>) Method</span><br><span class="line">    <span class="comment">// 获取当前类型对应方法的引用</span></span><br><span class="line">	MethodByName(<span class="type">string</span>) (Method, <span class="type">bool</span>)</span><br><span class="line">    <span class="comment">// 获取当前类型方法的数量</span></span><br><span class="line">	NumMethod() <span class="type">int</span></span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line">    <span class="comment">// 判断当前类型是否实现某个接口</span></span><br><span class="line">	Implements(u Type) <span class="type">bool</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>reflect.Value</code>类型则不同，它是一个结构体。而且也只有三个字段。它以结构体的方法实现的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Value <span class="keyword">struct</span> &#123;</span><br><span class="line">	typ *rtype</span><br><span class="line">	ptr unsafe.Pointer</span><br><span class="line">	flag</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="interface-与reflect"><a href="#interface-与reflect" class="headerlink" title="interface 与reflect"></a>interface 与reflect</h2><p>在了解reflect需要先知道interface的作用。可以把接口理解成电脑的一个接口。只要你符合接口方法的要求，你就能接入这个接口。在go1.18版本前，很多开发者利用interface的特性实现泛型的效果。这是因为interface作为一个边界类型，可以实现类型的接受。反射作为一个自描述、自控制的代码块。所以作为边界的interface{}是必不可少的。interface的灵活性是一把双刃剑，反射作为一种元编程方式，可以减少重复代码。但是过度的使用会导致程序逻辑不清晰，且会运行缓慢。</p>
+<h2 id="GO-反射三大法则"><a href="#GO-反射三大法则" class="headerlink" title="GO 反射三大法则"></a>GO 反射三大法则</h2><ul>
+<li>interface{} 变量可以转换成反射对象</li>
+<li>从反射对象可以获取interface{}变量</li>
+<li>要修改反射对象，其值必须可设置</li>
+</ul>
+<h3 id="第一法则"><a href="#第一法则" class="headerlink" title="第一法则"></a>第一法则</h3><p>反射是如何反射出对象的值并进行修改的。实际上，reflect过程中是发生了值传递，通过reflect.Value和reflect.Type进行接收</p>
+<p>可以看以下ValueOf的源码, 我的go用的是1.20版本，这时使用的是any，如果你是1.18版本之前的话，这里就是interface{}。当然interface{}和any是相同的<code>type any = interface&#123;&#125;</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ValueOf</span><span class="params">(i any)</span></span> Value &#123;</span><br><span class="line">	<span class="keyword">if</span> i == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> Value&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// <span class="doctag">TODO:</span> Maybe allow contents of a Value to live on the stack.</span></span><br><span class="line">	<span class="comment">// For now we make the contents always escape to the heap. It</span></span><br><span class="line">	<span class="comment">// makes life easier in a few places (see chanrecv/mapassign</span></span><br><span class="line">	<span class="comment">// comment below).</span></span><br><span class="line">	escapes(i)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> unpackEface(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这里进行了一个隐式的接口转换。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	test := <span class="string">&quot;this is test&quot;</span></span><br><span class="line">	x := reflect.ValueOf(test)</span><br><span class="line">	fmt.Println(reflect.TypeOf(x))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img1.imgtp.com/2023/10/04/xTXtYXTB.png" alt="第一法则"></p>
+<p>这个x实际就是一个新的<code>reflect.Value</code>对象。<code>reflect.TypeOf</code> 和 <code>reflect.ValueOf</code> 相当于是一个桥梁连接了interface{}和反射对象</p>
+<h3 id="第二法则"><a href="#第二法则" class="headerlink" title="第二法则"></a>第二法则</h3><p>第二法则即：从反射对象获取interface{}变量</p>
+<p>这个比较容易理解，通过Interface转换成interface</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;reflect&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	test := <span class="string">&quot;this is test&quot;</span></span><br><span class="line">	x := reflect.ValueOf(test)</span><br><span class="line">	newX := x.Interface().(<span class="type">string</span>)</span><br><span class="line">	fmt.Println(newX)</span><br><span class="line">	fmt.Println(reflect.TypeOf(newX))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">this is test</span><br><span class="line">string</span><br></pre></td></tr></table></figure>
+
+<p>这段代码的输出结果，符合预期，反射对象被成功转换成变量</p>
+<p><img src="https://img1.imgtp.com/2023/10/04/VQDaMPcs.png" alt="第二法则"></p>
+<p>通过这个方法就可以将反射转换成对象</p>
+<h3 id="第三法则"><a href="#第三法则" class="headerlink" title="第三法则"></a>第三法则</h3><p>更新值的时候，要判断值是否可以更新</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;reflect&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	i := <span class="number">1</span></span><br><span class="line">	v := reflect.ValueOf(i)</span><br><span class="line">	v.SetInt(<span class="number">10</span>)</span><br><span class="line">	fmt.Println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码初看貌似没有问题。但仔细看v时反射对象，对反射对象修改值，属于无效操作。程序为了防止错误就会崩溃</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">panic: reflect: reflect.Value.SetInt using unaddressable value</span><br><span class="line"></span><br><span class="line">goroutine 1 [running]:</span><br><span class="line">reflect.flag.mustBeAssignableSlow(0x0?)</span><br><span class="line">	C:/Program Files/Go/src/reflect/value.go:260 +0x85</span><br><span class="line">reflect.flag.mustBeAssignable(...)</span><br><span class="line">	C:/Program Files/Go/src/reflect/value.go:247</span><br><span class="line">reflect.Value.SetInt(&#123;0xd966c0?, 0xe37968?, 0xd056a9?&#125;, 0xa)</span><br><span class="line">	C:/Program Files/Go/src/reflect/value.go:2233 +0x48</span><br><span class="line">main.main()</span><br><span class="line">	f:/goProject/go-learn/reflect/changeValueDemo/main.go:11 +0xb1</span><br><span class="line">exit status 2</span><br></pre></td></tr></table></figure>
+
+<p>正确的修改原变量应该使用如下方法:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;reflect&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	i := <span class="number">1</span></span><br><span class="line">	v := reflect.ValueOf(&amp;i)</span><br><span class="line">	v.Elem().SetInt(<span class="number">10</span>)</span><br><span class="line">	fmt.Println(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时就能正确输出结果，所以有个要点，反射要传指针，反射对象要指向指针的值才可以修改值</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/03/interview-tcp-reliability/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/10/03/interview-tcp-reliability/" class="post-title-link" itemprop="url">面试重点：TCP如何保证可靠性</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-10-03 17:32:21" itemprop="dateCreated datePublished" datetime="2023-10-03T17:32:21+08:00">2023-10-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-04 21:14:14" itemprop="dateModified" datetime="2023-10-04T21:14:14+08:00">2023-10-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1/" itemprop="url" rel="index"><span itemprop="name">八股</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/10/03/interview-tcp-reliability/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/10/03/interview-tcp-reliability/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>文章内容主要参考：<a target="_blank" rel="noopener" href="https://xiaolincoding.com/network/3_tcp/tcp_feature.html#%E8%B6%85%E6%97%B6%E9%87%8D%E4%BC%A0">小林coding</a></p>
+<h2 id="TCP哪些机制保证了可靠性"><a href="#TCP哪些机制保证了可靠性" class="headerlink" title="TCP哪些机制保证了可靠性"></a>TCP哪些机制保证了可靠性</h2><ul>
+<li>重传机制：通过对未送达信息的重新传输，最终保证每个数据都能抵达到对端</li>
+<li>滑动窗口：通过窗口增加传输的效率，可以等待一个范围的包</li>
+<li>流量控制：发送方会根据对方的滑动窗口来控制自己的发送速度</li>
+<li>拥塞控制：网络传输过程丢包严重也会通过降低发送速度防止出现恶性循环</li>
+</ul>
+<h2 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h2><p>重传机制是为了保证，网络中报丢失后，能通过传输机制，最终保证报的正常传输</p>
+<ul>
+<li>超时重传</li>
+<li>快速重传</li>
+<li>SACK方法</li>
+<li>D-SACK方法</li>
+</ul>
+<h3 id="超时重传"><a href="#超时重传" class="headerlink" title="超时重传"></a>超时重传</h3><p>超时重传的机制比较简单，只需要在每次发送时设置一个定时器，在定时器超时时没有收到ACK的话就会重发数据。这就是所谓的超时重传。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/5.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="超时重传"></p>
+<h4 id="重传时间RTO（Retransmission-Timeout）设置多长合适"><a href="#重传时间RTO（Retransmission-Timeout）设置多长合适" class="headerlink" title="重传时间RTO（Retransmission Timeout）设置多长合适"></a>重传时间RTO（Retransmission Timeout）设置多长合适</h4><p>RTO较大会导致重发检测较慢，一次重发要好久，RTO较小会导致误判丢包次数过多，形成网络拥塞</p>
+<p>最好设置刚好大于一个RTT往返时延</p>
+<h3 id="快速重传"><a href="#快速重传" class="headerlink" title="快速重传"></a>快速重传</h3><p>所谓的快速重传，即是不依赖时间，而是根据丢包次数决定。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/10.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="快速重传"></p>
+<p>快速重传中，当一个包被接受时，接受方就会返回ACK + 下一个需求的序列号。这样如果一个包丢失时，就会返回返回一个最左边未收到的序列号。这样多次后，发送方就会知道有一个包丢失了，就会快速的重传</p>
+<p>快速重传解决了超时重传时间的问题，但是也衍生了另外一个问题。即重传最左边的一个，还是重传所有问题。为此工程师又设计了<code>SACK</code>重传机制</p>
+<h3 id="SACK重传"><a href="#SACK重传" class="headerlink" title="SACK重传"></a>SACK重传</h3><p>SACK( Selective Acknowledgment) 即选择性确认<br>这种方式是在TCP头部中增加了一个SACK的参数。它将已收到的数据的信息发送给发送方。这样发送方就会知道哪些数据丢失了，哪些数据传输成功了。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/11.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="SACK重传"></p>
+<p>SACK 会将最左侧的窗口保留，相当于告知发送方当前已经接受的数据。在ACK三次相同值触发快速重传时，传送方就能根据ACK的值和SACK的值推断出缺失的部分。</p>
+<h3 id="D-SACK重传"><a href="#D-SACK重传" class="headerlink" title="D-SACK重传"></a>D-SACK重传</h3><p>SACK是为发送方丢包设计的保险协议。而丢包过程往往是双方的问题。当接受方的ACK包出现丢失或发送方出现延迟发送，就会出现重复数据的传输。为此TCP又提出了D-SACK重传模式。</p>
+<p>小林coding中很好的用图总结了两个异常情况</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/12.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="ACK包丢失"></p>
+<p>此时ACK多次丢失，导致发送方错误的任务自己的包没有发送成功，在RTO时间到的时候会触发超时重传。此时就会发送重复的数据。此时接受方回复了一个ACK大于SACK情况。这种情况就是D-SACK告知发送方数据重复了</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/13.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="ACK包延迟"></p>
+<p>发送方延迟发送，导致发送方没有收到ACK的报文，所以它又重复了一次发送。这时候就出现了一次重复发送数据的情况。</p>
+<p>这时也是一个D-SACK的情况，ACK的值大于SACK的范围。此时表示数据是重复的。此时发送方根据自己的发送记录，可以推测出，数据包在传输的时候出现了延迟。<br>D-SACK的好处有如下：</p>
+<ul>
+<li>可以让发送方知道，发出去的包是丢了，还是ACK丢了</li>
+<li>可以知道发送的包是不是网络延迟了</li>
+<li>可以知道网络中是不是把包复制了</li>
+</ul>
+<h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h2><h3 id="什么是滑动窗口"><a href="#什么是滑动窗口" class="headerlink" title="什么是滑动窗口"></a>什么是滑动窗口</h3><p>算法中滑动窗口的表现是一个一定大小的窗口，在整个数据的遍历过程像一个窗口滑动一样。TCP引入滑动窗口是为了实现多个包的传输，而不会因为一个一个的顺序接收而导致阻塞。如果是一个发送对应一个ACK，通信效率就会受到往返时延的瓶颈</p>
+<p>有了窗口就可以无需等待确认应答，而可以继续发送大量的数据，即使有个ACK丢失了，也可以通过ACK的最大值表示确认应答位置。可以这么理解ACK的值就是告诉当前发送方我的最左窗口位置</p>
+<h3 id="窗口大小由哪一方决定？"><a href="#窗口大小由哪一方决定？" class="headerlink" title="窗口大小由哪一方决定？"></a>窗口大小由哪一方决定？</h3><p>TCP中存在一个字段<code>Windows</code>，也就是窗口大小。<br>这个字段是接收方为了告诉发送端自己的缓冲区大小，发送端就可以根据这个Window的大小来控制自己发送的速度。而不会导致接收端处理不过来这些包</p>
+<p>发送方的发送数据大小不能超过接受方的窗口大小，否则接收方就无法正常的接受数据</p>
+<h3 id="发送方的滑动窗口"><a href="#发送方的滑动窗口" class="headerlink" title="发送方的滑动窗口"></a>发送方的滑动窗口</h3><p>发送方的滑动窗口由四个部分组成</p>
+<ul>
+<li>确认收到的部分</li>
+<li>已发送但未收到的部分</li>
+<li>未发送但在接收范围的部分</li>
+<li>未发生且超过接收方范围的部分</li>
+</ul>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/19.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="发送方滑动窗口"></p>
+<p>这四个部分通过推理可以得知接收方的接收情况</p>
+<p>这个四部分的分割需要三条边界进行分割，分别是：</p>
+<ul>
+<li><code>SND.UNA</code> 绝对指针：接收方最后一个ACK的位置</li>
+<li><code>SND.NXT</code> 绝对指针：发送方当前发送的位置</li>
+<li><code>SND.UNA + SND.WND</code> 相对指针，通过接受方发送窗口大小的偏移量计算</li>
+</ul>
+<p>还可以发送数据的窗口大小 &#x3D; <code>SND.WND - (SND.NXT - SND.UNA)</code></p>
+<h3 id="接收方的滑动窗口"><a href="#接收方的滑动窗口" class="headerlink" title="接收方的滑动窗口"></a>接收方的滑动窗口</h3><p>接收方的滑动窗口分为三个部分</p>
+<ul>
+<li>成功接收并确认的数据</li>
+<li>未收到数据但可以接收的数据</li>
+<li>未收到的数据并不可以接收的数据</li>
+</ul>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/20.jpg" alt="小林coding"></p>
+<p>通过两个指针去控制</p>
+<ul>
+<li>RCV.WND 相对指针表示接收窗口大小</li>
+<li>RCV.NXT 是一个绝对指针，它指向发送方发送来的下一个数据字节的序列号</li>
+</ul>
+<h3 id="接收窗口和发送窗口的大小是相等的吗？"><a href="#接收窗口和发送窗口的大小是相等的吗？" class="headerlink" title="接收窗口和发送窗口的大小是相等的吗？"></a>接收窗口和发送窗口的大小是相等的吗？</h3><p>并不完全相等，但是是约等于的。为什么不能保证完全相等是因为TCP连接中两端存在时延</p>
+<h2 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h2><p>发送方不能无脑的发数据给接收方，要考虑接收方处理能力<br>如果无脑的发送数据给对方，但对方处理不过来，就会导致重发机制的触发，对网络资源进行不必要的浪费</p>
+<p>为此TCP提出了<strong>流量控制</strong>来保证发送方能根据接收方的实际接收能力控制发送的数据量。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/30/interview-serialization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/30/interview-serialization/" class="post-title-link" itemprop="url">面试重点：序列化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-30 19:52:47" itemprop="dateCreated datePublished" datetime="2023-09-30T19:52:47+08:00">2023-09-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-04 20:18:16" itemprop="dateModified" datetime="2023-10-04T20:18:16+08:00">2023-10-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/30/interview-serialization/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/30/interview-serialization/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="什么是序列化和反序列化？"><a href="#什么是序列化和反序列化？" class="headerlink" title="什么是序列化和反序列化？"></a>什么是序列化和反序列化？</h2><ul>
+<li>序列化： 将数据结构或对象或结构体转换成二进制字节的过程</li>
+<li>反序列化：将序列化后的二进制字节流反序列化成数据结构或者对象</li>
+</ul>
+<h3 id="什么时候比较常用？"><a href="#什么时候比较常用？" class="headerlink" title="什么时候比较常用？"></a>什么时候比较常用？</h3><ul>
+<li>RPC 网络传输</li>
+<li>文件存储</li>
+<li>存储到Redis缓存</li>
+<li>存储到内存</li>
+</ul>
+<h3 id="序列化属于TCP-IP四层协议的哪一层，七层呢？"><a href="#序列化属于TCP-IP四层协议的哪一层，七层呢？" class="headerlink" title="序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？"></a>序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？</h3><p>四层协议</p>
+<ul>
+<li>应用层</li>
+<li>传输层</li>
+<li>网络层</li>
+<li>网络接口层</li>
+</ul>
+<p>序列化属于程序中用于转换的操作，所以应该是最顶层于用户层的。所以是应用层的一部分。</p>
+<h2 id="常见的序列化"><a href="#常见的序列化" class="headerlink" title="常见的序列化"></a>常见的序列化</h2><h3 id="java常见序列化"><a href="#java常见序列化" class="headerlink" title="java常见序列化"></a>java常见序列化</h3><ul>
+<li>jdk序列：不推荐</li>
+<li>Kryo序列化：由于其变长存储特性并使用了字节码生成机制，拥有较高的运行速度和较小的字节码体积。</li>
+<li>Protobuf序列化：需要自己定义 IDL 文件和生成对应的序列化代码。</li>
+<li>ProtoStuff序列化：基于Protobuf提供了更多的功能和更简易的用法</li>
+<li>Hessian序列化：自定义描述的二进制 RPC 协议。</li>
+</ul>
+<h3 id="go常见序列化"><a href="#go常见序列化" class="headerlink" title="go常见序列化"></a>go常见序列化</h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/25/redis-distributed-locks/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -254,7 +657,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -368,7 +771,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -463,7 +866,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -641,7 +1044,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -760,7 +1163,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -769,7 +1172,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/09/21/interview-TCP-key-point/" class="post-title-link" itemprop="url">面试重点知识点：TCP相关</a>
+            <a href="/2023/09/21/interview-TCP-key-point/" class="post-title-link" itemprop="url">面试重点知识点：TCP连接相关</a>
         </h2>
 
         <div class="post-meta">
@@ -786,7 +1189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-27 15:04:20" itemprop="dateModified" datetime="2023-09-27T15:04:20+08:00">2023-09-27</time>
+                <time title="修改时间：2023-10-04 20:18:16" itemprop="dateModified" datetime="2023-10-04T20:18:16+08:00">2023-10-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -941,6 +1344,69 @@
 <h3 id="第二次挥手丢失了，会发生什么？"><a href="#第二次挥手丢失了，会发生什么？" class="headerlink" title="第二次挥手丢失了，会发生什么？"></a>第二次挥手丢失了，会发生什么？</h3><p>第二次挥手丢失，此时服务端已经进入了CLOSED_WAIT， 客户端在FIN_WAIT_1阶段。在客户端的视角，它还是无法感知是否已经发送过去，所以它会进行FIN的多次重传。每次重传都会回一个ACK。直到ACK被接收</p>
 <h3 id="第三次挥手丢失了，会发送什么？"><a href="#第三次挥手丢失了，会发送什么？" class="headerlink" title="第三次挥手丢失了，会发送什么？"></a>第三次挥手丢失了，会发送什么？</h3><p>第三次挥手，是服务端结束本地资源向客户端发送FIN的一个过程，此时客户端进入了一个FIN_WAIT_2劫夺，如果得不到ACK，客户端会一直四等，但是会在<code>60s</code>结束等待直接进入close。而服务端会进行多次重传，直到重传次数被用完。</p>
 <h3 id="第四次挥手丢失了，会发送什么？"><a href="#第四次挥手丢失了，会发送什么？" class="headerlink" title="第四次挥手丢失了，会发送什么？"></a>第四次挥手丢失了，会发送什么？</h3><p>第四次挥手，是客户端收到服务端发送FIN请求后回的ACK进入2MS的TIME_WAIT。此时服务端在LAST_ACK中，此时服务端如果没有收到ACK会多次重传向客户端发送FIN请求。每一次重置请求都会让TIME_WAIT的计时器重置。</p>
+<h3 id="TIME-WAIT的时间？"><a href="#TIME-WAIT的时间？" class="headerlink" title="TIME_WAIT的时间？"></a>TIME_WAIT的时间？</h3><p>2MSL（Maximum Segment Lifetime）即报文在网络中的最大生存时间。因为报文在网络传输中，会对他内部的TTL进行-1.当TTL为0的时候节点就会对其丢弃。</p>
+<h4 id="TTL是什么？"><a href="#TTL是什么？" class="headerlink" title="TTL是什么？"></a>TTL是什么？</h4><p>TTL 是 IP头部中的一个字段，每一次经过一个节点时，都会将TTL减1保证报文，不会在网络空间中无限循环。如果TTL为0时就会被抛弃在网络空间中</p>
+<h4 id="TTL-和-MSL的区别？"><a href="#TTL-和-MSL的区别？" class="headerlink" title="TTL 和 MSL的区别？"></a>TTL 和 MSL的区别？</h4><p>TTL 是一个值，用来判断报文是否应该被抛弃，MSL是一个表象，是表示报文TTL消失到0的时间。一般来说<code>MSL</code>要设置的比<code>TTL</code>所需要的时间大，防止出现了误判</p>
+<h4 id="为什么是2MSL，不是直接是MSL？"><a href="#为什么是2MSL，不是直接是MSL？" class="headerlink" title="为什么是2MSL，不是直接是MSL？"></a>为什么是2MSL，不是直接是MSL？</h4><p>首先是因为，这是两个来回，需要客户端发送一次后，服务端给他返回一个。这样才能结束，需要两个MSL</p>
+<h3 id="为什么需要TIME-WAIT"><a href="#为什么需要TIME-WAIT" class="headerlink" title="为什么需要TIME_WAIT?"></a>为什么需要TIME_WAIT?</h3><ul>
+<li>防止历史的连接的数据被新的连接错误的接收：因为序列号是有上下限的，可能出现序列绕回的情况</li>
+<li>保证被动关闭的一方能够正常的关闭：确保ACK被服务端收到，否则服务端进入LAST_ACK进行多次FIN请求的发送。而进入异常终止的状态</li>
+</ul>
+<h3 id="TIME-WAIT过多有什么害处？"><a href="#TIME-WAIT过多有什么害处？" class="headerlink" title="TIME_WAIT过多有什么害处？"></a>TIME_WAIT过多有什么害处？</h3><p>TIME_WAIT是主动关闭的一方最终结束状态。此时TIME_WAIT过多有两个危害</p>
+<ul>
+<li>占用系统资源</li>
+<li>占用端口资源</li>
+</ul>
+<h3 id="如何优化TIME-WAIT"><a href="#如何优化TIME-WAIT" class="headerlink" title="如何优化TIME_WAIT?"></a>如何优化TIME_WAIT?</h3><ul>
+<li><code>net.ipv4.tcp_tw_reuse</code> 和 <code>tcp_timestamps</code></li>
+</ul>
+<p>开启此参数可以复用TIME_WAIT的socket作为新的连接所用</p>
+<p>tcp_tw_reuse 功能只能用客户端（连接发起方），因为开启了该功能，在调用 connect() 函数时，内核会随机找一个 time_wait 状态超过 1 秒的连接给新的连接复用。</p>
+<ul>
+<li>net.ipv4.tcp_max_tw_buckets</li>
+</ul>
+<p>这个值默认为 18000，当系统中处于 TIME_WAIT 的连接一旦超过这个值时，系统就会将后面的 TIME_WAIT 连接状态重置，这个方法比较暴力。</p>
+<ul>
+<li>程序中使用 <code>SO_LINGER</code></li>
+</ul>
+<p>使用此选项会直接跳过<code>TIME_WAIT</code>，不过并不是太推荐</p>
+<h3 id="服务器出现大量TIME-WAIT的原因有哪些？"><a href="#服务器出现大量TIME-WAIT的原因有哪些？" class="headerlink" title="服务器出现大量TIME_WAIT的原因有哪些？"></a>服务器出现大量TIME_WAIT的原因有哪些？</h3><ul>
+<li>HTTP没有使用长连接</li>
+<li>HTTP长连接超时</li>
+<li>HTTP长连接请求数量达到上限</li>
+</ul>
+<h4 id="客户端禁用Keep-Alive，服务端开启-HTTP-Keep-Alive，谁是主动关闭方？"><a href="#客户端禁用Keep-Alive，服务端开启-HTTP-Keep-Alive，谁是主动关闭方？" class="headerlink" title="客户端禁用Keep-Alive，服务端开启 HTTP Keep-Alive，谁是主动关闭方？"></a>客户端禁用Keep-Alive，服务端开启 HTTP Keep-Alive，谁是主动关闭方？</h4><p>服务端会主动关闭</p>
+<p>当客户端禁用了 <code>HTTP Keep-Alive</code>，这时候 <code>HTTP</code> 请求的 <code>header</code> 就会有 <code>Connection:close</code> 信息，这时服务端在发完 <code>HTTP</code> 响应后，就会主动关闭连接。</p>
+<p>其实也很容易理解：发起方是客户端，客户端的要求不能拒绝，所以就不开启Keep-Alive</p>
+<h4 id="客户端开启了-HTTP-Keep-Alive，服务端禁用了-HTTP-Keep-Alive，谁是主动关闭方？"><a href="#客户端开启了-HTTP-Keep-Alive，服务端禁用了-HTTP-Keep-Alive，谁是主动关闭方？" class="headerlink" title="客户端开启了 HTTP Keep-Alive，服务端禁用了 HTTP Keep-Alive，谁是主动关闭方？"></a>客户端开启了 HTTP Keep-Alive，服务端禁用了 HTTP Keep-Alive，谁是主动关闭方？</h4><p>服务端主动关闭</p>
+<p>当客户端开启了 <code>HTTP Keep-Alive</code>，而服务端禁用了 <code>HTTP Keep-Alive</code>，这时服务端在发完 <code>HTTP</code> 响应后，服务端也会主动关闭连接。</p>
+<p>也很好理解，客服端的要求服务端无法满足也只能不<code>Keep-Alive</code></p>
+<h3 id="服务端出现大量CLOSE-WAIT状态的原因有哪些？"><a href="#服务端出现大量CLOSE-WAIT状态的原因有哪些？" class="headerlink" title="服务端出现大量CLOSE_WAIT状态的原因有哪些？"></a>服务端出现大量CLOSE_WAIT状态的原因有哪些？</h3><p><code>CLOSE_WAIT</code> 是被动关闭方，在返回<code>ACK</code>后，关闭进程释放资源的过程。所以当服务端出现大量<code>CLOSE_WAIT</code>时，说明服务端的程序没有调用<code>close</code>关闭连接。</p>
+<p>一个标准的TCP流程</p>
+<ol>
+<li>创建服务端socket，bind绑定端口、listen监听端口</li>
+<li>将服务端socket注册到epoll</li>
+<li>epoll_wait等待连接到来，调用accpet获取已连接的socket</li>
+<li>将已连接的socket注册到epoll</li>
+<li>epoll_wait等待事件发送</li>
+<li>对方连接关闭，我方调用close</li>
+</ol>
+<p>可能的原因</p>
+<ul>
+<li>2 没有实现，代码中没有将<code>socket</code>注册到<code>epoll</code>中，导致无法感知连接，就无法调用close</li>
+<li>3 没有实现，没有调用accpet去获取socket</li>
+<li>4 没有做，获取到socket连接后，却没有放到epoll中</li>
+<li>6 没有做，服务端没有执行close函数，代码无法抵达到执行close函数的过程</li>
+</ul>
+<h3 id="如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？"><a href="#如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？" class="headerlink" title="如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？"></a>如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？</h3><p>客户端崩溃，如果不是系统级的崩溃，那么客户端的操作系统会自动发送断开连接的请求。如果是宕机或断电这种系统级的，这时候服务端是无法捕捉到客户端的信息（杳无音讯）。TCP为了确保这种情况不会发送，提出了保活机制。没一段时间会执行一次心跳检查</p>
+<p>当开启保活机制后，要考虑以下三种情况：</p>
+<ul>
+<li>对方正常响应，TCP保活时间重置</li>
+<li>对端主机重启，此时服务端发送的请求，在对端看来是无效连接，所以会发送一个RST重新连接</li>
+<li>对端主机宕机，TCP发送消息无回复，在多次探测后无消息后，就会认为TCP连接已死亡</li>
+</ul>
+<p>当然，TCP的保活是在传输层的，应用层层面也可自己实现心跳检测。来进行更加灵活的修改</p>
+<h3 id="如果已经建立了连接，但是服务端的进程崩溃会发生什么？"><a href="#如果已经建立了连接，但是服务端的进程崩溃会发生什么？" class="headerlink" title="如果已经建立了连接，但是服务端的进程崩溃会发生什么？"></a>如果已经建立了连接，但是服务端的进程崩溃会发生什么？</h3><p>进程崩溃，内核会回收该进程所有的TCP连接资源，于是内核会主动发送关闭请求，正常完成TCP四次挥手的过程</p>
 
       
     </div>
@@ -965,7 +1431,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1045,329 +1511,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/20/network-http-study/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠的随笔">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/20/network-http-study/" class="post-title-link" itemprop="url">计算机网络：HTTP知识点遗忘点记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-20 16:35:47" itemprop="dateCreated datePublished" datetime="2023-09-20T16:35:47+08:00">2023-09-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-21 11:02:10" itemprop="dateModified" datetime="2023-09-21T11:02:10+08:00">2023-09-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/20/network-http-study/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/20/network-http-study/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>记录一下自己HTTP的相关薄弱点。强化一下学习<br>文章内容参考<a target="_blank" rel="noopener" href="https://xiaolincoding.com/network/2_http/http_interview.html#https-%E6%98%AF%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E7%9A%84-%E5%85%B6%E9%97%B4%E4%BA%A4%E4%BA%92%E4%BA%86%E4%BB%80%E4%B9%88">小林coding</a></p>
-<h2 id="HTTPs-的应用数据如何保证完整性"><a href="#HTTPs-的应用数据如何保证完整性" class="headerlink" title="HTTPs 的应用数据如何保证完整性"></a>HTTPs 的应用数据如何保证完整性</h2><p>这个问题，主要考查的是，HTTPs构建完对话后，如何去实现数据的传递，因为HTTPs传递消息不会像HTTP那样随意的明文传输，它还需要一个对称加密的过程。<br>这里涉及TLS的两个协议：</p>
-<ul>
-<li>TLS握手协议： 四次握手算法，负责协商加密算法和生成对称密钥的。</li>
-<li>TLS记录协议：负责保护应用程序数据并验证其完整性和来源，所以对HTTP数据加密是使用记录协议</li>
-</ul>
-<p>TLS记录协议主要负责消息（HTTP数据）的压缩，加密及数据的认证。<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/%E8%AE%B0%E5%BD%95%E5%8D%8F%E8%AE%AE.png" alt="TLS处理信息的过程"></p>
-<p>过程如下：</p>
-<ul>
-<li>消息分割：消息被分割成多个片段</li>
-<li>片段压缩：消息通过压缩算法进行压缩</li>
-<li>MAC生成：通过Hash算法对压缩片段生成MAC并追加到尾部</li>
-<li>对称加密：通过对称密钥进行加密</li>
-<li>生成报文：由数据类型、版本号、压缩后的长度组成最终报文</li>
-</ul>
-<h2 id="HTTP-2做了什么优化？"><a href="#HTTP-2做了什么优化？" class="headerlink" title="HTTP&#x2F;2做了什么优化？"></a>HTTP&#x2F;2做了什么优化？</h2><p>HTTP&#x2F;2协议是基于HTTPS的，所以HTTP&#x2F;2的安全性也是有保障的</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/25-HTTP2.png" alt="HTTP各版本架构"></p>
-<p>根据这些图可以看到HTTP&#x2F;2相比于HTTP&#x2F;1.1的一些改进</p>
-<ul>
-<li>头部压缩：<code>HPACK</code>算法，通过维护一个头信息对应信息表，用索引号来表示字段。</li>
-<li>二进制格式： 头信息和body都采用二进制传输</li>
-<li>并发传输：引用Stream概念，多个Stream在一条TCP中复用。通过Stream ID 让接收方变得排序，服务端可以乱序发送</li>
-<li>服务器推送：服务器会主动向客户端推送可能会用到的资源</li>
-</ul>
-<h2 id="HTTP-2有什么缺陷？"><a href="#HTTP-2有什么缺陷？" class="headerlink" title="HTTP&#x2F;2有什么缺陷？"></a>HTTP&#x2F;2有什么缺陷？</h2><p>HTTP&#x2F;2 通过Stream的并发能力，虽然解决了HTTP&#x2F;1队头阻塞的问题，但还是存在TCP的队头阻塞。因为HTTP&#x2F;2是基于TCP的。TCP 是字节流协议，TCP 层必须保证收到的字节数据是完整且连续的，这样内核才会将缓冲区里的数据返回给 HTTP 应用，那么当「前 1 个字节数据」没有到达时，后收到的字节数据只能存放在内核缓冲区里，只有等到这 1 个字节数据到达时，HTTP&#x2F;2 应用层才能从内核中拿到数据，这就是 HTTP&#x2F;2 队头阻塞问题。</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/network/quic/http2%E9%98%BB%E5%A1%9E.jpeg" alt="stream丢失片段"></p>
-<p>当通过TCP发送多个包的时候，如果有一个包在网络中丢失，那么就会导致之后的内容会在内核中缓存。直到丢失的包收到。应用层才能在内核中取到结果<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/%E7%BD%91%E7%BB%9C/http3/tcp%E9%98%9F%E5%A4%B4%E9%98%BB%E5%A1%9E.gif" alt="内核运行图"></p>
-<p>所以，一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的所有的 HTTP 请求都必须等待这个丢了的包被重传回来。</p>
-<h2 id="HTTP-3-做了哪些优化？"><a href="#HTTP-3-做了哪些优化？" class="headerlink" title="HTTP&#x2F;3 做了哪些优化？"></a>HTTP&#x2F;3 做了哪些优化？</h2><p>我们看到HTTP&#x2F;2做了很大的努力，让HTTP层面不出现队头阻塞，但是还是在TCP层上折了腰。<br>所以HTTP&#x2F;3将底层修改为UDP协议。</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/27-HTTP3.png" alt="HTTP各版本"></p>
-<p>基于UDP的quick协议可以实现可靠传输。</p>
-<p>那么HTTP&#x2F;3的三个优点就是</p>
-<ul>
-<li>无队头阻塞：同样是多路复用但是不会像HTTP&#x2F;2那样当stream某个出现丢失时阻塞。UDP中多个Stream之间没有依赖</li>
-<li>更快的建立连接：因为QUIC协议里包含了TLS协议。所以直接握手就可以了</li>
-<li>连接迁移：基于TCP的连接，强调了地址和端口号。如果二者有一点变化就需要重新连接，代价很高。而基于UDP的不需要</li>
-</ul>
-<h2 id="quick协议怎么让UDP实现可靠传输的？"><a href="#quick协议怎么让UDP实现可靠传输的？" class="headerlink" title="quick协议怎么让UDP实现可靠传输的？"></a>quick协议怎么让UDP实现可靠传输的？</h2><p>HTTP&#x2F;3的整体视角是这样的</p>
-<p><img src="https://cdn.xiaolincoding.com//mysql/other/http3-over-quic-protocol-works.png" alt="HTTP/3整体情况"></p>
-<ul>
-<li>Packet Header  分别包含了Long Packet Header 和 Short Packet Header两种实现方法，前者在首次连接时使用，后者用于日常传输</li>
-<li>QUIC FrameHeader 在一个Packet中会存放多个Frame数据， 这个Frame数据内容大致如下<br><img src="https://cdn.xiaolincoding.com//mysql/other/536298d2c54a43b699026bffe0f85010.png" alt="Frame内容"></li>
-</ul>
-<p>通过StreamID、Offset保证数据的有序性，length指明了Frame数据的长度</p>
-<h3 id="quic-ID-是什么样的，和TCP一样吗？"><a href="#quic-ID-是什么样的，和TCP一样吗？" class="headerlink" title="quic ID 是什么样的，和TCP一样吗？"></a>quic ID 是什么样的，和TCP一样吗？</h3><p>不是，quicID 在UDP中严格递增的，为了保证RTT（往返延时时间的无歧义测量）,所以让它严格递增，这也顺便解决了TCP中RTT歧义性导致重发事件概率增大</p>
-<h3 id="为什么QUIC-不会队头阻塞？"><a href="#为什么QUIC-不会队头阻塞？" class="headerlink" title="为什么QUIC 不会队头阻塞？"></a>为什么QUIC 不会队头阻塞？</h3><p>HTTP&#x2F;2 队头阻塞的原因是因为TCP, 虽然在应用层的层面上解决队头阻塞问题，但是在其Stream是基于TCP的，TCP滑动窗口的阻塞会导致队头阻塞。而HTTP&#x2F;3是基于UDP的，UDP会为每个Stream单独弄一个窗口。这样各个Stream之间是不会互相影响的</p>
-<h3 id="QUIC-如何做到流量控制？"><a href="#QUIC-如何做到流量控制？" class="headerlink" title="QUIC 如何做到流量控制？"></a>QUIC 如何做到流量控制？</h3><p>和TCP原理类似，TCP流量控制是通过接收方告诉发送方，它的接收窗口有多大，从而让发送方计算发送速率</p>
-<p>QUIC 实现流量控制的方式</p>
-<ul>
-<li>通过window_update 帧告知窗口大小</li>
-<li>通过BlockFrame 帧告知阻塞</li>
-</ul>
-<p>同时和HTTP&#x2F;2不同的是Stream每个都是单独的窗口，所以要进行两个流量控制</p>
-<ul>
-<li>Stream流量控制， 对每个Stream的窗口进行限制</li>
-<li>Connection 连接控制，对Stream总的连接大小进行限制，防止超过缓存</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/go-channel-various-situations/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠的随笔">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/19/go-channel-various-situations/" class="post-title-link" itemprop="url">Go：Channel各种情况下的情况</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-19 10:46:41" itemprop="dateCreated datePublished" datetime="2023-09-19T10:46:41+08:00">2023-09-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-20 20:41:49" itemprop="dateModified" datetime="2023-09-20T20:41:49+08:00">2023-09-20</time>
-              </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/19/go-channel-various-situations/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/19/go-channel-various-situations/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Channel情况解析"><a href="#Channel情况解析" class="headerlink" title="Channel情况解析"></a>Channel情况解析</h2><p>Channel 作为go协程编程中必要的一环，理解其原理和各种情况是必要的。如果加以利用这些特性。我们会在工作中可以保证安全的情况下探索各种玩法</p>
-<p>一般我们看到别人讲channel的各种情况，都用文本写了一行又一行。感觉看不太懂，看完下面会忘了上面。所以我自己整理了整理各种情况并用图表示出来。供自己以后进行快速查找和记忆</p>
-<p><img src="https://img1.imgtp.com/2023/09/19/hV0QoxLs.png" alt="channel各种情况"></p>
-<p>上图可以很清晰的看到什么流程会导致什么情况。总结一些特殊的情况：</p>
-<ul>
-<li>关闭channel 读 返回0</li>
-<li>关闭channel 写、关闭 panic</li>
-<li>channel &#x3D; nil 后关闭会panic</li>
-<li>channel &#x3D; nil channel将无法传递值了，正常使用它进行异步可能会阻塞</li>
-<li>无缓冲读写都会阻塞必须同时进行··</li>
-</ul>
-<p>图中阻塞的channel是为了保证异步，如果处理不当，会出现死锁。</p>
-<p>如果所有协程都进入了阻塞态，就会导致go报dealLock错误。所以在这些情况要注意，虽然有一些风险，但也会让我们收益更大。能做的事情更多</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/go-heap-coding/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠的随笔">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/19/go-heap-coding/" class="post-title-link" itemprop="url">GO：如何实现一个堆</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-09-19 09:10:36 / 修改时间：09:47:36" itemprop="dateCreated datePublished" datetime="2023-09-19T09:10:36+08:00">2023-09-19</time>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/19/go-heap-coding/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/19/go-heap-coding/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一些leetcode算法题中经常用到堆排序去解决问题比如常见</p>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-largest-element-in-an-array/">数组第K大个数</a><br><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-k-closest-elements/">658. 找到 K 个最接近的元素</a><br>Golang 给出了主要的实现堆队列的主要方法，但是由于堆的数据结构都可以使用，所以需要自己去实现一些必要的接口，才能正常使用一个堆</p>
-<h2 id="堆的接口"><a href="#堆的接口" class="headerlink" title="堆的接口"></a>堆的接口</h2><p><code>heap.Interface</code> 接口源码</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Interface <span class="keyword">interface</span> &#123;</span><br><span class="line">	sort.Interface</span><br><span class="line">	Push(x <span class="keyword">interface</span>&#123;&#125;) <span class="comment">// add x as element Len()</span></span><br><span class="line">	Pop() <span class="keyword">interface</span>&#123;&#125;   <span class="comment">// remove and return element Len() - 1.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中<code>sort.Interface</code> 接口源码</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Interface <span class="keyword">interface</span> &#123;</span><br><span class="line">	<span class="comment">// Len is the number of elements in the collection.</span></span><br><span class="line">	Len() <span class="type">int</span></span><br><span class="line">	<span class="comment">// Less reports whether the element with</span></span><br><span class="line">	<span class="comment">// index i should sort before the element with index j.</span></span><br><span class="line">	Less(i, j <span class="type">int</span>) <span class="type">bool</span></span><br><span class="line">	<span class="comment">// Swap swaps the elements with indexes i and j.</span></span><br><span class="line">	Swap(i, j <span class="type">int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>也就是说要实现一个堆，至少要实现以上的接口。所以我们要想使用heap定义的堆，就需要实现这五个方法。以下简单计算一个矩形面积的堆排序</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;container/heap&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Rectangle <span class="keyword">struct</span> &#123;</span><br><span class="line">	width  <span class="type">int</span></span><br><span class="line">	height <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rec *Rectangle)</span></span> Area() <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> rec.height * rec.width</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> RectHeap []Rectangle</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp RectHeap)</span></span> Len() <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">len</span>(hp)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 按从小到大排列</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp RectHeap)</span></span> Less(i, j <span class="type">int</span>) <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> hp[i].Area() &lt; hp[j].Area()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp RectHeap)</span></span> Swap(i, j <span class="type">int</span>) &#123;</span><br><span class="line">	hp[i], hp[j] = hp[j], hp[i]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp *RectHeap)</span></span> Push(h <span class="keyword">interface</span>&#123;&#125;) &#123;</span><br><span class="line">	*hp = <span class="built_in">append</span>(*hp, h.(Rectangle))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp *RectHeap)</span></span> Pop() (x <span class="keyword">interface</span>&#123;&#125;) &#123;</span><br><span class="line">	n := <span class="built_in">len</span>(*hp)</span><br><span class="line">	x = (*hp)[n<span class="number">-1</span>]</span><br><span class="line">	*hp = (*hp)[:n<span class="number">-1</span>]</span><br><span class="line">	<span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	hp := &amp;RectHeap&#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">2</span>; i &lt; <span class="number">6</span>; i++ &#123;</span><br><span class="line">		*hp = <span class="built_in">append</span>(*hp, Rectangle&#123;i, i&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;原始slice: &quot;</span>, hp)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 堆操作</span></span><br><span class="line">	heap.Init(hp)</span><br><span class="line">	heap.Push(hp, Rectangle&#123;<span class="number">100</span>, <span class="number">10</span>&#125;)</span><br><span class="line">	fmt.Println(<span class="string">&quot;top元素：&quot;</span>, (*hp)[<span class="number">0</span>])</span><br><span class="line">	fmt.Println(<span class="string">&quot;删除并返回最后一个：&quot;</span>, heap.Pop(hp)) <span class="comment">// 最后 一个元素</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;最终slice: &quot;</span>, hp)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>通过实现五个接口需要实现的函数，即可完成要求</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1428,27 +1575,27 @@
     <img class="site-author-image" itemprop="image" alt="yxh"
       src="/images/avatar.gif">
   <p class="site-author-name" itemprop="name">yxh</p>
-  <div class="site-description" itemprop="description">鼠鼠我呀要努力啦</div>
+  <div class="site-description" itemprop="description">Go开发弱鸡，沉淀ing</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1484,7 +1631,58 @@
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 

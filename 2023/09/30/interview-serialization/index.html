@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="什么是序列化和反序列化？ 序列化： 将数据结构或对象或结构体转换成二进制字节的过程 反序列化：将序列化后的二进制字节流反序列化成数据结构或者对象  什么时候比较常用？ RPC 网络传输 文件存储 存储到Redis缓存 存储到内存  序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？四层协议  应用层 传输层 网络层 网络接口层  序列化属于程序中用于转换的操作，所以应该是最顶层于用户层的。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2023/09/13/hello-world/index.html">
+<meta property="og:title" content="面试重点：序列化">
+<meta property="og:url" content="http://example.com/2023/09/30/interview-serialization/index.html">
 <meta property="og:site_name" content="鼠鼠的随笔">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="什么是序列化和反序列化？ 序列化： 将数据结构或对象或结构体转换成二进制字节的过程 反序列化：将序列化后的二进制字节流反序列化成数据结构或者对象  什么时候比较常用？ RPC 网络传输 文件存储 存储到Redis缓存 存储到内存  序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？四层协议  应用层 传输层 网络层 网络接口层  序列化属于程序中用于转换的操作，所以应该是最顶层于用户层的。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-09-13T13:19:30.936Z">
-<meta property="article:modified_time" content="2023-09-13T13:19:30.936Z">
+<meta property="article:published_time" content="2023-09-30T11:52:47.000Z">
+<meta property="article:modified_time" content="2023-10-04T12:18:16.683Z">
 <meta property="article:author" content="yxh">
+<meta property="article:tag" content="序列化">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/09/13/hello-world/">
+<link rel="canonical" href="http://example.com/2023/09/30/interview-serialization/">
 
 
 <script id="page-configurations">
@@ -45,7 +46,7 @@
   };
 </script>
 
-  <title>Hello World | 鼠鼠的随笔</title>
+  <title>面试重点：序列化 | 鼠鼠的随笔</title>
   
 
 
@@ -160,12 +161,12 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/13/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/30/interview-serialization/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -173,7 +174,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          面试重点：序列化
         </h1>
 
         <div class="post-meta">
@@ -183,10 +184,33 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-09-13 21:19:30" itemprop="dateCreated datePublished" datetime="2023-09-13T21:19:30+08:00">2023-09-13</time>
+              <time title="创建时间：2023-09-30 19:52:47" itemprop="dateCreated datePublished" datetime="2023-09-30T19:52:47+08:00">2023-09-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-04 20:18:16" itemprop="dateModified" datetime="2023-10-04T20:18:16+08:00">2023-10-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
   <span class="post-meta-item">
     
@@ -195,8 +219,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/09/13/hello-world/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/13/hello-world/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/09/30/interview-serialization/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/30/interview-serialization/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -211,20 +235,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+        <h2 id="什么是序列化和反序列化？"><a href="#什么是序列化和反序列化？" class="headerlink" title="什么是序列化和反序列化？"></a>什么是序列化和反序列化？</h2><ul>
+<li>序列化： 将数据结构或对象或结构体转换成二进制字节的过程</li>
+<li>反序列化：将序列化后的二进制字节流反序列化成数据结构或者对象</li>
+</ul>
+<h3 id="什么时候比较常用？"><a href="#什么时候比较常用？" class="headerlink" title="什么时候比较常用？"></a>什么时候比较常用？</h3><ul>
+<li>RPC 网络传输</li>
+<li>文件存储</li>
+<li>存储到Redis缓存</li>
+<li>存储到内存</li>
+</ul>
+<h3 id="序列化属于TCP-IP四层协议的哪一层，七层呢？"><a href="#序列化属于TCP-IP四层协议的哪一层，七层呢？" class="headerlink" title="序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？"></a>序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？</h3><p>四层协议</p>
+<ul>
+<li>应用层</li>
+<li>传输层</li>
+<li>网络层</li>
+<li>网络接口层</li>
+</ul>
+<p>序列化属于程序中用于转换的操作，所以应该是最顶层于用户层的。所以是应用层的一部分。</p>
+<h2 id="常见的序列化"><a href="#常见的序列化" class="headerlink" title="常见的序列化"></a>常见的序列化</h2><h3 id="java常见序列化"><a href="#java常见序列化" class="headerlink" title="java常见序列化"></a>java常见序列化</h3><ul>
+<li>jdk序列：不推荐</li>
+<li>Kryo序列化：由于其变长存储特性并使用了字节码生成机制，拥有较高的运行速度和较小的字节码体积。</li>
+<li>Protobuf序列化：需要自己定义 IDL 文件和生成对应的序列化代码。</li>
+<li>ProtoStuff序列化：基于Protobuf提供了更多的功能和更简易的用法</li>
+<li>Hessian序列化：自定义描述的二进制 RPC 协议。</li>
+</ul>
+<h3 id="go常见序列化"><a href="#go常见序列化" class="headerlink" title="go常见序列化"></a>go常见序列化</h3>
     </div>
 
     
@@ -232,16 +268,22 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># 序列化</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/09/14/My-New-Post/" rel="next" title="进程、线程、协程基础知识">
-      进程、线程、协程基础知识 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/09/25/redis-distributed-locks/" rel="prev" title="Go实战：redis分布式锁开发问题">
+      <i class="fa fa-chevron-left"></i> Go实战：redis分布式锁开发问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/03/interview-tcp-reliability/" rel="next" title="面试重点：TCP如何保证可靠性">
+      面试重点：TCP如何保证可靠性 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -302,7 +344,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是序列化和反序列化？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%AF%94%E8%BE%83%E5%B8%B8%E7%94%A8%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么时候比较常用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%B1%9E%E4%BA%8ETCP-IP%E5%9B%9B%E5%B1%82%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%93%AA%E4%B8%80%E5%B1%82%EF%BC%8C%E4%B8%83%E5%B1%82%E5%91%A2%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">常见的序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#java%E5%B8%B8%E8%A7%81%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">java常见序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#go%E5%B8%B8%E8%A7%81%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">go常见序列化</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -311,27 +353,27 @@
     <img class="site-author-image" itemprop="image" alt="yxh"
       src="/images/avatar.gif">
   <p class="site-author-name" itemprop="name">yxh</p>
-  <div class="site-description" itemprop="description">鼠鼠我呀要努力啦</div>
+  <div class="site-description" itemprop="description">Go开发弱鸡，沉淀ing</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -367,7 +409,58 @@
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 

@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="鼠鼠我呀要努力啦">
+  <meta name="description" content="Go开发弱鸡，沉淀ing">
 <meta property="og:type" content="website">
 <meta property="og:title" content="鼠鼠的随笔">
 <meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="鼠鼠的随笔">
-<meta property="og:description" content="鼠鼠我呀要努力啦">
+<meta property="og:description" content="Go开发弱鸡，沉淀ing">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="yxh">
 <meta name="twitter:card" content="summary">
@@ -157,12 +157,331 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/20/network-http-study/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/20/network-http-study/" class="post-title-link" itemprop="url">计算机网络：HTTP知识点遗忘点记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-20 16:35:47" itemprop="dateCreated datePublished" datetime="2023-09-20T16:35:47+08:00">2023-09-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-21 11:02:10" itemprop="dateModified" datetime="2023-09-21T11:02:10+08:00">2023-09-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/20/network-http-study/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/20/network-http-study/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>记录一下自己HTTP的相关薄弱点。强化一下学习<br>文章内容参考<a target="_blank" rel="noopener" href="https://xiaolincoding.com/network/2_http/http_interview.html#https-%E6%98%AF%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E7%9A%84-%E5%85%B6%E9%97%B4%E4%BA%A4%E4%BA%92%E4%BA%86%E4%BB%80%E4%B9%88">小林coding</a></p>
+<h2 id="HTTPs-的应用数据如何保证完整性"><a href="#HTTPs-的应用数据如何保证完整性" class="headerlink" title="HTTPs 的应用数据如何保证完整性"></a>HTTPs 的应用数据如何保证完整性</h2><p>这个问题，主要考查的是，HTTPs构建完对话后，如何去实现数据的传递，因为HTTPs传递消息不会像HTTP那样随意的明文传输，它还需要一个对称加密的过程。<br>这里涉及TLS的两个协议：</p>
+<ul>
+<li>TLS握手协议： 四次握手算法，负责协商加密算法和生成对称密钥的。</li>
+<li>TLS记录协议：负责保护应用程序数据并验证其完整性和来源，所以对HTTP数据加密是使用记录协议</li>
+</ul>
+<p>TLS记录协议主要负责消息（HTTP数据）的压缩，加密及数据的认证。<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/%E8%AE%B0%E5%BD%95%E5%8D%8F%E8%AE%AE.png" alt="TLS处理信息的过程"></p>
+<p>过程如下：</p>
+<ul>
+<li>消息分割：消息被分割成多个片段</li>
+<li>片段压缩：消息通过压缩算法进行压缩</li>
+<li>MAC生成：通过Hash算法对压缩片段生成MAC并追加到尾部</li>
+<li>对称加密：通过对称密钥进行加密</li>
+<li>生成报文：由数据类型、版本号、压缩后的长度组成最终报文</li>
+</ul>
+<h2 id="HTTP-2做了什么优化？"><a href="#HTTP-2做了什么优化？" class="headerlink" title="HTTP&#x2F;2做了什么优化？"></a>HTTP&#x2F;2做了什么优化？</h2><p>HTTP&#x2F;2协议是基于HTTPS的，所以HTTP&#x2F;2的安全性也是有保障的</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/25-HTTP2.png" alt="HTTP各版本架构"></p>
+<p>根据这些图可以看到HTTP&#x2F;2相比于HTTP&#x2F;1.1的一些改进</p>
+<ul>
+<li>头部压缩：<code>HPACK</code>算法，通过维护一个头信息对应信息表，用索引号来表示字段。</li>
+<li>二进制格式： 头信息和body都采用二进制传输</li>
+<li>并发传输：引用Stream概念，多个Stream在一条TCP中复用。通过Stream ID 让接收方变得排序，服务端可以乱序发送</li>
+<li>服务器推送：服务器会主动向客户端推送可能会用到的资源</li>
+</ul>
+<h2 id="HTTP-2有什么缺陷？"><a href="#HTTP-2有什么缺陷？" class="headerlink" title="HTTP&#x2F;2有什么缺陷？"></a>HTTP&#x2F;2有什么缺陷？</h2><p>HTTP&#x2F;2 通过Stream的并发能力，虽然解决了HTTP&#x2F;1队头阻塞的问题，但还是存在TCP的队头阻塞。因为HTTP&#x2F;2是基于TCP的。TCP 是字节流协议，TCP 层必须保证收到的字节数据是完整且连续的，这样内核才会将缓冲区里的数据返回给 HTTP 应用，那么当「前 1 个字节数据」没有到达时，后收到的字节数据只能存放在内核缓冲区里，只有等到这 1 个字节数据到达时，HTTP&#x2F;2 应用层才能从内核中拿到数据，这就是 HTTP&#x2F;2 队头阻塞问题。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/network/quic/http2%E9%98%BB%E5%A1%9E.jpeg" alt="stream丢失片段"></p>
+<p>当通过TCP发送多个包的时候，如果有一个包在网络中丢失，那么就会导致之后的内容会在内核中缓存。直到丢失的包收到。应用层才能在内核中取到结果<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/%E7%BD%91%E7%BB%9C/http3/tcp%E9%98%9F%E5%A4%B4%E9%98%BB%E5%A1%9E.gif" alt="内核运行图"></p>
+<p>所以，一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的所有的 HTTP 请求都必须等待这个丢了的包被重传回来。</p>
+<h2 id="HTTP-3-做了哪些优化？"><a href="#HTTP-3-做了哪些优化？" class="headerlink" title="HTTP&#x2F;3 做了哪些优化？"></a>HTTP&#x2F;3 做了哪些优化？</h2><p>我们看到HTTP&#x2F;2做了很大的努力，让HTTP层面不出现队头阻塞，但是还是在TCP层上折了腰。<br>所以HTTP&#x2F;3将底层修改为UDP协议。</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/27-HTTP3.png" alt="HTTP各版本"></p>
+<p>基于UDP的quick协议可以实现可靠传输。</p>
+<p>那么HTTP&#x2F;3的三个优点就是</p>
+<ul>
+<li>无队头阻塞：同样是多路复用但是不会像HTTP&#x2F;2那样当stream某个出现丢失时阻塞。UDP中多个Stream之间没有依赖</li>
+<li>更快的建立连接：因为QUIC协议里包含了TLS协议。所以直接握手就可以了</li>
+<li>连接迁移：基于TCP的连接，强调了地址和端口号。如果二者有一点变化就需要重新连接，代价很高。而基于UDP的不需要</li>
+</ul>
+<h2 id="quick协议怎么让UDP实现可靠传输的？"><a href="#quick协议怎么让UDP实现可靠传输的？" class="headerlink" title="quick协议怎么让UDP实现可靠传输的？"></a>quick协议怎么让UDP实现可靠传输的？</h2><p>HTTP&#x2F;3的整体视角是这样的</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/http3-over-quic-protocol-works.png" alt="HTTP/3整体情况"></p>
+<ul>
+<li>Packet Header  分别包含了Long Packet Header 和 Short Packet Header两种实现方法，前者在首次连接时使用，后者用于日常传输</li>
+<li>QUIC FrameHeader 在一个Packet中会存放多个Frame数据， 这个Frame数据内容大致如下<br><img src="https://cdn.xiaolincoding.com//mysql/other/536298d2c54a43b699026bffe0f85010.png" alt="Frame内容"></li>
+</ul>
+<p>通过StreamID、Offset保证数据的有序性，length指明了Frame数据的长度</p>
+<h3 id="quic-ID-是什么样的，和TCP一样吗？"><a href="#quic-ID-是什么样的，和TCP一样吗？" class="headerlink" title="quic ID 是什么样的，和TCP一样吗？"></a>quic ID 是什么样的，和TCP一样吗？</h3><p>不是，quicID 在UDP中严格递增的，为了保证RTT（往返延时时间的无歧义测量）,所以让它严格递增，这也顺便解决了TCP中RTT歧义性导致重发事件概率增大</p>
+<h3 id="为什么QUIC-不会队头阻塞？"><a href="#为什么QUIC-不会队头阻塞？" class="headerlink" title="为什么QUIC 不会队头阻塞？"></a>为什么QUIC 不会队头阻塞？</h3><p>HTTP&#x2F;2 队头阻塞的原因是因为TCP, 虽然在应用层的层面上解决队头阻塞问题，但是在其Stream是基于TCP的，TCP滑动窗口的阻塞会导致队头阻塞。而HTTP&#x2F;3是基于UDP的，UDP会为每个Stream单独弄一个窗口。这样各个Stream之间是不会互相影响的</p>
+<h3 id="QUIC-如何做到流量控制？"><a href="#QUIC-如何做到流量控制？" class="headerlink" title="QUIC 如何做到流量控制？"></a>QUIC 如何做到流量控制？</h3><p>和TCP原理类似，TCP流量控制是通过接收方告诉发送方，它的接收窗口有多大，从而让发送方计算发送速率</p>
+<p>QUIC 实现流量控制的方式</p>
+<ul>
+<li>通过window_update 帧告知窗口大小</li>
+<li>通过BlockFrame 帧告知阻塞</li>
+</ul>
+<p>同时和HTTP&#x2F;2不同的是Stream每个都是单独的窗口，所以要进行两个流量控制</p>
+<ul>
+<li>Stream流量控制， 对每个Stream的窗口进行限制</li>
+<li>Connection 连接控制，对Stream总的连接大小进行限制，防止超过缓存</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/go-channel-various-situations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/19/go-channel-various-situations/" class="post-title-link" itemprop="url">Go：Channel各种情况下的情况</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-19 10:46:41" itemprop="dateCreated datePublished" datetime="2023-09-19T10:46:41+08:00">2023-09-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-20 20:41:49" itemprop="dateModified" datetime="2023-09-20T20:41:49+08:00">2023-09-20</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/19/go-channel-various-situations/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/19/go-channel-various-situations/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Channel情况解析"><a href="#Channel情况解析" class="headerlink" title="Channel情况解析"></a>Channel情况解析</h2><p>Channel 作为go协程编程中必要的一环，理解其原理和各种情况是必要的。如果加以利用这些特性。我们会在工作中可以保证安全的情况下探索各种玩法</p>
+<p>一般我们看到别人讲channel的各种情况，都用文本写了一行又一行。感觉看不太懂，看完下面会忘了上面。所以我自己整理了整理各种情况并用图表示出来。供自己以后进行快速查找和记忆</p>
+<p><img src="https://img1.imgtp.com/2023/09/19/hV0QoxLs.png" alt="channel各种情况"></p>
+<p>上图可以很清晰的看到什么流程会导致什么情况。总结一些特殊的情况：</p>
+<ul>
+<li>关闭channel 读 返回0</li>
+<li>关闭channel 写、关闭 panic</li>
+<li>channel &#x3D; nil 后关闭会panic</li>
+<li>channel &#x3D; nil channel将无法传递值了，正常使用它进行异步可能会阻塞</li>
+<li>无缓冲读写都会阻塞必须同时进行··</li>
+</ul>
+<p>图中阻塞的channel是为了保证异步，如果处理不当，会出现死锁。</p>
+<p>如果所有协程都进入了阻塞态，就会导致go报dealLock错误。所以在这些情况要注意，虽然有一些风险，但也会让我们收益更大。能做的事情更多</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/go-heap-coding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/19/go-heap-coding/" class="post-title-link" itemprop="url">GO：如何实现一个堆</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-19 09:10:36 / 修改时间：09:47:36" itemprop="dateCreated datePublished" datetime="2023-09-19T09:10:36+08:00">2023-09-19</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/19/go-heap-coding/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/19/go-heap-coding/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一些leetcode算法题中经常用到堆排序去解决问题比如常见</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-largest-element-in-an-array/">数组第K大个数</a><br><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-k-closest-elements/">658. 找到 K 个最接近的元素</a><br>Golang 给出了主要的实现堆队列的主要方法，但是由于堆的数据结构都可以使用，所以需要自己去实现一些必要的接口，才能正常使用一个堆</p>
+<h2 id="堆的接口"><a href="#堆的接口" class="headerlink" title="堆的接口"></a>堆的接口</h2><p><code>heap.Interface</code> 接口源码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Interface <span class="keyword">interface</span> &#123;</span><br><span class="line">	sort.Interface</span><br><span class="line">	Push(x <span class="keyword">interface</span>&#123;&#125;) <span class="comment">// add x as element Len()</span></span><br><span class="line">	Pop() <span class="keyword">interface</span>&#123;&#125;   <span class="comment">// remove and return element Len() - 1.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>sort.Interface</code> 接口源码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Interface <span class="keyword">interface</span> &#123;</span><br><span class="line">	<span class="comment">// Len is the number of elements in the collection.</span></span><br><span class="line">	Len() <span class="type">int</span></span><br><span class="line">	<span class="comment">// Less reports whether the element with</span></span><br><span class="line">	<span class="comment">// index i should sort before the element with index j.</span></span><br><span class="line">	Less(i, j <span class="type">int</span>) <span class="type">bool</span></span><br><span class="line">	<span class="comment">// Swap swaps the elements with indexes i and j.</span></span><br><span class="line">	Swap(i, j <span class="type">int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是说要实现一个堆，至少要实现以上的接口。所以我们要想使用heap定义的堆，就需要实现这五个方法。以下简单计算一个矩形面积的堆排序</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;container/heap&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Rectangle <span class="keyword">struct</span> &#123;</span><br><span class="line">	width  <span class="type">int</span></span><br><span class="line">	height <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rec *Rectangle)</span></span> Area() <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> rec.height * rec.width</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> RectHeap []Rectangle</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp RectHeap)</span></span> Len() <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">len</span>(hp)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 按从小到大排列</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp RectHeap)</span></span> Less(i, j <span class="type">int</span>) <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> hp[i].Area() &lt; hp[j].Area()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp RectHeap)</span></span> Swap(i, j <span class="type">int</span>) &#123;</span><br><span class="line">	hp[i], hp[j] = hp[j], hp[i]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp *RectHeap)</span></span> Push(h <span class="keyword">interface</span>&#123;&#125;) &#123;</span><br><span class="line">	*hp = <span class="built_in">append</span>(*hp, h.(Rectangle))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(hp *RectHeap)</span></span> Pop() (x <span class="keyword">interface</span>&#123;&#125;) &#123;</span><br><span class="line">	n := <span class="built_in">len</span>(*hp)</span><br><span class="line">	x = (*hp)[n<span class="number">-1</span>]</span><br><span class="line">	*hp = (*hp)[:n<span class="number">-1</span>]</span><br><span class="line">	<span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	hp := &amp;RectHeap&#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">2</span>; i &lt; <span class="number">6</span>; i++ &#123;</span><br><span class="line">		*hp = <span class="built_in">append</span>(*hp, Rectangle&#123;i, i&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;原始slice: &quot;</span>, hp)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 堆操作</span></span><br><span class="line">	heap.Init(hp)</span><br><span class="line">	heap.Push(hp, Rectangle&#123;<span class="number">100</span>, <span class="number">10</span>&#125;)</span><br><span class="line">	fmt.Println(<span class="string">&quot;top元素：&quot;</span>, (*hp)[<span class="number">0</span>])</span><br><span class="line">	fmt.Println(<span class="string">&quot;删除并返回最后一个：&quot;</span>, heap.Pop(hp)) <span class="comment">// 最后 一个元素</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;最终slice: &quot;</span>, hp)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过实现五个接口需要实现的函数，即可完成要求</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/18/go-channel-coding-sytle/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -247,7 +566,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -420,7 +739,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -607,7 +926,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -727,7 +1046,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -941,7 +1260,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1107,7 +1426,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1190,391 +1509,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/14/My-New-Post/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠的随笔">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/14/My-New-Post/" class="post-title-link" itemprop="url">进程、线程、协程基础知识</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-14 21:11:55" itemprop="dateCreated datePublished" datetime="2023-09-14T21:11:55+08:00">2023-09-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-15 21:31:36" itemprop="dateModified" datetime="2023-09-15T21:31:36+08:00">2023-09-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/14/My-New-Post/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/14/My-New-Post/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Golang后端选手， 最近秋招有点难受，复习一下八股，就从进程开始吧（主要内容来自小林coding）</p>
-<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><p>通常来说，我们编写的代码会被存储成静态文件。通过编译后就会变成一些二进制的可执行文件。当这些文件被运行时，就会被装载到内存中去。<br>此时cpu就会执行这些程序的指令。这个运行的程序就被称为了<strong>进程</strong>。</p>
-<p>通常来说，程序执行的时候往往会有些读取硬盘文件的操作。这些操作所花费的时候虽然在我们人的感受中没多少。但是对于被压榨的CPU来说，就是休息的有点多了。</p>
-<p>这个时候进程就被提出来，可不可以在CPU等待时候，中断当前进程。去执行另一个进程。这样CPU也不会歇太长时间。我们能更好的压榨了^-^</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/4-%E8%BF%9B%E7%A8%8B%E4%BA%A4%E6%9B%BF%E8%BF%90%E8%A1%8C.jpg" alt="cpu进程切换"></p>
-<p>所以多进程的思想就被提出来了</p>
-<p>于是就有了一个必会的八股知识</p>
-<h3 id="并行和并发？"><a href="#并行和并发？" class="headerlink" title="并行和并发？"></a>并行和并发？</h3><p>不多说 看图<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/5-%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C.jpg" alt="并发与并行"></p>
-<p>当单核CPU通过多个进程切换来做，这样可以减少CPU休息的时间。CPU休息少了，任务自然就做的多了（太真实了有木有T-T）</p>
-<h3 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h3><p>进程既然要切换，那我们可以把这些状态按照不同情况进行分类。整体如下</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/8-%E8%BF%9B%E7%A8%8B%E4%BA%94%E4%B8%AA%E7%8A%B6%E6%80%81.jpg" alt="进程状态"></p>
-<p>归纳一下</p>
-<ul>
-<li>运行状态: 此时进程控制着CPU</li>
-<li>阻塞状态: 此时进程正在等待某个事件的发生，此时没有压榨CPU</li>
-<li>就绪状态：完事具备，只欠东风了，就缺个CPU</li>
-<li>创建状态：刚被创建</li>
-<li>结束状态：进程即将消失</li>
-</ul>
-<p>既然进程不在运行的时候。那这些进程要放到哪里。如果放到内存里。那个这个内存小身板可能有点顶不住了。而且这从整个操作系统视角来看就是再浪费内存的资源。所以一些操作系统会在进程阻塞的时候将内存换到物理磁盘里。反正物理磁盘里够折腾。</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/9-%E6%8D%A2%E5%85%A5%E6%8D%A2%E5%87%BA.jpg" alt="缓存换页"></p>
-<p>本着节约的精神。增加了换盘的部分。所以就又增加了两个状态。</p>
-<ul>
-<li>就绪挂起状态：进程在硬盘中挂起等待某个事件出现</li>
-<li>阻塞挂起状态：进程在硬盘中等待，只要进入内存就能立即就绪</li>
-</ul>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/10-%E8%BF%9B%E7%A8%8B%E4%B8%83%E4%B8%AD%E7%8A%B6%E6%80%81.jpg" alt="新增的状态"></p>
-<h2 id="进程的控制结构"><a href="#进程的控制结构" class="headerlink" title="进程的控制结构"></a>进程的控制结构</h2><h3 id="进程在操作系统中是怎么被控制的呢？"><a href="#进程在操作系统中是怎么被控制的呢？" class="headerlink" title="进程在操作系统中是怎么被控制的呢？"></a>进程在操作系统中是怎么被控制的呢？</h3><p>是通过PCB 进程控制块描述进程的。其数据结构就是线性链表</p>
-<h3 id="PCB包含什么信息？"><a href="#PCB包含什么信息？" class="headerlink" title="PCB包含什么信息？"></a>PCB包含什么信息？</h3><p>进程描述信息</p>
-<ul>
-<li>进程标识符： 标识进程</li>
-<li>用户标识符： 标识进行归属的用户</li>
-</ul>
-<p>进程控制及管理信息：</p>
-<ul>
-<li>进程当前的状态</li>
-<li>进程的优先级 （调度算法中所必须的）</li>
-</ul>
-<p>资源分配清单</p>
-<ul>
-<li>内存地址或虚拟地址的信息，所打开文件的列表和所使用的I&#x2F;O设备信息</li>
-</ul>
-<p>CPU相关信息</p>
-<ul>
-<li>CPU寄存器的信息。当进程切换时，为了保证下次能知道CPU的状态。所以需要将CPU当时的状态信息存到PCB中，下次执行就能准确无误的到断点执行</li>
-</ul>
-<h3 id="PCB队列如何组织的？"><a href="#PCB队列如何组织的？" class="headerlink" title="PCB队列如何组织的？"></a>PCB队列如何组织的？</h3><p>一般来说是通过链表进行组织的。其次要按照进程的不同状态进行分类。比如就绪状态单独做一个队列，阻塞单独做一个阻塞队列。多种状态同时构建。这样就能很轻松的实现前面所说的进程状态转换问题了。<strong>多核CPU用几个核就要用创建几个队列</strong></p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/12-PCB%E7%8A%B6%E6%80%81%E9%93%BE%E8%A1%A8%E7%BB%84%E7%BB%87.jpg" alt="PCB组织"></p>
-<p>一般情况下会选择链表去实现，因为要考虑到怎么去处理进程的取消、创建、状态转换。所以一定要实现灵活的插入和删除。</p>
-<h2 id="进程的控制"><a href="#进程的控制" class="headerlink" title="进程的控制"></a>进程的控制</h2><p>维护进程队列的结构一般为链表。那进程状态的转换要怎么实现？</p>
-<p>创建进程</p>
-<p>操作系统允许一个进程创建一个子进程。子进程会继承父进程的所拥有资源</p>
-<ul>
-<li>创建一个空白PCB，填写进程信息</li>
-<li>分配运行时的资源</li>
-<li>插入就绪队列，等待运行</li>
-</ul>
-<p>终止进程</p>
-<p>一般来说一个进程的终止有三种状态。</p>
-<ol>
-<li>正常终止</li>
-<li>异常终止</li>
-<li>kill</li>
-</ol>
-<p>当进程要结束后。其继承的资源要还给父进程（通过系统回收：回收内存，关闭文件描述符等等）。当父进程被终止时，子进程就会变成孤儿进程，就需要交给1号进程进行回收。否则子进程就会变成僵尸进程</p>
-<ul>
-<li>查找PCB</li>
-<li>终止执行</li>
-<li>有子进程交给1号进程收养</li>
-<li>将进程资源交给系统回收</li>
-<li>PCB删除</li>
-</ul>
-<p>阻塞进程</p>
-<p>当进程需要等待某个事件的发生，就需要把自己阻塞。一旦进入阻塞状态，就必须让其他进程唤醒</p>
-<ul>
-<li>根据标识号找到PCB</li>
-<li>如果为运行态，就把当前的上下文存到PCB里，再转为阻塞态</li>
-<li>加入到阻塞队列中</li>
-</ul>
-<p>唤醒进程</p>
-<p>当阻塞进程在事件发生后，被其他进程唤醒，类似接班人。只有CPU的运行才能有进程的进入</p>
-<ul>
-<li>找到PCB</li>
-<li>移除阻塞队列，转入就绪队列</li>
-<li>等待调度</li>
-</ul>
-<h2 id="进程的上下文切换"><a href="#进程的上下文切换" class="headerlink" title="进程的上下文切换"></a>进程的上下文切换</h2><p>当不同进程切换时，进程进行切换时，就会出现上下文切换</p>
-<h3 id="什么是CPU上下文切换？"><a href="#什么是CPU上下文切换？" class="headerlink" title="什么是CPU上下文切换？"></a>什么是CPU上下文切换？</h3><p>所谓的上下文就是CPU寄存器和程序计数器在执行任务前所必须的依赖环境。需要知道上次进程执行的状态</p>
-<p>所以CPU上下文切换就是将CPU寄存器和程序计数器中的内容在切换时保存到PCB中，加载时从PCB中加载到寄存器和程序计数器中。实现任务原封不动的切换。</p>
-<h3 id="进程上下文切换是什么？"><a href="#进程上下文切换是什么？" class="headerlink" title="进程上下文切换是什么？"></a>进程上下文切换是什么？</h3><p>进程是由内核调度的，进程的切换只能发生在内核态。</p>
-<p>进程的上下文切换不仅包含了虚拟内存、栈、全局变量等用户空间的资源，还包括了内核堆栈、寄存器等内核空间的资源。</p>
-<p>注意：进程的上下文切换比较大，所以接下来提出了线程切换</p>
-<h3 id="发生进程上下文切换有哪些场景？"><a href="#发生进程上下文切换有哪些场景？" class="headerlink" title="发生进程上下文切换有哪些场景？"></a>发生进程上下文切换有哪些场景？</h3><ul>
-<li>系统的自动调度，根据CPU时间片自动切换</li>
-<li>进程资源不足，挂起等待资源充足</li>
-<li>Sleep主动挂起</li>
-<li>高优先级进程插队</li>
-<li>硬中断（外设、错误、时钟、外部信号、通知）</li>
-</ul>
-<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><p>必须要记得一个知识点：CPU的最小调度基本单位是  <strong>线程</strong></p>
-<h3 id="为什么使用线程？"><a href="#为什么使用线程？" class="headerlink" title="为什么使用线程？"></a>为什么使用线程？</h3><p>线程相比进程的好处在于上下文切换快和通信方便，它们共享进程的内容。上下文切换也只需要CPU切换</p>
-<h3 id="什么是线程？"><a href="#什么是线程？" class="headerlink" title="什么是线程？"></a>什么是线程？</h3><p>一句话： <strong>线程是进程当中的一条执行流程</strong></p>
-<p>同一个进程内，多个线程可以共享代码段、数据段、打开的文件等资源。但每个线程各自都有独立的寄存器和栈。确保线程的控制是独立的</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/16-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.jpg" alt="线程的执行流程"></p>
-<h3 id="线程的优缺点？"><a href="#线程的优缺点？" class="headerlink" title="线程的优缺点？"></a>线程的优缺点？</h3><p>优点：</p>
-<ul>
-<li>进程可以存在多个线程</li>
-<li>线程之间可以并发运行</li>
-<li>线程可以共享地址空间和文件资源</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>一般情况下线程崩溃且没有捕捉错误时会导致进程崩溃</li>
-</ul>
-<h3 id="线程和进程的比较"><a href="#线程和进程的比较" class="headerlink" title="线程和进程的比较"></a>线程和进程的比较</h3><p>线程与进程的比较如下：</p>
-<ul>
-<li>进程是资源的调度单位 线程是cpu的调度单位</li>
-<li>进程拥有完整的资源平台，而线程只独享最小的资源</li>
-<li>线程同样具有就绪、阻塞、运行三个状态</li>
-<li>线程更加轻量，资源转换更方便</li>
-</ul>
-<p>线程减少开销体现在：</p>
-<ul>
-<li>线程创建快，线程不需要去创建资源，直接使用进程的</li>
-<li>线程终止快 不需要去清理资源，这些都是交给进程的</li>
-<li>线程切换快 因为线程只需要进行CPU上下文切换</li>
-<li>线程内部交互快， 因为同一进程内部资源共享</li>
-</ul>
-<h3 id="线程上下文的切换是什么？"><a href="#线程上下文的切换是什么？" class="headerlink" title="线程上下文的切换是什么？"></a>线程上下文的切换是什么？</h3><p>重复一遍， 进程是资源的基本调度单位， 线程是CPU的基本调度单位</p>
-<p>操作系统的任务调度对象就是线程。进程是提供资源的</p>
-<p>当两个线程切换是同一个进程里的话就很简单，只需要切换CPU上下文<br>当两个线程不是同一个进程，需要进程切换</p>
-<h3 id="线程如何实现的？"><a href="#线程如何实现的？" class="headerlink" title="线程如何实现的？"></a>线程如何实现的？</h3><p>主要有三种线程的实现方式</p>
-<ul>
-<li>用户线程：用户态线程库来完成线程的管理</li>
-<li>内核线程：由内核管理的线程</li>
-<li>轻量级线程： 内核中支持用户线程</li>
-</ul>
-<h3 id="用户线程如何理解？存在什么优势和缺陷？"><a href="#用户线程如何理解？存在什么优势和缺陷？" class="headerlink" title="用户线程如何理解？存在什么优势和缺陷？"></a>用户线程如何理解？存在什么优势和缺陷？</h3><p>用户线程的整个线程的管理和调度，操作系统是不会参与的。而是由用户级线程库函数来完成线程的调用管理。这个线程库函数怎么理解呢？</p>
-<p>我是这么理解的，一般来说多个线程会对上一个内核线程。这时候线程库函数就是一个管理者，他会去安排这些线程加入到内核空间的线程中。<br>比如Golang的协程就是用户态线程的一种实现，它的线程管理全部由用户去管理，自然也就更高效了</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/20-%E7%BA%BF%E7%A8%8BPCB-%E4%B8%80%E5%AF%B9%E5%A4%9A%E5%85%B3%E7%B3%BB.jpg" alt="用户线程"></p>
-<p>优点：</p>
-<ul>
-<li>基于用户级线程库函数维护的，即时操作系统不支持线程，也可以并发</li>
-<li>无需用户态和内核态的切换，速度比较快</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>由于操作系统没法管理，出现阻塞、死锁等问题。无法处理</li>
-<li>用户态线程无法打断当前运行中的线程。</li>
-<li>由于调度时间片多层分割，分到进程，在分到线程。更少了，执行就会有一些不必要的麻烦</li>
-</ul>
-<h3 id="那内核线程如何理解？存在什么优势和缺陷？"><a href="#那内核线程如何理解？存在什么优势和缺陷？" class="headerlink" title="那内核线程如何理解？存在什么优势和缺陷？"></a>那内核线程如何理解？存在什么优势和缺陷？</h3><p>什么是内核线程？</p>
-<p>内核线程是由操作系统管理的，线程对应的 TCB 自然是放在操作系统里的，这样线程的创建、终止和管理都是由操作系统负责。</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/21-%E7%BA%BF%E7%A8%8BPCB-%E4%B8%80%E5%AF%B9%E4%B8%80%E5%85%B3%E7%B3%BB.jpg" alt="内核态线程"></p>
-<p>优点：</p>
-<ul>
-<li>在一个进程中，如果某个内核线程发起系统调用，并不影响其他内核线程的运行</li>
-<li>分配给线程，多线程的进程获得更多的CPU运行时间</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>需要在支持内核线程的系统中使用，由内核维护PCB和TCB</li>
-<li>线程的创建、终止和切换都是通过系统调用的方式来进行，因此对于系统来说，系统开销比较大；</li>
-</ul>
-<h3 id="轻量级进程如何理解？"><a href="#轻量级进程如何理解？" class="headerlink" title="轻量级进程如何理解？"></a>轻量级进程如何理解？</h3><p>轻量级进程（是内核支持的用户线程，一个进程可有一个或多个 LWP，每个 LWP 是跟内核线程一对一映射的，也就是 LWP 都是由一个内核线程支持，而且 LWP 是由内核管理并像普通进程一样被调度。</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/22-LWP.jpg" alt="轻量级进程"></p>
-<p>简单来讲就是用户空间模拟进程。通过cpu去实现的</p>
-<h2 id="go协程"><a href="#go协程" class="headerlink" title="go协程"></a>go协程</h2><p>前面也讲了，协程实际上就是用户态线程的实现，用户态线程实现的区别主要是看线程怎么管理的。管理的好坏，也就决定了并发的好坏。go协程的实现，主要基于它的GMP模型。</p>
-<p><img src="/image/image.png" alt="GMP模型"></p>
-<p>网上有一张GMP模型的展示我感觉很不错，可以用来演示。</p>
-<h3 id="什么是GMP模型？"><a href="#什么是GMP模型？" class="headerlink" title="什么是GMP模型？"></a>什么是GMP模型？</h3><ul>
-<li><code>G</code> 代表我们在代码中用<code>go</code>字段启动的协程</li>
-<li><code>M</code> 代表内核线程</li>
-<li><code>P</code> 代表我们的处理器，其主要由GOMAXPROCS字段指定</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过runtime中的GOMAXPROCS字段 指定其数量</span></span><br><span class="line">runtime.GOMAXPROCS(<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
-
-<p>通过GMP可以实现一个高并发量的用户态线程模式</p>
-<h3 id="GMP模型怎么运行的？"><a href="#GMP模型怎么运行的？" class="headerlink" title="GMP模型怎么运行的？"></a>GMP模型怎么运行的？</h3><ul>
-<li>全局队列：存放等待的运行的G</li>
-<li>P的本地队列：同全局队列类似，存放的也是等待运行的 G，存的数量有限，不超过 256 个。新建 G’时，G’优先加入到 P 的本地队列，如果队列满了，则会把本地队列中一半的 G 移动到全局队列。</li>
-<li>P的数量：由GOMAXPROCS指定，默认为CPU核数</li>
-<li>M：线程想运行任务就得获取 P，从 P 的本地队列获取 G。如果线程在运行阻塞时会创建新的线程</li>
-</ul>
-<h3 id="P和M的数量？"><a href="#P和M的数量？" class="headerlink" title="P和M的数量？"></a>P和M的数量？</h3><p>P的数量有GOMAXPROCS决定<br>M的数量由当前运行阻塞度决定</p>
-<h3 id="P-和-M-何时会被创建？"><a href="#P-和-M-何时会被创建？" class="headerlink" title="P 和 M 何时会被创建？"></a>P 和 M 何时会被创建？</h3><p>P在确定数量后，运行系统时就开始创建<br>M 则是在没有足够的M去关联P并运行时，会创建新的M。比如阻塞M后就会新建M</p>
-<h3 id="调度器是怎么设计的？"><a href="#调度器是怎么设计的？" class="headerlink" title="调度器是怎么设计的？"></a>调度器是怎么设计的？</h3><p><strong>复用线程</strong>：避免频繁创建、销毁线程</p>
-<ol>
-<li>workSteal机制 ：当本地无可运行的G时，会尝试从其他线程绑定的P中偷取G，并不去销毁</li>
-<li>hand off 机制：当本线程因为 G 进行系统调用阻塞时，线程释放绑定的 P，把 P 转移给其他空闲的线程执行。</li>
-</ol>
-<p><strong>利用并行</strong>：<code>GOMAXPROCS</code> 设置 <code>P</code> 的数量，最多有 <code>GOMAXPROCS</code> 个线程分布在多个 <code>CPU</code> 上同时运行。<code>GOMAXPROCS</code> 也限制了并发的程度，比如 <code>GOMAXPROCS</code> &#x3D; 核数&#x2F;2，则最多利用了一半的 CPU 核进行并行。</p>
-<p><strong>抢占</strong>: 在 <code>coroutine</code> 中要等待一个协程主动让出 <code>CPU</code> 才执行下一个协程，在 <code>Go</code> 中，一个 <code>goroutine</code> 最多占用 <code>CPU</code> 10ms，防止其他 <code>goroutine</code> 被饿死，这就是 <code>goroutine</code> 不同于 <code>coroutine</code> 的一个地方。</p>
-<p><strong>全局 G 队列</strong>: 在新的调度器中依然有全局 G 队列，但功能已经被弱化了，当 M 执行 work stealing 从其他 P 偷不到 G 时，它可以从全局 G 队列获取 G。</p>
-<h3 id="M0-和-G0-有什么特点？"><a href="#M0-和-G0-有什么特点？" class="headerlink" title="M0 和 G0 有什么特点？"></a>M0 和 G0 有什么特点？</h3><p><code>M0</code> 是启动程序后的编号为 <code>0</code> 的主线程，这个 <code>M</code> 对应的实例会在全局变量 <code>runtime.m0</code> 中，不需要在 <code>heap</code> 上分配，<code>M0</code> 负责执行初始化操作和启动第一个 <code>G</code>， 在之后 <code>M0</code> 就和其他的 M 一样了。</p>
-<p><code>G0</code> 是每次启动一个 <code>M</code> 都会第一个创建的 <code>gourtine</code>，<code>G0</code> 仅用于负责调度的 <code>G</code>，<code>G0</code> 不指向任何可执行的函数，每个 <code>M</code> 都会有一个自己的 <code>G0</code>。在调度或系统调用时会使用 <code>G0</code> 的栈空间，全局变量的 <code>G0</code> 是 <code>M0</code> 的 <code>G0</code></p>
-<h3 id="怎么可视化GMP编程"><a href="#怎么可视化GMP编程" class="headerlink" title="怎么可视化GMP编程"></a>怎么可视化GMP编程</h3><p><code>go tool trace</code> 可以记录运行时的信息，能提供可视化的Web界面</p>
-<p>简单测试代码：main 函数创建 trace，trace 会运行在单独的 goroutine 中，然后 main 打印”Hello World” 退出。</p>
-<p><code>main.go</code></p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;runtime/trace&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123; <span class="comment">//创建trace文件</span></span><br><span class="line">	f, err := os.Create(<span class="string">&quot;trace.out&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> f.Close()</span><br><span class="line">	<span class="comment">//启动trace goroutine</span></span><br><span class="line">	err = trace.Start(f)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> trace.Stop()</span><br><span class="line">	<span class="comment">//main</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;Hello World&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>运行程序</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run main.go Hello World</span><br></pre></td></tr></table></figure>
-
-<p>会得到一个 trace.out 文件，然后我们可以用一个工具打开，来分析这个文件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool trace trace.out</span><br></pre></td></tr></table></figure>
-
-<p>就会打开分析这个文件， 点击view trace， 就能看到协程的执行情况</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>大概理了一下进程、线程、协程之间的关系。其实还是有很多东西需要去理解，这里只是八股文的一个总结。如果想知道更为翔实的内容，还得是翻源码呀。</p>
-<p>🐀🐀我太弱了，还需要努力T-T</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/13/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="鼠鼠我呀要努力啦">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠的随笔">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/13/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-13 21:19:30" itemprop="dateCreated datePublished" datetime="2023-09-13T21:19:30+08:00">2023-09-13</time>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/13/hello-world/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/13/hello-world/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1635,27 +1573,27 @@
     <img class="site-author-image" itemprop="image" alt="yxh"
       src="/images/avatar.gif">
   <p class="site-author-name" itemprop="name">yxh</p>
-  <div class="site-description" itemprop="description">鼠鼠我呀要努力啦</div>
+  <div class="site-description" itemprop="description">Go开发弱鸡，沉淀ing</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1691,7 +1629,58 @@
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
