@@ -157,6 +157,274 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/21/interview-TCP-key-point/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/21/interview-TCP-key-point/" class="post-title-link" itemprop="url">面试重点知识点：TCP连接相关</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-21 11:24:42" itemprop="dateCreated datePublished" datetime="2023-09-21T11:24:42+08:00">2023-09-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-04 20:18:16" itemprop="dateModified" datetime="2023-10-04T20:18:16+08:00">2023-10-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/09/21/interview-TCP-key-point/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/21/interview-TCP-key-point/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本文主要参考<a target="_blank" rel="noopener" href="https://xiaolincoding.com/network/3_tcp/tcp_interview.html#tcp-%E5%A4%B4%E6%A0%BC%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B">小林coding</a></p>
+<h2 id="TCP-基本认识"><a href="#TCP-基本认识" class="headerlink" title="TCP 基本认识"></a>TCP 基本认识</h2><h3 id="TCP头格式有哪些？"><a href="#TCP头格式有哪些？" class="headerlink" title="TCP头格式有哪些？"></a>TCP头格式有哪些？</h3><p>说几个重点的</p>
+<ul>
+<li>seq 序列号：解决网络包乱序问题</li>
+<li>确认应答号：解决丢包问题</li>
+<li>控制位：表示状态<ol>
+<li>ACK：确认应答</li>
+<li>SYN：建立连接</li>
+<li>RST：异常断开</li>
+<li>FIN: 正常结束</li>
+</ol>
+</li>
+</ul>
+<h3 id="TCP工作了哪一层？为什么这么多应用层都用它？"><a href="#TCP工作了哪一层？为什么这么多应用层都用它？" class="headerlink" title="TCP工作了哪一层？为什么这么多应用层都用它？"></a>TCP工作了哪一层？为什么这么多应用层都用它？</h3><p>TCP工作在传输层，为应用层服务。<br>大多数应用层都用它的原因是因为IP层只保证两点之间的连接，但是无法保证整个报文的正常交付，所以需要提升一个层面去监督IP的传输过程。保证传输的可靠性</p>
+<h3 id="TCP是什么？"><a href="#TCP是什么？" class="headerlink" title="TCP是什么？"></a>TCP是什么？</h3><p>一种传输协议，它有以下三个特点</p>
+<ul>
+<li>面向连接： 一对一连接</li>
+<li>可靠的： 保证报文的正常交互</li>
+<li>基于字节流的： 字节流传输，可能会出现粘包的问题</li>
+</ul>
+<h3 id="什么是TCP连接？"><a href="#什么是TCP连接？" class="headerlink" title="什么是TCP连接？"></a>什么是TCP连接？</h3><p>TCP 连接简单来说就是用于保证可靠性和流量控制的一些状态，总共有三个</p>
+<ul>
+<li>socket： 保证两个主机之间能够连接</li>
+<li>序列号： 保证了不会乱序</li>
+<li>窗口大小： 实现流量控制</li>
+</ul>
+<h3 id="如何确定一个TCP连接？"><a href="#如何确定一个TCP连接？" class="headerlink" title="如何确定一个TCP连接？"></a>如何确定一个TCP连接？</h3><p>通过四元组</p>
+<p>（源地址，源端口，目的地址，目的端口）</p>
+<h4 id="TCP理论的最大连接数？"><a href="#TCP理论的最大连接数？" class="headerlink" title="TCP理论的最大连接数？"></a>TCP理论的最大连接数？</h4><p>理论最大连接数 &#x3D; 客户端IP数*服务端端口数</p>
+<p>但是系统的最大并发数是有限制的</p>
+<ul>
+<li>在linux系统中一个TCP连接算一个文件，会导致文件描述符（Linux指向文件的指针表）被占满</li>
+<li>内存会OOM</li>
+</ul>
+<h3 id="UDP和TCP-的区别？-场景的区别？"><a href="#UDP和TCP-的区别？-场景的区别？" class="headerlink" title="UDP和TCP 的区别？ 场景的区别？"></a>UDP和TCP 的区别？ 场景的区别？</h3><p>TCP 和UDP的区别主要有七个点</p>
+<ul>
+<li>有无连接： TCP是有连接， UDP无连接</li>
+<li>可靠性： TCP保证报文的交付，UDP不保证</li>
+<li>连接数： TCP是1对1， UDP是可以1对1或者1对多的</li>
+<li>拥塞控制、流量控制： TCP有这些，UDP无法感知对方的接收（QUIC除外）</li>
+<li>首部开销： TCP 首部有端口、序列号、状态码， UDP 只有端口号、包长度、校验号</li>
+<li>传输方式： TCP是流式传输， UDP是包进行发送，是有边界的，但可能会乱序</li>
+<li>分片不同：TCP 为了保证可靠性会进行分片，UDP则在IP层分片，自己不关心分片</li>
+</ul>
+<p>TCP的应用场景</p>
+<ul>
+<li>FTP 文件传输</li>
+<li>HTTP&#x2F; HTTPS</li>
+</ul>
+<p>UDP的场景</p>
+<ul>
+<li>包总量少的通信 DNS、SNMP</li>
+<li>即时视频、音频</li>
+<li>广播通信</li>
+</ul>
+<h4 id="为什么UDP-头部有包长度，TCP没有？"><a href="#为什么UDP-头部有包长度，TCP没有？" class="headerlink" title="为什么UDP 头部有包长度，TCP没有？"></a>为什么UDP 头部有包长度，TCP没有？</h4><p>TCP可以计算出来<br>TCP 数据长度 &#x3D; IP总长度 - IP头 - TCP头</p>
+<p>UDP 为了快，所以不想这么计算，直接用空间换时间</p>
+<h4 id="为什么TCP-有首部长度，UDP没有？"><a href="#为什么TCP-有首部长度，UDP没有？" class="headerlink" title="为什么TCP 有首部长度，UDP没有？"></a>为什么TCP 有首部长度，UDP没有？</h4><p>UDP是固定的<br>TCP 是有可选选项字段的</p>
+<h3 id="TCP-和UDP-能共用字段吗？-为什么？"><a href="#TCP-和UDP-能共用字段吗？-为什么？" class="headerlink" title="TCP 和UDP 能共用字段吗？ 为什么？"></a>TCP 和UDP 能共用字段吗？ 为什么？</h3><p>可以，操作系统存在两种传输协议，两种协议在内核种使用了两种软件模块</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/network/port/tcp%E5%92%8Cudp%E6%A8%A1%E5%9D%97.jpeg" alt="传输层"></p>
+<p>网络层会根据报文的头按照两种协议，分别传给UDP模块和TCP模块，两者最后传输给两类端口</p>
+<h2 id="TCP连接建立"><a href="#TCP连接建立" class="headerlink" title="TCP连接建立"></a>TCP连接建立</h2><h3 id="TCP-怎么建立三次握手？"><a href="#TCP-怎么建立三次握手？" class="headerlink" title="TCP 怎么建立三次握手？"></a>TCP 怎么建立三次握手？</h3><p><img src="https://img1.imgtp.com/2023/09/26/brzne9QG.png" alt="三次握手"></p>
+<ul>
+<li>客户端发送SYN 及序列号 X， 进入SYN_SENT 此时不收到ACK就会超时重传</li>
+<li>服务端收到后回复 ACK 及 seq &#x3D; Y 及 Ack NUM &#x3D; X+1 进入 SYN_RCVD</li>
+<li>客服端收到后，会发送ACK ack &#x3D; Y + 1 创建完成， 服务端收到后也会创建完成</li>
+</ul>
+<p>注意：第三次握手可以携带数据，前两次握手不可以携带</p>
+<h3 id="如何在Linux系统中查看TCP状态？"><a href="#如何在Linux系统中查看TCP状态？" class="headerlink" title="如何在Linux系统中查看TCP状态？"></a>如何在Linux系统中查看TCP状态？</h3><p>TCP 连接状态，在Linux可以通过<code>netstat -napt</code>查看</p>
+<h3 id="为什么是三次握手，不是两次或者四次？"><a href="#为什么是三次握手，不是两次或者四次？" class="headerlink" title="为什么是三次握手，不是两次或者四次？"></a>为什么是三次握手，不是两次或者四次？</h3><ul>
+<li>避免历史连接：如果每次都相同的话，会导致</li>
+<li>同步双方初始序列号</li>
+<li>避免资源浪费</li>
+</ul>
+<p>两次握手：无法避免历史连接的建立，会造成双方资源的消费，也无法可靠的同步双方序列号<br>四次握手：三次握手就可以实现了，不需要冗余的通信次数</p>
+<h3 id="为什么每次建立TCP连接时，初始化序列号要求不一样？"><a href="#为什么每次建立TCP连接时，初始化序列号要求不一样？" class="headerlink" title="为什么每次建立TCP连接时，初始化序列号要求不一样？"></a>为什么每次建立TCP连接时，初始化序列号要求不一样？</h3><ul>
+<li>防止历史报文被下一个相同四元组连接接收</li>
+<li>为了安全性，随机的序列号不易被黑客攻击</li>
+</ul>
+<h3 id="初始序列号-ISN-是如何随机产生的？"><a href="#初始序列号-ISN-是如何随机产生的？" class="headerlink" title="初始序列号 ISN 是如何随机产生的？"></a>初始序列号 ISN 是如何随机产生的？</h3><p>ISN 基于时钟产生的</p>
+<p>ISN &#x3D; M + F(四元组)</p>
+<ul>
+<li>M 是计时器 每隔4微妙+1</li>
+<li>F 是HASH算法，根据四元组生成一个随机值</li>
+</ul>
+<h3 id="IP层会分片了，为什么还要TCP层进行分片"><a href="#IP层会分片了，为什么还要TCP层进行分片" class="headerlink" title="IP层会分片了，为什么还要TCP层进行分片"></a>IP层会分片了，为什么还要TCP层进行分片</h3><p>TCP头部要每次都传，不然如果进行整个的切分，会导致数据丢失无法被定位</p>
+<h3 id="第一次握手丢失了，会发生什么？"><a href="#第一次握手丢失了，会发生什么？" class="headerlink" title="第一次握手丢失了，会发生什么？"></a>第一次握手丢失了，会发生什么？</h3><p>第一次握手丢失，此时客户端已经发送SYN请求，进入SYN_SENT 状态。这种状态下会在一定时间下进行重试，每次重试时间是上一次的两倍。直到超过默认的最大时间。此时如果发送成功，就继续TCP连接，否则重复发送直到TCP连接断开</p>
+<h3 id="第二次握手丢失了，会发生什么？"><a href="#第二次握手丢失了，会发生什么？" class="headerlink" title="第二次握手丢失了，会发生什么？"></a>第二次握手丢失了，会发生什么？</h3><p>第二次握手丢失时，此时客户端在SYN_SENT状态，服务端在SYN_RCYD状态。这个时候，客户端是不知道服务端已经收到了消息，所以客户端会进行多次SYN_SENT的请求，同时服务端也会进行多次SYN_ACK。两者都会不断的发送消息。</p>
+<h3 id="第三次握手丢失了，会发送什么？"><a href="#第三次握手丢失了，会发送什么？" class="headerlink" title="第三次握手丢失了，会发送什么？"></a>第三次握手丢失了，会发送什么？</h3><p>ACK报文不会重传，此时会等待服务端重复发送SYN_ACK 每次发送后，客户端接收到都会发送一个ACK。如果没有丢失就进入连接，否则就会进入堵塞</p>
+<h3 id="什么是SYN攻击？如何避免SYN攻击？"><a href="#什么是SYN攻击？如何避免SYN攻击？" class="headerlink" title="什么是SYN攻击？如何避免SYN攻击？"></a>什么是SYN攻击？如何避免SYN攻击？</h3><p>TCP 连接会有一个半连接队列，用来记录接收客户端SYN的报文</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/format,png-20230309230622886.png" alt="TCP连接队列"></p>
+<p>正常流程：</p>
+<ol>
+<li>服务端接收客户端的SYN报文，会创建一个半连接对象，然后加入到SYN队列（半连接队列）中</li>
+<li>发送SYN+ACK给客户端</li>
+<li>接收到客户端ACK后，从半连接队列中取出一个，根据其创建一个全连接对象，放入到Accept队列中</li>
+<li>应用调用accept()的socket接口，从Accept队列中取出对象使用</li>
+</ol>
+<p>SYN攻击方式最直接的方式就是把半连接队列打满，这样更容易实现，客户端只需要提出连接就可。多次提交都没有问题。导致半连接队列满了后，就没法在接收之后的连接请求了</p>
+<p>如何避免：</p>
+<ul>
+<li>调大消息缓存队列</li>
+<li>增大TCP半连接队列</li>
+<li>开启syncookies</li>
+<li>减少SYN_ACK的重传次数</li>
+</ul>
+<h2 id="TCP连接断开"><a href="#TCP连接断开" class="headerlink" title="TCP连接断开"></a>TCP连接断开</h2><h3 id="TCP的四次挥手过程"><a href="#TCP的四次挥手过程" class="headerlink" title="TCP的四次挥手过程"></a>TCP的四次挥手过程</h3><p><img src="https://img1.imgtp.com/2023/09/27/gEbtacy0.png" alt="四次挥手"></p>
+<ul>
+<li>客户端申请关闭， 发送<code>FIN</code>进入<code>FIN_WAIT_1</code></li>
+<li>服务端收到请求后，发送<code>ACK</code>，进入<code>CLOSE_WAIT</code>进行资源结束，客户端收到<code>ACK</code>进入<code>FIN_WAIT_1</code></li>
+<li><code>CLOSE_WAIT</code>结束后，表示服务端已经正确的关闭了所有资源。发送<code>FIN</code>，进入<code>LAST_ACK</code></li>
+<li>客服端收到<code>FIN</code> 后发送<code>ACK</code>。此时进入<code>TIME_Wait</code> 等待<code>2MS</code>后进入<code>CLOSE</code>态。服务端在收到<code>ACK</code>后进入<code>CLOSE</code>态</li>
+</ul>
+<h3 id="为什么挥手四次？"><a href="#为什么挥手四次？" class="headerlink" title="为什么挥手四次？"></a>为什么挥手四次？</h3><p>需要去进行一个资源的关闭，这一个资源的关闭导致了ACK和FIN是分开发送的。</p>
+<h3 id="第一次挥手丢失了，会发生什么？"><a href="#第一次挥手丢失了，会发生什么？" class="headerlink" title="第一次挥手丢失了，会发生什么？"></a>第一次挥手丢失了，会发生什么？</h3><p>第一次挥手丢失，服务端是无感知的，所以客户端会执行超时重传</p>
+<h3 id="第二次挥手丢失了，会发生什么？"><a href="#第二次挥手丢失了，会发生什么？" class="headerlink" title="第二次挥手丢失了，会发生什么？"></a>第二次挥手丢失了，会发生什么？</h3><p>第二次挥手丢失，此时服务端已经进入了CLOSED_WAIT， 客户端在FIN_WAIT_1阶段。在客户端的视角，它还是无法感知是否已经发送过去，所以它会进行FIN的多次重传。每次重传都会回一个ACK。直到ACK被接收</p>
+<h3 id="第三次挥手丢失了，会发送什么？"><a href="#第三次挥手丢失了，会发送什么？" class="headerlink" title="第三次挥手丢失了，会发送什么？"></a>第三次挥手丢失了，会发送什么？</h3><p>第三次挥手，是服务端结束本地资源向客户端发送FIN的一个过程，此时客户端进入了一个FIN_WAIT_2劫夺，如果得不到ACK，客户端会一直四等，但是会在<code>60s</code>结束等待直接进入close。而服务端会进行多次重传，直到重传次数被用完。</p>
+<h3 id="第四次挥手丢失了，会发送什么？"><a href="#第四次挥手丢失了，会发送什么？" class="headerlink" title="第四次挥手丢失了，会发送什么？"></a>第四次挥手丢失了，会发送什么？</h3><p>第四次挥手，是客户端收到服务端发送FIN请求后回的ACK进入2MS的TIME_WAIT。此时服务端在LAST_ACK中，此时服务端如果没有收到ACK会多次重传向客户端发送FIN请求。每一次重置请求都会让TIME_WAIT的计时器重置。</p>
+<h3 id="TIME-WAIT的时间？"><a href="#TIME-WAIT的时间？" class="headerlink" title="TIME_WAIT的时间？"></a>TIME_WAIT的时间？</h3><p>2MSL（Maximum Segment Lifetime）即报文在网络中的最大生存时间。因为报文在网络传输中，会对他内部的TTL进行-1.当TTL为0的时候节点就会对其丢弃。</p>
+<h4 id="TTL是什么？"><a href="#TTL是什么？" class="headerlink" title="TTL是什么？"></a>TTL是什么？</h4><p>TTL 是 IP头部中的一个字段，每一次经过一个节点时，都会将TTL减1保证报文，不会在网络空间中无限循环。如果TTL为0时就会被抛弃在网络空间中</p>
+<h4 id="TTL-和-MSL的区别？"><a href="#TTL-和-MSL的区别？" class="headerlink" title="TTL 和 MSL的区别？"></a>TTL 和 MSL的区别？</h4><p>TTL 是一个值，用来判断报文是否应该被抛弃，MSL是一个表象，是表示报文TTL消失到0的时间。一般来说<code>MSL</code>要设置的比<code>TTL</code>所需要的时间大，防止出现了误判</p>
+<h4 id="为什么是2MSL，不是直接是MSL？"><a href="#为什么是2MSL，不是直接是MSL？" class="headerlink" title="为什么是2MSL，不是直接是MSL？"></a>为什么是2MSL，不是直接是MSL？</h4><p>首先是因为，这是两个来回，需要客户端发送一次后，服务端给他返回一个。这样才能结束，需要两个MSL</p>
+<h3 id="为什么需要TIME-WAIT"><a href="#为什么需要TIME-WAIT" class="headerlink" title="为什么需要TIME_WAIT?"></a>为什么需要TIME_WAIT?</h3><ul>
+<li>防止历史的连接的数据被新的连接错误的接收：因为序列号是有上下限的，可能出现序列绕回的情况</li>
+<li>保证被动关闭的一方能够正常的关闭：确保ACK被服务端收到，否则服务端进入LAST_ACK进行多次FIN请求的发送。而进入异常终止的状态</li>
+</ul>
+<h3 id="TIME-WAIT过多有什么害处？"><a href="#TIME-WAIT过多有什么害处？" class="headerlink" title="TIME_WAIT过多有什么害处？"></a>TIME_WAIT过多有什么害处？</h3><p>TIME_WAIT是主动关闭的一方最终结束状态。此时TIME_WAIT过多有两个危害</p>
+<ul>
+<li>占用系统资源</li>
+<li>占用端口资源</li>
+</ul>
+<h3 id="如何优化TIME-WAIT"><a href="#如何优化TIME-WAIT" class="headerlink" title="如何优化TIME_WAIT?"></a>如何优化TIME_WAIT?</h3><ul>
+<li><code>net.ipv4.tcp_tw_reuse</code> 和 <code>tcp_timestamps</code></li>
+</ul>
+<p>开启此参数可以复用TIME_WAIT的socket作为新的连接所用</p>
+<p>tcp_tw_reuse 功能只能用客户端（连接发起方），因为开启了该功能，在调用 connect() 函数时，内核会随机找一个 time_wait 状态超过 1 秒的连接给新的连接复用。</p>
+<ul>
+<li>net.ipv4.tcp_max_tw_buckets</li>
+</ul>
+<p>这个值默认为 18000，当系统中处于 TIME_WAIT 的连接一旦超过这个值时，系统就会将后面的 TIME_WAIT 连接状态重置，这个方法比较暴力。</p>
+<ul>
+<li>程序中使用 <code>SO_LINGER</code></li>
+</ul>
+<p>使用此选项会直接跳过<code>TIME_WAIT</code>，不过并不是太推荐</p>
+<h3 id="服务器出现大量TIME-WAIT的原因有哪些？"><a href="#服务器出现大量TIME-WAIT的原因有哪些？" class="headerlink" title="服务器出现大量TIME_WAIT的原因有哪些？"></a>服务器出现大量TIME_WAIT的原因有哪些？</h3><ul>
+<li>HTTP没有使用长连接</li>
+<li>HTTP长连接超时</li>
+<li>HTTP长连接请求数量达到上限</li>
+</ul>
+<h4 id="客户端禁用Keep-Alive，服务端开启-HTTP-Keep-Alive，谁是主动关闭方？"><a href="#客户端禁用Keep-Alive，服务端开启-HTTP-Keep-Alive，谁是主动关闭方？" class="headerlink" title="客户端禁用Keep-Alive，服务端开启 HTTP Keep-Alive，谁是主动关闭方？"></a>客户端禁用Keep-Alive，服务端开启 HTTP Keep-Alive，谁是主动关闭方？</h4><p>服务端会主动关闭</p>
+<p>当客户端禁用了 <code>HTTP Keep-Alive</code>，这时候 <code>HTTP</code> 请求的 <code>header</code> 就会有 <code>Connection:close</code> 信息，这时服务端在发完 <code>HTTP</code> 响应后，就会主动关闭连接。</p>
+<p>其实也很容易理解：发起方是客户端，客户端的要求不能拒绝，所以就不开启Keep-Alive</p>
+<h4 id="客户端开启了-HTTP-Keep-Alive，服务端禁用了-HTTP-Keep-Alive，谁是主动关闭方？"><a href="#客户端开启了-HTTP-Keep-Alive，服务端禁用了-HTTP-Keep-Alive，谁是主动关闭方？" class="headerlink" title="客户端开启了 HTTP Keep-Alive，服务端禁用了 HTTP Keep-Alive，谁是主动关闭方？"></a>客户端开启了 HTTP Keep-Alive，服务端禁用了 HTTP Keep-Alive，谁是主动关闭方？</h4><p>服务端主动关闭</p>
+<p>当客户端开启了 <code>HTTP Keep-Alive</code>，而服务端禁用了 <code>HTTP Keep-Alive</code>，这时服务端在发完 <code>HTTP</code> 响应后，服务端也会主动关闭连接。</p>
+<p>也很好理解，客服端的要求服务端无法满足也只能不<code>Keep-Alive</code></p>
+<h3 id="服务端出现大量CLOSE-WAIT状态的原因有哪些？"><a href="#服务端出现大量CLOSE-WAIT状态的原因有哪些？" class="headerlink" title="服务端出现大量CLOSE_WAIT状态的原因有哪些？"></a>服务端出现大量CLOSE_WAIT状态的原因有哪些？</h3><p><code>CLOSE_WAIT</code> 是被动关闭方，在返回<code>ACK</code>后，关闭进程释放资源的过程。所以当服务端出现大量<code>CLOSE_WAIT</code>时，说明服务端的程序没有调用<code>close</code>关闭连接。</p>
+<p>一个标准的TCP流程</p>
+<ol>
+<li>创建服务端socket，bind绑定端口、listen监听端口</li>
+<li>将服务端socket注册到epoll</li>
+<li>epoll_wait等待连接到来，调用accpet获取已连接的socket</li>
+<li>将已连接的socket注册到epoll</li>
+<li>epoll_wait等待事件发送</li>
+<li>对方连接关闭，我方调用close</li>
+</ol>
+<p>可能的原因</p>
+<ul>
+<li>2 没有实现，代码中没有将<code>socket</code>注册到<code>epoll</code>中，导致无法感知连接，就无法调用close</li>
+<li>3 没有实现，没有调用accpet去获取socket</li>
+<li>4 没有做，获取到socket连接后，却没有放到epoll中</li>
+<li>6 没有做，服务端没有执行close函数，代码无法抵达到执行close函数的过程</li>
+</ul>
+<h3 id="如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？"><a href="#如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？" class="headerlink" title="如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？"></a>如果客户端以及建立连接后，但是客户端突然出现了故障会发生什么？</h3><p>客户端崩溃，如果不是系统级的崩溃，那么客户端的操作系统会自动发送断开连接的请求。如果是宕机或断电这种系统级的，这时候服务端是无法捕捉到客户端的信息（杳无音讯）。TCP为了确保这种情况不会发送，提出了保活机制。没一段时间会执行一次心跳检查</p>
+<p>当开启保活机制后，要考虑以下三种情况：</p>
+<ul>
+<li>对方正常响应，TCP保活时间重置</li>
+<li>对端主机重启，此时服务端发送的请求，在对端看来是无效连接，所以会发送一个RST重新连接</li>
+<li>对端主机宕机，TCP发送消息无回复，在多次探测后无消息后，就会认为TCP连接已死亡</li>
+</ul>
+<p>当然，TCP的保活是在传输层的，应用层层面也可自己实现心跳检测。来进行更加灵活的修改</p>
+<h3 id="如果已经建立了连接，但是服务端的进程崩溃会发生什么？"><a href="#如果已经建立了连接，但是服务端的进程崩溃会发生什么？" class="headerlink" title="如果已经建立了连接，但是服务端的进程崩溃会发生什么？"></a>如果已经建立了连接，但是服务端的进程崩溃会发生什么？</h3><p>进程崩溃，内核会回收该进程所有的TCP连接资源，于是内核会主动发送关闭请求，正常完成TCP四次挥手的过程</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/20/tuhuyangche-exam/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1340,172 +1608,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/Mysql-Lock/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠的随笔">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/15/Mysql-Lock/" class="post-title-link" itemprop="url">mysql锁介绍</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-15 21:32:56" itemprop="dateCreated datePublished" datetime="2023-09-15T21:32:56+08:00">2023-09-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-16 19:39:50" itemprop="dateModified" datetime="2023-09-16T19:39:50+08:00">2023-09-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/15/Mysql-Lock/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/15/Mysql-Lock/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Mysql-锁"><a href="#Mysql-锁" class="headerlink" title="Mysql 锁"></a>Mysql 锁</h1><p>现在后端对高并发的要求很高。当时暑期实习面腾讯云智、小米都被问到Redis怎么实现分布式锁。我当时寻思我写的是了解啊。</p>
-<p>不吹水了，看看Mysql的锁机制怎么实现（内容参考小林Coding）</p>
-<h2 id="全局锁"><a href="#全局锁" class="headerlink" title="全局锁"></a>全局锁</h2><p>全局锁就是将mysql整个数据库锁住（很暴力）</p>
-<h3 id="全局锁怎么用的？"><a href="#全局锁怎么用的？" class="headerlink" title="全局锁怎么用的？"></a>全局锁怎么用的？</h3><p>要使用全局锁，需要执行这个命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush tables with read lock</span><br></pre></td></tr></table></figure>
-
-<p>整个数据库会进入只读状态<br>任何增、删、改的操作都会被阻塞</p>
-<p>解锁使用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unlock tables</span><br></pre></td></tr></table></figure>
-
-<p>还有一种解锁方法，是命令发起者的会话断开</p>
-<h3 id="全局锁的应用场景是什么？"><a href="#全局锁的应用场景是什么？" class="headerlink" title="全局锁的应用场景是什么？"></a>全局锁的应用场景是什么？</h3><p>全局锁一般用在全局备份上, 因为此时数据在备份是无法在一瞬间备份的。万一头尾数据存在一致性关联。可能会出现头备份完成，尾部修改导致的数据不一致</p>
-<h3 id="加全局锁的缺点是什么？"><a href="#加全局锁的缺点是什么？" class="headerlink" title="加全局锁的缺点是什么？"></a>加全局锁的缺点是什么？</h3><p>全局锁，意味着整个数据库是只读状态。这样只能读不能写，一定情况下会影响业务。</p>
-<h3 id="除了加全局锁备份，还有其他备份方式吗？"><a href="#除了加全局锁备份，还有其他备份方式吗？" class="headerlink" title="除了加全局锁备份，还有其他备份方式吗？"></a>除了加全局锁备份，还有其他备份方式吗？</h3><p><code>MVCC</code>后面会介绍到，<code>Mysql</code>的灵魂。通过<code>ReadView</code>进行备份</p>
-<p>如何操作？</p>
-<p>使用<code>mysqldump</code>工具，在使用<code>mysqldump</code>时加上<code>–single-transaction</code> 参数的时候，就会在备份数据库之前先开启事务。</p>
-<h2 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h2><h3 id="Mysql表级锁有哪些？具体怎么用的"><a href="#Mysql表级锁有哪些？具体怎么用的" class="headerlink" title="Mysql表级锁有哪些？具体怎么用的"></a>Mysql表级锁有哪些？具体怎么用的</h3><p>Mysql表级锁大概有四个</p>
-<ul>
-<li>表锁</li>
-<li>元数据锁</li>
-<li>意向锁</li>
-<li>AUTO-INC锁</li>
-</ul>
-<h4 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h4><p>表锁就是加在整个表的锁</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 读锁</span><br><span class="line">lock table t_student read;</span><br><span class="line">// 写锁</span><br><span class="line">lock table t_student write;</span><br><span class="line"></span><br><span class="line">// 释放当前会话的锁</span><br><span class="line">unlock tables</span><br></pre></td></tr></table></figure>
-
-<h4 id="元数据锁"><a href="#元数据锁" class="headerlink" title="元数据锁"></a>元数据锁</h4><p>首先要知道什么是元数据呢？</p>
-<p>元数据（Metadata）是关于数据的数据，它提供了关于数据的描述、定义和管理信息。元数据通常用于帮助组织、理解、搜索和管理数据（数据库对象结构、表、索引等）</p>
-<p>所以元数据锁的出现就是为了保证用户在对表执行CRUD操作时，防止其他线程对这个表结构进行了更改</p>
-<p>一般来说，我们不需要显示的去调用</p>
-<ul>
-<li>变更结构 加写锁</li>
-<li>CRUD 加读锁</li>
-</ul>
-<p>当执行Select时语句时会加MDL读锁，接下来所有结构更变操作都会被阻塞<br>当执行结构更变操作时，所有的CRUD也会被阻塞</p>
-<h4 id="MDL不会显示调用，那什么时候会释放？"><a href="#MDL不会显示调用，那什么时候会释放？" class="headerlink" title="MDL不会显示调用，那什么时候会释放？"></a>MDL不会显示调用，那什么时候会释放？</h4><p>MDL 是在事务提交后释放，事务执行期间，MDL是一直持续的</p>
-<p>但是事务过长可能也会导致一些异常</p>
-<p>举个例子</p>
-<ol>
-<li>线程A启动事务，执行一个Select语句，此时开启了读锁，且不提交事务，所也就不会释放</li>
-<li>线程B这时候执行Select语句则不会被阻塞</li>
-<li>线程C修改表字段，此时又要加写锁，但又申请不到写锁，就会阻塞</li>
-<li>此时C的写锁阻塞会导致之后不管是写锁还是读锁都会阻塞</li>
-</ol>
-<h4 id="为什么线程-C-因为申请不到-MDL-写锁，而导致后续的申请读锁的查询操作也会被阻塞？"><a href="#为什么线程-C-因为申请不到-MDL-写锁，而导致后续的申请读锁的查询操作也会被阻塞？" class="headerlink" title="为什么线程 C 因为申请不到 MDL 写锁，而导致后续的申请读锁的查询操作也会被阻塞？"></a>为什么线程 C 因为申请不到 MDL 写锁，而导致后续的申请读锁的查询操作也会被阻塞？</h4><p>因为申请MDL锁的操作是一个队列，且队列中写锁的优先级更高，一旦申请不到写锁，按照排序来说，必须要等到写锁申请到后面的读锁才能申请。这里设计到一些饥饿锁的知识</p>
-<p>所以安全的操作结构的方法，是在做表结构更变时看看是不是存在长事务MDL锁，有的话可以Kill掉。让它一会再查</p>
-<h3 id="意向锁"><a href="#意向锁" class="headerlink" title="意向锁"></a>意向锁</h3><h4 id="意向锁是什么？"><a href="#意向锁是什么？" class="headerlink" title="意向锁是什么？"></a>意向锁是什么？</h4><p>当执行插入、更新、删除操作，需要先对表加上一个意向锁。</p>
-<p>注意Select一般情况下是不会加锁的，因为Select走的是MVCC</p>
-<p>也可以强行操作让Select走意向锁</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//先在表上加上意向共享锁，然后对读取的记录加共享锁</span><br><span class="line">select ... lock in share mode;</span><br><span class="line"></span><br><span class="line">//先表上加上意向独占锁，然后对读取的记录加独占锁</span><br><span class="line">select ... for update;</span><br></pre></td></tr></table></figure>
-
-<h4 id="为什么设置意向锁？"><a href="#为什么设置意向锁？" class="headerlink" title="为什么设置意向锁？"></a>为什么设置意向锁？</h4><p>意向锁主要是和表锁发生冲突，mysql为了判断一个表内有没有加锁，使用意向锁进行快速查找</p>
-<h4 id="AUTO-INC锁"><a href="#AUTO-INC锁" class="headerlink" title="AUTO-INC锁"></a>AUTO-INC锁</h4><p>innoDB早期版本，使用的这种锁，在<code>AUTO_INCREMENT</code>字段自增时会加入进去，会在整个语句执行完毕后释放锁</p>
-<p>现在版本使用的是一种轻量锁，这种轻量的锁会在自增字段值赋值完毕后，马上就释放了</p>
-<p>但是这种方法虽然更快一点。也会有些缺点。在主从复制模式下。如果出现下面这个场景就会出现异常</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/innodb_autoinc_lock_mode=2.png" alt="主从复制异常"></p>
-<p>看最后一行，可能出现如下情况</p>
-<ul>
-<li>sessionB 加入两个值</li>
-<li>此时sessionA 也加入了一个值</li>
-<li>sessionB 把剩余的值加入</li>
-</ul>
-<p>可以看到这个id是不连续的。如果<code>binlog</code>记录的是原始语句那么这个自增字段可能就会不一样。解决方法是将<code>inlog_format</code>设置为row，binlog就会记录主库分配的自增值</p>
-<h2 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h2><p><code>InnoDB</code> 引擎是支持行级锁的，而 <code>MyISAM</code> 引擎并不支持行级锁。</p>
-<p>如果加行锁了后，同时也会在表级加意向锁</p>
-<ul>
-<li>Record Lock 记录锁</li>
-<li>Gap Lock 间隙锁</li>
-<li>Next-Key Lock 临键锁</li>
-</ul>
-<h3 id="Record-Lock"><a href="#Record-Lock" class="headerlink" title="Record Lock"></a>Record Lock</h3><p>就是X和S两种情况的兼容，比较容易理解</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/%E8%AE%B0%E5%BD%95%E9%94%81.drawio.png" alt="记录锁"></p>
-<h3 id="Gap-Lock"><a href="#Gap-Lock" class="headerlink" title="Gap Lock"></a>Gap Lock</h3><p>间隙锁为了防止出现幻读。二者不互斥</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/gap%E9%94%81.drawio.png" alt="间隙锁"></p>
-<h3 id="Next-Key-Lock-临键锁"><a href="#Next-Key-Lock-临键锁" class="headerlink" title="Next-Key Lock 临键锁"></a>Next-Key Lock 临键锁</h3><p>是 Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身。</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/%E4%B8%B4%E9%94%AE%E9%94%81.drawio.png" alt="临键锁"></p>
-<p>会出现XS兼容问题</p>
-<h3 id="插入意向锁"><a href="#插入意向锁" class="headerlink" title="插入意向锁"></a>插入意向锁</h3><p>一个事务在插入一条记录的时候，需要判断插入位置是否已被其他事务加了间隙锁（next-key lock 也包含间隙锁）。<br>如果有的话，插入操作就会发生阻塞，直到拥有间隙锁的那个事务提交为止（释放间隙锁的时刻），在此期间会生成一个插入意向锁，表明有事务想在某个区间插入新记录，但是现在处于等待状态。（车票中的候补票。）</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://xiaolincoding.com/mysql/lock/mysql_lock.html#%E5%85%A8%E5%B1%80%E9%94%81">小林coding</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1577,20 +1679,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
