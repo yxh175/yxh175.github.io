@@ -2,8 +2,7 @@
 title: GO：并发编程 面试重点
 date: 2023-09-21 15:36:09
 categories:
-- 面试
-- 八股
+- 八股文
 tags:
 - Golang
 - 并发编程
