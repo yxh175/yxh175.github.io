@@ -157,6 +157,243 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/07/interview-docker-key-point/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yxh">
+      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鼠鼠的随笔">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/10/07/interview-docker-key-point/" class="post-title-link" itemprop="url">面试重点：docker常见面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-07 12:48:41 / 修改时间：16:18:46" itemprop="dateCreated datePublished" datetime="2023-10-07T12:48:41+08:00">2023-10-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">八股文</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/10/07/interview-docker-key-point/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/10/07/interview-docker-key-point/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>docker平时有用到一点，但并不是经常使用，只用过几个常用的命令，所以还是总结一下常见的docker面试题</p>
+<h2 id="什么是docker"><a href="#什么是docker" class="headerlink" title="什么是docker"></a>什么是docker</h2><p>Go语言开发的一个容器虚拟化技术，使用C&#x2F;S架构，具有隔离、快速、轻便的特点</p>
+<h2 id="Docker与虚拟机有什么不同？"><a href="#Docker与虚拟机有什么不同？" class="headerlink" title="Docker与虚拟机有什么不同？"></a>Docker与虚拟机有什么不同？</h2><p>虚拟机是模拟一个os系统去操作应用，这样的好处是简单。可以很容易的设置各种细节，并且用户也很容易理解多个系统之间的关系。docker不同，它取消了运行臃肿的客户机操作系统，取而代之的是守护进程。通过寄宿在主机中，可以直接与主系统进行通信，并为各个容器分配资源。一个容器就是一个隔绝的沙箱，其中包含着各个镜像。</p>
+<h2 id="Docker镜像是什么？"><a href="#Docker镜像是什么？" class="headerlink" title="Docker镜像是什么？"></a>Docker镜像是什么？</h2><p>镜像可以理解为一个可以运行在docker容器中软件包，它包含了运行应用程序所需要的一切代码、运行时环境、系统工具、系统库以及预设的环境变量。镜像可以看作是容器的模板，容器是基于镜像创建的运行实例。</p>
+<h2 id="Docker容器是什么？"><a href="#Docker容器是什么？" class="headerlink" title="Docker容器是什么？"></a>Docker容器是什么？</h2><p>Docker 容器是 Docker 平台上运行的独立的、可执行的应用程序单元。容器包含了应用程序及其所有依赖项，包括代码、运行时环境、系统工具、系统库以及预设的环境变量。容器是基于 Docker 镜像创建的实例，它们可以在任何支持 Docker 的环境中运行，而不受环境的影响。</p>
+<h2 id="Docker容器有几种状态？"><a href="#Docker容器有几种状态？" class="headerlink" title="Docker容器有几种状态？"></a>Docker容器有几种状态？</h2><ul>
+<li>运行</li>
+<li>暂停</li>
+<li>重启</li>
+<li>退出</li>
+</ul>
+<h2 id="DockerFile常见指令"><a href="#DockerFile常见指令" class="headerlink" title="DockerFile常见指令"></a>DockerFile常见指令</h2><p>dockerFile常见命令如下</p>
+<ol>
+<li><p>FROM: 指定基础镜像，表示从哪里开始构建镜像。</p>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">20.04</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MAINTAINER：指定镜像的作者信息。已经不推荐使用，一般可以用 LABEL 代替。</p>
+</li>
+<li><p>LABEL：为镜像添加元数据，通常用于提供关于镜像的信息，如版本、描述、维护者等。例如</p>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> version=<span class="string">&quot;1.0&quot;</span></span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> description=<span class="string">&quot;My custom image&quot;</span></span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> maintainer=<span class="string">&quot;user@example.com&quot;</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RUN：在容器内执行命令，用于安装软件、配置环境等。</p>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y package-name</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>COPY 和 ADD：用于将文件从主机复制到容器内。COPY 用于复制文件和目录，而 ADD 可以用于复制文件、目录，并且支持解压缩。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span><span class="language-bash"> source_file /destination/</span></span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> source_file.tar.gz /destination/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WORKDIR：设置容器内的工作目录，后续的命令都将在这个目录下执行。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ENV：设置环境变量。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ENV</span> MY_VAR=value</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>EXPOSE：声明容器在运行时监听的端口，但并不映射到宿主机上。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CMD 和 ENTRYPOINT：用于设置容器启动时执行的命令。CMD 通常用于指定容器的默认命令，而 ENTRYPOINT 用于定义容器的入口点，可以与 CMD 结合使用。</p>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;app&quot;</span>, <span class="string">&quot;-d&quot;</span>]</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;my-entrypoint-script&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>VOLUME：声明容器内的目录将被挂载为数据卷，用于持久化数据。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">VOLUME</span><span class="language-bash"> /data</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>想要了解更多，这个网站有一些基础命令<a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-dockerfile.html">菜鸟docker教程</a></p>
+<h2 id="DockerFile中命令COPY和ADD命令有什么区别？"><a href="#DockerFile中命令COPY和ADD命令有什么区别？" class="headerlink" title="DockerFile中命令COPY和ADD命令有什么区别？"></a>DockerFile中命令COPY和ADD命令有什么区别？</h2><p>两者都是可以将文件从主机复制到容器内。但是ADD额外增加解压的功能</p>
+<h2 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h2><p>常用的Docker命令主要分为五个部分：</p>
+<ul>
+<li>镜像相关</li>
+<li>容器相关</li>
+<li>容器和镜像管理</li>
+<li>网络相关命令</li>
+<li>Docker Compose</li>
+</ul>
+<h3 id="镜像相关"><a href="#镜像相关" class="headerlink" title="镜像相关"></a>镜像相关</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从Docker镜像仓库</span></span><br><span class="line">docker pull IMAGE_NAME:TAG</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出本地已经下载的镜像</span></span><br><span class="line">docker images</span><br><span class="line">docker images ls</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除本地镜像 rmi</span></span><br><span class="line">docker rmi IMAGE_ID</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">根据Dockerfile构建镜像</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-i: 交互式操作。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-t: 终端。</span></span><br><span class="line">docker build -t IMAGE_NAME:TAG PATH_TO_DOCKERFILE</span><br></pre></td></tr></table></figure>
+
+<h3 id="容器相关命令"><a href="#容器相关命令" class="headerlink" title="容器相关命令"></a>容器相关命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建并运行容器。</span></span><br><span class="line">docker run -d IMAGE_NAME:TAG</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出正在运行的容器。</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有容器，包括已停止的。</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动已停止的容器。</span></span><br><span class="line">docker start CONTAINER_ID</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">停止运行中的容器</span></span><br><span class="line">docker stop CONTAINER_ID</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启容器。</span></span><br><span class="line">docker restart CONTAINER_ID</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在容器内部执行交互式命令。</span></span><br><span class="line">docker exec -it CONTAINER_ID /bin/bash</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看容器的日志输出。</span></span><br><span class="line">docker logs CONTAINER_ID</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除容器。</span></span><br><span class="line">docker rm CONTAINER_ID</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">清理所有停止的容器。</span></span><br><span class="line">docker container prune</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="容器和镜像管理"><a href="#容器和镜像管理" class="headerlink" title="容器和镜像管理"></a>容器和镜像管理</h3><p>感觉有点运维要用的，主要是对容器和镜像的管理</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看容器或镜像的详细信息。</span></span><br><span class="line">docker inspect CONTAINER_OR_IMAGE_ID</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">给镜像添加标签。</span></span><br><span class="line">docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">基于容器的当前状态创建新镜像。</span></span><br><span class="line">docker commit CONTAINER_ID NEW_IMAGE_NAME:TAG</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将镜像保存为 tar 文件</span></span><br><span class="line">docker save -o OUTPUT_FILE.tar IMAGE_NAME:TAG</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从 tar 文件加载镜像。</span></span><br><span class="line">docker load -i INPUT_FILE.tar</span><br></pre></td></tr></table></figure>
+
+<h3 id="网络相关命令"><a href="#网络相关命令" class="headerlink" title="网络相关命令"></a>网络相关命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有 Docker 网络。</span></span><br><span class="line">docker network ls</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建一个自定义网络。</span></span><br><span class="line">docker network create NETWORK_NAME</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将容器连接到指定网络。</span></span><br><span class="line">docker network connect NETWORK_NAME CONTAINER_NAME</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从网络中断开容器。</span></span><br><span class="line">docker network disconnect NETWORK_NAME CONTAINER_NAME</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><p>Docker Compose 是一个用于定义和运行多容器 Docker 应用程序的工具，常用命令包括：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动应用程序。</span></span><br><span class="line">docker-compose up</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">停止并删除应用程序的容器和网络。</span></span><br><span class="line">docker-compose down</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">构建 Docker Compose 文件中定义的服务。</span></span><br><span class="line">docker-compose build</span><br></pre></td></tr></table></figure>
+
+<p>当然这些是一些常用的命令，在工作中如果我们需要某些特殊的命令，可以尝试百度或者通过docker –help查找</p>
+<h2 id="容器与主机之间的数据拷贝命令"><a href="#容器与主机之间的数据拷贝命令" class="headerlink" title="容器与主机之间的数据拷贝命令"></a>容器与主机之间的数据拷贝命令</h2><p>docker 主机和容器之间数据拷贝通常也是重要的，比如配置一个nginx时，通过数据拷贝命令，能更方便的把配置修改，而不需要每次启动都去进入容器去修改</p>
+<h3 id="docker-cp-方式"><a href="#docker-cp-方式" class="headerlink" title="docker cp 方式"></a>docker cp 方式</h3><p>docker cp的方法就是直接复制文件到两者的两个方向</p>
+<ul>
+<li><p>从容器拷贝到主机</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp CONTAINER_ID:/path/to/container/file /path/on/host</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从主机拷贝到容器</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp CONTAINER_ID:/path/to/container/file /path/on/host</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这样虽然不用打开容器，但每次修改完后都需要在执行一下复制命令，有没有什么比较好的方法去解决它呢？答案是有的，<strong>共享数据卷</strong>就是一个很好的解决方法</p>
+<h3 id="共享数据卷"><a href="#共享数据卷" class="headerlink" title="共享数据卷"></a>共享数据卷</h3><p>Docker允许通过挂载数据卷的方式在容器和主机之间共享数据，将主机的目录挂载在容器内部，这样就能实现实时共享数据</p>
+<ul>
+<li><p>在容器启动时挂载主机目录到容器：</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v /path/on/host:/path/in/container IMAGE_NAME</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在容器内部创建数据卷并挂载到主机：</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -v /path/in/container IMAGE_NAME</span><br><span class="line">docker cp CONTAINER_ID:/path/in/container /path/on/host</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="使用共享数据卷容器"><a href="#使用共享数据卷容器" class="headerlink" title="使用共享数据卷容器"></a>使用共享数据卷容器</h3><p>还有一种方法，通过创建一个容器作为数据管理中心。创建一个专门的数据卷容器，其他容器可以通过 <code>--volumes-from </code>参数来共享数据卷容器的数据卷。这种方式可以用于在多个容器之间共享数据。</p>
+<ul>
+<li><p>创建数据卷容器</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker create -v /data --name data-container IMAGE_NAME</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动其他容器并共享数据卷</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --volumes-from data-container -it ubuntu</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="docker-使用nginx的主要流程"><a href="#docker-使用nginx的主要流程" class="headerlink" title="docker 使用nginx的主要流程"></a>docker 使用nginx的主要流程</h2><ul>
+<li>首先获取镜像</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx:latest</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看本地镜像</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建容器运行并挂载路径</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx-test -p 8080:80 -d -v &lt;主机路径&gt; &lt;容器路径&gt; nginx  </span><br></pre></td></tr></table></figure>
+
+<h2 id="什么是Docker-Swarm"><a href="#什么是Docker-Swarm" class="headerlink" title="什么是Docker Swarm"></a>什么是Docker Swarm</h2><p>Docker Swarm 是 Docker 的一个集群和编排工具，用于管理和编排多个 Docker 容器的部署。它允许将多个 Docker 主机组成一个集群，并将容器应用程序在这个集群中进行分布式部署和管理。</p>
+<h2 id="如何批量清理临时镜像文件"><a href="#如何批量清理临时镜像文件" class="headerlink" title="如何批量清理临时镜像文件"></a>如何批量清理临时镜像文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi -f $(docker images -q)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-q</code> 选项表示只输出镜像的 <code>ID</code>，而不包括其他信息。</li>
+<li><code>$(...)：</code>这是命令替换的语法，它会将 <code>docker images -q</code>的输出结果作为参数传递给下一个命令。</li>
+<li><code>docker rmi -f</code>：这部分命令用于删除<code>Docker</code>镜像。<code>-f</code>选项表示强制删除，即使镜像正在被容器使用也会被删除。</li>
+</ul>
+<h2 id="如何查看镜像支持的环境变量？"><a href="#如何查看镜像支持的环境变量？" class="headerlink" title="如何查看镜像支持的环境变量？"></a>如何查看镜像支持的环境变量？</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在 Docker 容器中运行一个镜像，并显示容器中的环境变量。</span></span><br><span class="line">docker run &lt;镜像ID&gt; env</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>docker run</code>：这是 <code>Docker</code> 命令的一部分，用于启动一个新的容器。</li>
+<li><code>&lt;镜像ID&gt;</code>：这是要运行的 <code>Docker</code> 镜像的 <code>ID</code>。</li>
+<li><code>env</code>：这是在容器内部执行的命令。在这种情况下，它是一个简单的命令 <code>env</code>，用于显示容器的环境变量。</li>
+</ul>
+<h2 id="构建Docker镜像应该遵循哪些原则"><a href="#构建Docker镜像应该遵循哪些原则" class="headerlink" title="构建Docker镜像应该遵循哪些原则?"></a>构建Docker镜像应该遵循哪些原则?</h2><ol>
+<li>尽量选取满足需求但较小的基础系统镜像</li>
+<li>清理编译生成文件、安装包的缓存等临时文件</li>
+<li>安装各个软件时候要指定准确的版本号，并避免引入不需要的依赖</li>
+<li>从安全的角度考虑，应用尽量使用系统的库和依赖</li>
+<li>使用Dockerfile创建镜像时候要添加.dockerignore文件或使用干净的工作目录</li>
+</ol>
+<h2 id="如何停止所有正在运行的容器"><a href="#如何停止所有正在运行的容器" class="headerlink" title="如何停止所有正在运行的容器?"></a>如何停止所有正在运行的容器?</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker kill $(docker ps -q)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>docker ps -q</code>：这部分命令用于列出当前正在运行的 <code>Docker</code> 容器的 <code>ID</code>，其中 <code>-q</code> 选项表示只输出容器的 <code>ID</code>，而不包括其他信息。</li>
+<li><code>$(...)</code>：这是命令替换的语法，它会将 <code>docker ps -q</code> 的输出结果（即正在运行的容器的 ID 列表）作为参数传递给下一个命令。</li>
+<li><code>docker kill</code>：这部分命令用于停止 <code>Docker</code> 容器。当你执行 <code>docker kill CONTAINER_ID</code> 时，它会向指定的容器发送一个 SIGKILL 信号，强制停止容器的运行。</li>
+</ul>
+<p>整个命令的作用是将 <code>docker ps -q</code> 列出的所有正在运行的容器的 <code>ID</code> 传递给 <code>docker kill</code> 命令，从而停止所有运行中的 <code>Docker</code> 容器。</p>
+<h2 id="如何清理批量后台停止的容器"><a href="#如何清理批量后台停止的容器" class="headerlink" title="如何清理批量后台停止的容器"></a>如何清理批量后台停止的容器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Docker 将删除所有已停止的容器，释放它们占用的资源</span></span><br><span class="line">docker container prune</span><br></pre></td></tr></table></figure>
+
+<h2 id="可以在一个容器中同时运行多个应用进程吗？"><a href="#可以在一个容器中同时运行多个应用进程吗？" class="headerlink" title="可以在一个容器中同时运行多个应用进程吗？"></a>可以在一个容器中同时运行多个应用进程吗？</h2><p>可以但不推荐</p>
+<p>资源不好管理也容易出现冲突，监控也可能会出现冲突</p>
+<h2 id="如何控制容器占用系统资源（CPU，内存）的份额？"><a href="#如何控制容器占用系统资源（CPU，内存）的份额？" class="headerlink" title="如何控制容器占用系统资源（CPU，内存）的份额？"></a>如何控制容器占用系统资源（CPU，内存）的份额？</h2><h3 id="CPU控制"><a href="#CPU控制" class="headerlink" title="CPU控制"></a>CPU控制</h3><ul>
+<li><p><code>--cpus</code> 参数：使用 <code>--cpus</code> 参数可以限制容器使用的 <code>CPU</code> 核心数量。例如，以下命令限制容器只能使用 0.5 个 <code>CPU</code> 核心：</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --cpus=0.5 my_container</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>--cpu-shares</code> 参数：使用 <code>--cpu-shares</code> 参数可以为容器分配 CPU 时间片的权重。较高的权重值表示容器将获得更多的 CPU 时间。例如，以下命令为容器分配了相对较高的 CPU 权重</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --cpu-shares=512 my_container</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="内存控制"><a href="#内存控制" class="headerlink" title="内存控制"></a>内存控制</h3><ul>
+<li><p><code>--memory</code> 参数：使用 <code>--memory</code> 参数可以限制容器使用的内存量。例如，以下命令限制容器最多使用 512MB 内存：</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --memory=512m my_container</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>--memory-swap</code> 参数：使用 <code>--memory-swap</code> 参数可以限制容器的虚拟内存（包括物理内存和交换空间）使用。默认情况下，Docker 会将 <code>--memory-swap</code> 设置为无限制。例如，以下命令将容器的虚拟内存限制为 1GB（包括 512MB 物理内存和 512MB 交换空间）</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --memory=512m --memory-swap=1g my_container</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="如何将一台宿主机的docker环境迁移到另外一台宿主机？"><a href="#如何将一台宿主机的docker环境迁移到另外一台宿主机？" class="headerlink" title="如何将一台宿主机的docker环境迁移到另外一台宿主机？"></a>如何将一台宿主机的docker环境迁移到另外一台宿主机？</h2><p>停止Docker服务，将整个docker存储文件复制到另外一台宿主机上，然后调整另外一台宿主机的配置即可</p>
+<h2 id="什么是docker-compose"><a href="#什么是docker-compose" class="headerlink" title="什么是docker-compose"></a>什么是docker-compose</h2><p>使用 Docker Compose，你可以在本地开发和测试多容器应用程序，然后将相同的配置和定义部署到生产环境中，从而简化了容器化应用程序的开发、部署和管理过程。它是 Docker 生态系统中非常有用的工具之一。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/04/go-reflect-try/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -320,7 +557,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-06 22:18:05" itemprop="dateModified" datetime="2023-10-06T22:18:05+08:00">2023-10-06</time>
+                <time title="修改时间：2023-10-07 12:46:08" itemprop="dateModified" datetime="2023-10-07T12:46:08+08:00">2023-10-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -526,7 +763,8 @@
 <li>ssthresh &#x3D; cwnd</li>
 <li>快速恢复</li>
 </ul>
-<h3 id="快速恢复"><a href="#快速恢复" class="headerlink" title="快速恢复"></a>快速恢复</h3><p>快速恢复算法如下：</p>
+<h3 id="快速恢复"><a href="#快速恢复" class="headerlink" title="快速恢复"></a>快速恢复</h3><p>快速重传使用快速恢复算法是因为快速恢复算法认为，你还能收到3个重复的ACK，说明网络不是态糟糕</p>
+<p>快速恢复算法如下：</p>
 <ul>
 <li>拥塞窗口 cwnd &#x3D; ssthresh + 3 （ 3 的意思是确认有 3 个数据包被收到了）；</li>
 <li>重传丢失的数据包；</li>
@@ -1527,95 +1765,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/20/tuhuyangche-exam/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="yxh">
-      <meta itemprop="description" content="Go开发弱鸡，沉淀ing">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="鼠鼠的随笔">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/20/tuhuyangche-exam/" class="post-title-link" itemprop="url">笔试题：途虎养车JAVA开发</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-09-20 20:42:06 / 修改时间：21:28:00" itemprop="dateCreated datePublished" datetime="2023-09-20T20:42:06+08:00">2023-09-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AC%94%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">笔试</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/20/tuhuyangche-exam/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/20/tuhuyangche-exam/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>途虎第三题没写出来，记录一下，复述一下题目大概</p>
-<p>给定一些坐标，这些坐标是城市的坐标，(如果每个坐标在一行或者在一列的话则表示两者是可以互相到达的，此时二者只需建立一个工厂)，现在给定一系列坐标，问最少要建多少个工厂</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入</span><br><span class="line"><span class="punctuation">&#123;</span><span class="punctuation">&#123;</span><span class="number">0</span><span class="punctuation">,</span><span class="number">0</span><span class="punctuation">&#125;</span><span class="punctuation">,</span> <span class="punctuation">&#123;</span><span class="number">0</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">&#125;</span><span class="punctuation">,</span> <span class="punctuation">&#123;</span><span class="number">2</span><span class="punctuation">,</span><span class="number">0</span><span class="punctuation">&#125;</span><span class="punctuation">,</span> <span class="punctuation">&#123;</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">&#125;</span><span class="punctuation">,</span> <span class="punctuation">&#123;</span><span class="number">2</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line">输出</span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p>刚开始钻牛角尖了，老想着用dfs。实际上是不需要的，因为dfs是为了找到下一个可达点的位置。而这里，坐标全部给你了。只需要你遍历一边。维护一个n*m的表来判断能不能到达</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	nums := [][]<span class="type">int</span>&#123;&#123;<span class="number">0</span>, <span class="number">0</span>&#125;, &#123;<span class="number">0</span>, <span class="number">2</span>&#125;, &#123;<span class="number">2</span>, <span class="number">0</span>&#125;, &#123;<span class="number">2</span>, <span class="number">2</span>&#125;&#125;</span><br><span class="line">	fmt.Println(needFactory(nums))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">needFactory</span><span class="params">(nums [][]<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	rowLen, colLen := <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">	<span class="comment">// 找到坐标</span></span><br><span class="line">	<span class="keyword">for</span> _, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">		rowLen = max(num[<span class="number">0</span>], rowLen)</span><br><span class="line">		colLen = max(num[<span class="number">1</span>], colLen)</span><br><span class="line">	&#125;</span><br><span class="line">	rowLen += <span class="number">1</span></span><br><span class="line">	colLen += <span class="number">1</span></span><br><span class="line">	visited := <span class="built_in">make</span>([][]<span class="type">bool</span>, rowLen)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; rowLen; i++ &#123;</span><br><span class="line">		visited[i] = <span class="built_in">make</span>([]<span class="type">bool</span>, colLen)</span><br><span class="line">	&#125;</span><br><span class="line">	cnt := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> _, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">		x, y := num[<span class="number">0</span>], num[<span class="number">1</span>]</span><br><span class="line">		<span class="keyword">if</span> !visited[x][y] &#123;</span><br><span class="line">			cnt++</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> i := x; i &lt; rowLen; i++ &#123;</span><br><span class="line">			visited[i][y] = <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> i := y; i &lt; colLen; i++ &#123;</span><br><span class="line">			visited[x][i] = <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> cnt</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">max</span><span class="params">(a, b <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> a &gt; b &#123;</span><br><span class="line">		<span class="keyword">return</span> a</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>最终答案和测试样例结果相同</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1687,7 +1836,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1700,7 +1849,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
