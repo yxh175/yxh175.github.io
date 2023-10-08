@@ -188,7 +188,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-08 10:36:44" itemprop="dateModified" datetime="2023-10-08T10:36:44+08:00">2023-10-08</time>
+                <time title="修改时间：2023-10-08 11:30:52" itemprop="dateModified" datetime="2023-10-08T11:30:52+08:00">2023-10-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,6 +276,22 @@
 <p>零拷贝技术的文件传输方式相比传统文件传输的方式，减少了 2 次上下文切换和数据拷贝次数，只需要 2 次上下文切换和数据拷贝次数，就可以完成文件的传输，而且 2 次的数据拷贝过程，都不需要通过 CPU，2 次都是由 DMA 来搬运。</p>
 <p>所以，总体来看，零拷贝技术可以把文件传输的性能提高至少一倍以上</p>
 <h4 id="哪些项目使用了零拷贝技术"><a href="#哪些项目使用了零拷贝技术" class="headerlink" title="哪些项目使用了零拷贝技术"></a>哪些项目使用了零拷贝技术</h4><p>Kafka</p>
+<h3 id="PageCache-有什么作用？"><a href="#PageCache-有什么作用？" class="headerlink" title="PageCache 有什么作用？"></a>PageCache 有什么作用？</h3><p>PageCache即磁盘高速缓存，也是内核缓冲区。</p>
+<p>由于零拷贝使用PageCache，可以使得零拷贝进一步得到提升。</p>
+<p>使用PageCache就相当于使用了一个缓存区。缓存一定数据所以它的主要优点有两个</p>
+<ul>
+<li>缓存最近被访问的数据</li>
+<li>预读功能</li>
+</ul>
+<p>但是在传输大文件的时候，缓冲区的存在有时也会拖慢整个传输进度，白白浪费一次DMA拷贝。</p>
+<p>因为传输大文件肯定是按照顺序依次传输，也就是说缓存击中的概率几乎为0。就导致了以下问题</p>
+<ul>
+<li>PageCache长时间被大文件覆盖，热点小文件无法使用pageCache</li>
+<li>大文件无法享受PageCache的好处</li>
+</ul>
+<p>所以大文件的传输不应该使用PageCache进行传输，它最好使用什么呢？</p>
+<h3 id="大文件传输用什么方式实现？"><a href="#大文件传输用什么方式实现？" class="headerlink" title="大文件传输用什么方式实现？"></a>大文件传输用什么方式实现？</h3><p>既然大文件使用PageCache进行传输有这么多负面的效果，那应该用什么实现呢？</p>
+<p>通过用户态的异步I&#x2F;O和内核台的直接I&#x2F;O进行处理</p>
 
       
     </div>
