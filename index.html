@@ -171,7 +171,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/10/07/interview-os-networkSystem/" class="post-title-link" itemprop="url">interview-os-networkSystem</a>
+            <a href="/2023/10/07/interview-os-networkSystem/" class="post-title-link" itemprop="url">面试总结：操作系统之网络系统</a>
         </h2>
 
         <div class="post-meta">
@@ -180,10 +180,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-10-07 21:41:10 / 修改时间：22:00:04" itemprop="dateCreated datePublished" datetime="2023-10-07T21:41:10+08:00">2023-10-07</time>
+              <time title="创建时间：2023-10-07 21:41:10" itemprop="dateCreated datePublished" datetime="2023-10-07T21:41:10+08:00">2023-10-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-08 10:36:44" itemprop="dateModified" datetime="2023-10-08T10:36:44+08:00">2023-10-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -219,7 +225,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>网络在计算机网络中的地位很重要，同样的在操作系统中去实现网络的底层也很重要，接下来研究一下常见的面试问题</p>
+          <p>本文主要参考<a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/8_network_system/zero_copy.html#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89-dma-%E6%8A%80%E6%9C%AF">小林coding</a>，来进行网络系统知识相关的回忆</p>
+<p>网络在计算机网络中的地位很重要，同样的在操作系统中去实现网络的底层也很重要，接下来研究一下常见的面试问题</p>
 <h2 id="什么是零拷贝？"><a href="#什么是零拷贝？" class="headerlink" title="什么是零拷贝？"></a>什么是零拷贝？</h2><p>这个是一个面试高频问题，答案也是见字知其意。</p>
 <p>零拷贝是指计算机执行IO操作时，CPU不需要将数据从一个存储区域复制到另一个存储区域，从而可以减少上下文切换以及CPU的拷贝时间。它是一种I&#x2F;O操作优化技术。</p>
 <p>它的优势在于：</p>
@@ -232,7 +239,43 @@
 <p>因此科学家就提出了DMA技术，来直接进行内存访问。</p>
 <p>简单理解DMA技术即：在进行I&#x2F;O设备和内存的数据传输的时候，数据搬运的工作全部交给了DMA控制器，而CPU不再参与数据搬运相关的事情，这样CPU就可以去处理别的事务。</p>
 <p>也就是说DMA就是一个写入装置，对于简单的写入也不再需要劳烦CPU，只需要使用DMA控制器就行。随着设计的不断提升，每个I&#x2F;O设备都有了自己的DMA控制器</p>
-<h4 id="是否有了DMA控制器，CPU就不参与写入了"><a href="#是否有了DMA控制器，CPU就不参与写入了" class="headerlink" title="是否有了DMA控制器，CPU就不参与写入了"></a>是否有了DMA控制器，CPU就不参与写入了</h4><p>并不能这么绝对的说，准确的来说是CPU不参与 将数据从磁盘控制器缓冲区搬运到内核空间 的简单工作。这部分由DMA完成，CPU还是会参与写入调度，这时CPU更像一个管理者</p>
+<h4 id="是否有了DMA控制器，CPU就不参与写入了"><a href="#是否有了DMA控制器，CPU就不参与写入了" class="headerlink" title="是否有了DMA控制器，CPU就不参与写入了"></a>是否有了DMA控制器，CPU就不参与写入了</h4><p>并不能这么绝对的说，准确的来说是CPU不参与 将数据从磁盘控制器缓冲区搬运到内核空间 的简单工作。这部分由DMA完成，CPU还是会参与写入调度，这时CPU更像一个管理者，只负责调度</p>
+<h3 id="传统的文件传输有多糟糕"><a href="#传统的文件传输有多糟糕" class="headerlink" title="传统的文件传输有多糟糕"></a>传统的文件传输有多糟糕</h3><p>如果服务端要提供文件传输的功能，直观的去想最简单的方式还是通过CPU去进行中断拷贝</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E9%9B%B6%E6%8B%B7%E8%B4%9D/%E4%BC%A0%E7%BB%9F%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93.png" alt="传统文件传输"></p>
+<p>这期间会发生两次CPU拷贝和两次DMA，两次CPU拷贝也就是要进行四次CPU状态切换。</p>
+<p>一份数据要拷贝四次，看起来有点繁琐与不划算。</p>
+<p>所以要怎么解决呢？核心的问题是如何减少上下文切换次数和拷贝次数</p>
+<h3 id="优化文件传输性能的方法"><a href="#优化文件传输性能的方法" class="headerlink" title="优化文件传输性能的方法"></a>优化文件传输性能的方法</h3><h4 id="减少用户态与内核态的上下文切换次数"><a href="#减少用户态与内核态的上下文切换次数" class="headerlink" title="减少用户态与内核态的上下文切换次数"></a>减少用户态与内核态的上下文切换次数</h4><p>读取磁盘数据的时候，之所以要发生上下文切换，这是因为用户空间没有权限操作磁盘或网卡，内核的权限最高，这些操作设备的过程都需要交由操作系统内核来完成，所以一般要通过内核去完成某些任务的时候，就需要使用操作系统提供的系统调用函数。</p>
+<p>而一次系统调用必然会发生 2 次上下文切换：首先从用户态切换到内核态，当内核执行完任务后，再切换回用户态交由进程代码执行。</p>
+<p>所以，要想减少上下文切换到次数，就要减少系统调用的次数。</p>
+<h4 id="减少数据拷贝次数"><a href="#减少数据拷贝次数" class="headerlink" title="减少数据拷贝次数"></a>减少数据拷贝次数</h4><p>可以看到流程图中CPU拷贝次数多的原因是因为要拷贝到用户缓冲区中，如果用户缓冲区不会对数据加工，可以不把数据搬到缓冲区中，直接进行发送</p>
+<h3 id="如何实现零拷贝？"><a href="#如何实现零拷贝？" class="headerlink" title="如何实现零拷贝？"></a>如何实现零拷贝？</h3><p>实现零拷贝的方法通常有两种</p>
+<ul>
+<li>mmap + write</li>
+<li>sendfile</li>
+</ul>
+<h4 id="mmap-write"><a href="#mmap-write" class="headerlink" title="mmap + write"></a>mmap + write</h4><p>这里的优化是替换了原本的read函数，换成mmap函数。这两个函数的区别是什么呢？</p>
+<ul>
+<li>read函数： 将内核态缓存区的内容拷贝到用户缓冲区</li>
+<li>mmap函数： 将内核态缓存区共享给用户缓冲区</li>
+</ul>
+<p>所以就可以少一次拷贝，如下流程</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E9%9B%B6%E6%8B%B7%E8%B4%9D/mmap%20%2B%20write%20%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="mmap拷贝"></p>
+<p>但是这时仍然需要调用两次函数，进行四次上下文切换</p>
+<h4 id="sendfile"><a href="#sendfile" class="headerlink" title="sendfile"></a>sendfile</h4><p>senffile是一个专门发送文件的系统函数，相当于它可以一次替代read()和write()两个系统调用。减少一次系统调用，只需要两次上下文切换，三次数据拷贝，流程如下：</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E9%9B%B6%E6%8B%B7%E8%B4%9D/senfile-3%E6%AC%A1%E6%8B%B7%E8%B4%9D.png" alt="sendfile"></p>
+<p>如果网卡支持SG-DMA(The Scatter-Gather Direct Memory Access)，可以大幅减少拷贝次数</p>
+<p>SG-DMA技术即：</p>
+<ul>
+<li>通过DMA将磁盘数据拷贝到内核缓冲区中</li>
+<li>缓冲区描述符和数据长度传到socket缓冲区，然后将实际数据传输到网卡中。就又可以减少一次拷贝</li>
+</ul>
+<p>使用SG-DMA的流程如下</p>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E9%9B%B6%E6%8B%B7%E8%B4%9D/senfile-%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="SG-DMA"></p>
+<p>所谓的零拷贝（Zero-copy）技术，因为我们没有在内存层面去拷贝数据，也就是说全程没有通过 CPU 来搬运数据，所有的数据都是通过 DMA 来进行传输的。</p>
+<p>零拷贝技术的文件传输方式相比传统文件传输的方式，减少了 2 次上下文切换和数据拷贝次数，只需要 2 次上下文切换和数据拷贝次数，就可以完成文件的传输，而且 2 次的数据拷贝过程，都不需要通过 CPU，2 次都是由 DMA 来搬运。</p>
+<p>所以，总体来看，零拷贝技术可以把文件传输的性能提高至少一倍以上</p>
+<h4 id="哪些项目使用了零拷贝技术"><a href="#哪些项目使用了零拷贝技术" class="headerlink" title="哪些项目使用了零拷贝技术"></a>哪些项目使用了零拷贝技术</h4><p>Kafka</p>
 
       
     </div>
