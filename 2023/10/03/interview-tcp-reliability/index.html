@@ -18,13 +18,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"xiaoheinotes.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="文章内容主要参考：小林coding TCP哪些机制保证了可靠性 重传机制：通过对未送达信息的重新传输，最终保证每个数据都能抵达到对端 滑动窗口：通过窗口增加传输的效率，可以等待一个范围的包 流量控制：发送方会根据对方的滑动窗口来控制自己的发送速度 拥塞控制：网络传输过程丢包严重也会通过降低发送速度防止出现恶性循环  重传机制重传机制是为了保证，网络中报丢失后，能通过传输机制，最终保证报的正常传输">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试重点：TCP如何保证可靠性">
-<meta property="og:url" content="http://example.com/2023/10/03/interview-tcp-reliability/index.html">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/10/03/interview-tcp-reliability/index.html">
 <meta property="og:site_name" content="小黑的随笔">
 <meta property="og:description" content="文章内容主要参考：小林coding TCP哪些机制保证了可靠性 重传机制：通过对未送达信息的重新传输，最终保证每个数据都能抵达到对端 滑动窗口：通过窗口增加传输的效率，可以等待一个范围的包 流量控制：发送方会根据对方的滑动窗口来控制自己的发送速度 拥塞控制：网络传输过程丢包严重也会通过降低发送速度防止出现恶性循环  重传机制重传机制是为了保证，网络中报丢失后，能通过传输机制，最终保证报的正常传输">
 <meta property="og:locale" content="zh_CN">
@@ -48,7 +48,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/5.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0">
 
-<link rel="canonical" href="http://example.com/2023/10/03/interview-tcp-reliability/">
+<link rel="canonical" href="http://xiaoheinotes.com/2023/10/03/interview-tcp-reliability/">
 
 
 <script id="page-configurations">
@@ -148,6 +148,11 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
   </ul>
 </nav>
 
@@ -176,7 +181,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/03/interview-tcp-reliability/">
+    <link itemprop="mainEntityOfPage" href="http://xiaoheinotes.com/2023/10/03/interview-tcp-reliability/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

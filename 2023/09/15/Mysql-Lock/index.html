@@ -18,13 +18,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"xiaoheinotes.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="Mysql 锁现在后端对高并发的要求很高。当时暑期实习面腾讯云智、小米都被问到Redis怎么实现分布式锁。我当时寻思我写的是了解啊。 不吹水了，看看Mysql的锁机制怎么实现（内容参考小林Coding） 全局锁全局锁就是将mysql整个数据库锁住（很暴力） 全局锁怎么用的？要使用全局锁，需要执行这个命令 1flush tables with read lock  整个数据库会进入只读状态任何增、删">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql锁介绍">
-<meta property="og:url" content="http://example.com/2023/09/15/Mysql-Lock/index.html">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/09/15/Mysql-Lock/index.html">
 <meta property="og:site_name" content="小黑的随笔">
 <meta property="og:description" content="Mysql 锁现在后端对高并发的要求很高。当时暑期实习面腾讯云智、小米都被问到Redis怎么实现分布式锁。我当时寻思我写的是了解啊。 不吹水了，看看Mysql的锁机制怎么实现（内容参考小林Coding） 全局锁全局锁就是将mysql整个数据库锁住（很暴力） 全局锁怎么用的？要使用全局锁，需要执行这个命令 1flush tables with read lock  整个数据库会进入只读状态任何增、删">
 <meta property="og:locale" content="zh_CN">
@@ -41,7 +41,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E9%94%81/innodb_autoinc_lock_mode=2.png">
 
-<link rel="canonical" href="http://example.com/2023/09/15/Mysql-Lock/">
+<link rel="canonical" href="http://xiaoheinotes.com/2023/09/15/Mysql-Lock/">
 
 
 <script id="page-configurations">
@@ -141,6 +141,11 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
   </ul>
 </nav>
 
@@ -169,7 +174,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/Mysql-Lock/">
+    <link itemprop="mainEntityOfPage" href="http://xiaoheinotes.com/2023/09/15/Mysql-Lock/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

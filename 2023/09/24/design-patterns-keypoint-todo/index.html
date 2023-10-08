@@ -18,13 +18,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"xiaoheinotes.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="最近做了很多笔试题，都提到了设计模式。非科班出身的鼠鼠之前了解过这些八股，但是都是浅尝而止。这次试着深入了解一下。用go实现相关思路 单例模式单例模式是最常用的一种设计模式，它的设计模式也是很好理解，就是保证返回相同内存的位置的同一实例。创建了就可以反复使用。在这基础上也出现了两种设计理念：  饿汉式： 程序启动时就init()中创建好实例，不用考虑多线程下并发调用的问题 懒汉式： 等需要调用时，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go 实战：设计模式的实现">
-<meta property="og:url" content="http://example.com/2023/09/24/design-patterns-keypoint-todo/index.html">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/09/24/design-patterns-keypoint-todo/index.html">
 <meta property="og:site_name" content="小黑的随笔">
 <meta property="og:description" content="最近做了很多笔试题，都提到了设计模式。非科班出身的鼠鼠之前了解过这些八股，但是都是浅尝而止。这次试着深入了解一下。用go实现相关思路 单例模式单例模式是最常用的一种设计模式，它的设计模式也是很好理解，就是保证返回相同内存的位置的同一实例。创建了就可以反复使用。在这基础上也出现了两种设计理念：  饿汉式： 程序启动时就init()中创建好实例，不用考虑多线程下并发调用的问题 懒汉式： 等需要调用时，">
 <meta property="og:locale" content="zh_CN">
@@ -35,7 +35,7 @@
 <meta property="article:tag" content="设计模式">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/09/24/design-patterns-keypoint-todo/">
+<link rel="canonical" href="http://xiaoheinotes.com/2023/09/24/design-patterns-keypoint-todo/">
 
 
 <script id="page-configurations">
@@ -135,6 +135,11 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
   </ul>
 </nav>
 
@@ -163,7 +168,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/24/design-patterns-keypoint-todo/">
+    <link itemprop="mainEntityOfPage" href="http://xiaoheinotes.com/2023/09/24/design-patterns-keypoint-todo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

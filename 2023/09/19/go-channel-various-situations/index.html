@@ -18,13 +18,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"xiaoheinotes.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="Channel情况解析Channel 作为go协程编程中必要的一环，理解其原理和各种情况是必要的。如果加以利用这些特性。我们会在工作中可以保证安全的情况下探索各种玩法 一般我们看到别人讲channel的各种情况，都用文本写了一行又一行。感觉看不太懂，看完下面会忘了上面。所以我自己整理了整理各种情况并用图表示出来。供自己以后进行快速查找和记忆  上图可以很清晰的看到什么流程会导致什么情况。总结一些特">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go：Channel各种情况下的情况">
-<meta property="og:url" content="http://example.com/2023/09/19/go-channel-various-situations/index.html">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/09/19/go-channel-various-situations/index.html">
 <meta property="og:site_name" content="小黑的随笔">
 <meta property="og:description" content="Channel情况解析Channel 作为go协程编程中必要的一环，理解其原理和各种情况是必要的。如果加以利用这些特性。我们会在工作中可以保证安全的情况下探索各种玩法 一般我们看到别人讲channel的各种情况，都用文本写了一行又一行。感觉看不太懂，看完下面会忘了上面。所以我自己整理了整理各种情况并用图表示出来。供自己以后进行快速查找和记忆  上图可以很清晰的看到什么流程会导致什么情况。总结一些特">
 <meta property="og:locale" content="zh_CN">
@@ -37,7 +37,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img1.imgtp.com/2023/09/19/hV0QoxLs.png">
 
-<link rel="canonical" href="http://example.com/2023/09/19/go-channel-various-situations/">
+<link rel="canonical" href="http://xiaoheinotes.com/2023/09/19/go-channel-various-situations/">
 
 
 <script id="page-configurations">
@@ -137,6 +137,11 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
   </ul>
 </nav>
 
@@ -165,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/go-channel-various-situations/">
+    <link itemprop="mainEntityOfPage" href="http://xiaoheinotes.com/2023/09/19/go-channel-various-situations/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

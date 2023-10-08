@@ -18,13 +18,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"xiaoheinotes.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="学习Redis的记录，参考自小林coding AOF日志AOF日志简单来讲，就是把所有写操作Redis内容全部在执行后马上追加的AOF日志里。如果下次Redis重新启动，想要恢复，只需要按顺序执行它就能恢复整个记录。  Redis默认情况下是不开启AOF日志的，需要修改redis.conf配置文件的参数修改 AOF日志是普通的文本文件，但是它通过一种自己的规则来记录的  为什么redis要执行命令">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis持久化实现">
-<meta property="og:url" content="http://example.com/2023/09/18/redis-aof-rdb/index.html">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/09/18/redis-aof-rdb/index.html">
 <meta property="og:site_name" content="小黑的随笔">
 <meta property="og:description" content="学习Redis的记录，参考自小林coding AOF日志AOF日志简单来讲，就是把所有写操作Redis内容全部在执行后马上追加的AOF日志里。如果下次Redis重新启动，想要恢复，只需要按顺序执行它就能恢复整个记录。  Redis默认情况下是不开启AOF日志的，需要修改redis.conf配置文件的参数修改 AOF日志是普通的文本文件，但是它通过一种自己的规则来记录的  为什么redis要执行命令">
 <meta property="og:locale" content="zh_CN">
@@ -45,7 +45,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.xiaolincoding.com//mysql/other/6f0ab40396b7fc2c15e6f4487d3a0ad7.png">
 
-<link rel="canonical" href="http://example.com/2023/09/18/redis-aof-rdb/">
+<link rel="canonical" href="http://xiaoheinotes.com/2023/09/18/redis-aof-rdb/">
 
 
 <script id="page-configurations">
@@ -145,6 +145,11 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
   </ul>
 </nav>
 
@@ -173,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/18/redis-aof-rdb/">
+    <link itemprop="mainEntityOfPage" href="http://xiaoheinotes.com/2023/09/18/redis-aof-rdb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
