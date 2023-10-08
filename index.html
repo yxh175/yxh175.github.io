@@ -1,7 +1,282 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>小黑的随笔</title><meta name="author" content="xiaohei"><meta name="copyright" content="xiaohei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="那一年沉淀ing">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小黑的随笔">
+<meta property="og:url" content="http://xiaoheinotes.com/index.html">
+<meta property="og:site_name" content="小黑的随笔">
+<meta property="og:description" content="那一年沉淀ing">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xiaoheinotes.com/images/avatar.gif">
+<meta property="article:author" content="xiaohei">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xiaoheinotes.com/images/avatar.gif"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://xiaoheinotes.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '小黑的随笔',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-10-08 20:32:13'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
 
-block content
-  include ./includes/mixins/post-ui.pug
-  #recent-posts.recent-posts
-    +postUI
-    include includes/pagination.pug
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="小黑的随笔" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/avatar.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="小黑的随笔"><span class="site-name">小黑的随笔</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">小黑的随笔</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/10/07/interview-os-networkSystem/" title="面试总结：操作系统之网络系统">面试总结：操作系统之网络系统</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-10-07T13:41:10.000Z" title="发表于 2023-10-07 21:41:10">2023-10-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">本文主要参考小林coding，来进行网络系统知识相关的回忆
+网络在计算机网络中的地位很重要，同样的在操作系统中去实现网络的底层也很重要，接下来研究一下常见的面试问题
+什么是零拷贝？这个是一个面试高频问题，答案也是见字知其意。
+零拷贝是指计算机执行IO操作时，CPU不需要将数据从一个存储区域复制到另一个存储区域，从而可以减少上下文切换以及CPU的拷贝时间。它是一种I&#x2F;O操作优化技术。
+它的优势在于：
+
+减少内存复制的操作
+提高性能
+减少CPU开销
+
+DMA技术DMA技术即(Direct Memory Access) 技术，就是一种直接访问内存的技术。在没有这个技术之前。I&#x2F;O过程往往需要CPU不断的中断，来将磁盘的缓冲区的数据的写入到寄存器中。此期间是无法执行其他任务的。也就是说当传输大量数据文件，都使用CPU进行搬运，CPU的用户进程就会频繁的陷入阻塞等待的状态
+因此科学家就提出了DMA技术，来直接进行内存访问。
+简单理解DMA技术即：在进行I&#x2F;O设备和内存的数据传输的时候，数据搬运的工作全部交给了DMA控制器，而CPU不再参与数据搬运相关的事情，这样CP ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/10/07/interview-docker-key-point/" title="面试重点：docker常见面试题">面试重点：docker常见面试题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-10-07T04:48:41.000Z" title="发表于 2023-10-07 12:48:41">2023-10-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">docker平时有用到一点，但并不是经常使用，只用过几个常用的命令，所以还是总结一下常见的docker面试题
+什么是dockerGo语言开发的一个容器虚拟化技术，使用C&#x2F;S架构，具有隔离、快速、轻便的特点
+Docker与虚拟机有什么不同？虚拟机是模拟一个os系统去操作应用，这样的好处是简单。可以很容易的设置各种细节，并且用户也很容易理解多个系统之间的关系。docker不同，它取消了运行臃肿的客户机操作系统，取而代之的是守护进程。通过寄宿在主机中，可以直接与主系统进行通信，并为各个容器分配资源。一个容器就是一个隔绝的沙箱，其中包含着各个镜像。
+Docker镜像是什么？镜像可以理解为一个可以运行在docker容器中软件包，它包含了运行应用程序所需要的一切代码、运行时环境、系统工具、系统库以及预设的环境变量。镜像可以看作是容器的模板，容器是基于镜像创建的运行实例。
+Docker容器是什么？Docker 容器是 Docker 平台上运行的独立的、可执行的应用程序单元。容器包含了应用程序及其所有依赖项，包括代码、运行时环境、系统工具、系统库以及预设的环境变量。容器是基于 Docker  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/10/04/go-reflect-try/" title="GO：反射实战编程">GO：反射实战编程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-10-04T01:34:45.000Z" title="发表于 2023-10-04 09:34:45">2023-10-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/">编程实战</a></span></div><div class="content">reflect包在Golang语言中有重要的作用。反射在计算机科学领域中，是指一个应用能够进行自描述、自控制。Golang中实现了反射，反射机制就是在运行时动态的调用对象的属性和方法。
+reflect中有两个重要的函数和类型
+两个函数
+
+reflect.TypeOf  获取类型信息
+reflect.ValueOf  获取数据的运行时表示
+
+两个类型
+
+reflect.Type
+reflect.Value
+
+reflect.Type是反射包定义的一个接口，其中定义了一些不错的方法。这里列举出来一些，如果感兴趣可以翻一下源码。
+1234567891011121314type Type interface &#123;	Align() int	FieldAlign() int	Method(int) Method    // 获取当前类型对应方法的引用	MethodByName(string) (Method, bool)    // 获取当前类型方法的数量	NumMethod() int	...    // 判断当前类型是否实现某个接口	Implements(u Type) bool    ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/10/03/interview-tcp-reliability/" title="面试重点：TCP如何保证可靠性">面试重点：TCP如何保证可靠性</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-10-03T09:32:21.000Z" title="发表于 2023-10-03 17:32:21">2023-10-03</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1/">八股</a></span></div><div class="content">文章内容主要参考：小林coding
+TCP哪些机制保证了可靠性
+重传机制：通过对未送达信息的重新传输，最终保证每个数据都能抵达到对端
+滑动窗口：通过窗口增加传输的效率，可以等待一个范围的包
+流量控制：发送方会根据对方的滑动窗口来控制自己的发送速度
+拥塞控制：网络传输过程丢包严重也会通过降低发送速度防止出现恶性循环
+
+重传机制重传机制是为了保证，网络中报丢失后，能通过传输机制，最终保证报的正常传输
+
+超时重传
+快速重传
+SACK方法
+D-SACK方法
+
+超时重传超时重传的机制比较简单，只需要在每次发送时设置一个定时器，在定时器超时时没有收到ACK的话就会重发数据。这就是所谓的超时重传。
+
+重传时间RTO（Retransmission Timeout）设置多长合适RTO较大会导致重发检测较慢，一次重发要好久，RTO较小会导致误判丢包次数过多，形成网络拥塞
+最好设置刚好大于一个RTT往返时延
+快速重传所谓的快速重传，即是不依赖时间，而是根据丢包次数决定。
+
+快速重传中，当一个包被接受时，接受方就会返回ACK + 下一个需求的序列号。这样如果一个包丢失时，就会返回返回一个最左边未收到的序列号。 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/30/interview-serialization/" title="面试重点：序列化">面试重点：序列化</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-30T11:52:47.000Z" title="发表于 2023-09-30 19:52:47">2023-09-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">什么是序列化和反序列化？
+序列化： 将数据结构或对象或结构体转换成二进制字节的过程
+反序列化：将序列化后的二进制字节流反序列化成数据结构或者对象
+
+什么时候比较常用？
+RPC 网络传输
+文件存储
+存储到Redis缓存
+存储到内存
+
+序列化属于TCP&#x2F;IP四层协议的哪一层，七层呢？四层协议
+
+应用层
+传输层
+网络层
+网络接口层
+
+序列化属于程序中用于转换的操作，所以应该是最顶层于用户层的。所以是应用层的一部分。
+常见的序列化java常见序列化
+jdk序列：不推荐
+Kryo序列化：由于其变长存储特性并使用了字节码生成机制，拥有较高的运行速度和较小的字节码体积。
+Protobuf序列化：需要自己定义 IDL 文件和生成对应的序列化代码。
+ProtoStuff序列化：基于Protobuf提供了更多的功能和更简易的用法
+Hessian序列化：自定义描述的二进制 RPC 协议。
+
+go常见序列化</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/25/redis-distributed-locks/" title="Go实战：redis分布式锁开发问题">Go实战：redis分布式锁开发问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-25T09:30:28.000Z" title="发表于 2023-09-25 17:30:28">2023-09-25</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">之前金山面试被问到了怎么实现Redis分布式锁，但是答了个大概，但是再往深的问，就有些不会了。因此查了查相关博客，大概了解了整个过程。试着用一个redis + gin的小demo实战一下各种情况
+SetNX 和 EX 分开配置一般来说我们上来就会说，Set的时候设置一个NX参数。保证只能创建一个锁。 这个时候如果接下来的线程阻塞了就会导致整个系统都阻塞，这是在业务面上比较危险的事情。非原子情况下使用EX|PX来保证redis锁到期后，会自动删除。
+一般来说go-redis很少出现这种情况。go-redis 使用了SetNx会自动配置一个时间，如果不想设置时间就设置成-1，也就是说，写一个分两步的操作某种程度上也挺难的
+因为某个业务异常，无法释放锁释放锁失败，导致所有线程都无法拿到这个锁。好在可以用EX实现，这个就是一个很好的方法
+释放别人的锁我第一次看到这个问题，我就很疑惑，这怎么可能会释放别人的锁呢？之后大概想了想。这种情况确实有可能发生。
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/24/design-patterns-keypoint-todo/" title="Go 实战：设计模式的实现">Go 实战：设计模式的实现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-24T13:13:07.000Z" title="发表于 2023-09-24 21:13:07">2023-09-24</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1/">八股</a></span></div><div class="content">最近做了很多笔试题，都提到了设计模式。非科班出身的鼠鼠之前了解过这些八股，但是都是浅尝而止。这次试着深入了解一下。用go实现相关思路
+单例模式单例模式是最常用的一种设计模式，它的设计模式也是很好理解，就是保证返回相同内存的位置的同一实例。创建了就可以反复使用。在这基础上也出现了两种设计理念：
+
+饿汉式： 程序启动时就init()中创建好实例，不用考虑多线程下并发调用的问题
+懒汉式： 等需要调用时，在创建实例，需要考虑多线程的会创建多个实例的异常情况
+
+所以不难看出难点在于懒汉式的实现。在go中有很优雅的实现方法sync.Once 实现单例模式
+创建文件 instance.go 
+1234567891011121314151617181920package pattern_testimport &quot;sync&quot;type Instance struct &#123;	Core string&#125;var instance *Instancevar once sync.Oncefunc GetInstance() *Instance &#123;	once.Do(func ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/23/exam-meituan/" title="笔试回顾：美团9-23">笔试回顾：美团9-23</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-23T05:30:50.000Z" title="发表于 2023-09-23 13:30:50">2023-09-23</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AC%94%E8%AF%95/">笔试</a></span></div><div class="content">编程题总共五道编程题
+对于一个连串分数数组，计算小于前面最小成绩或者大于前面最大成绩的总数123456789101112131415161718192021222324252627282930313233343536373839package mainimport (    &quot;fmt&quot;)func main() &#123;    n := 0    fmt.Scanln(&amp;n)    scores := make([]int, n)    for i := 0; i &lt; n; i++ &#123;        fmt.Scan(&amp;scores[i])    &#125;    cnt := countExameScores(scores)    fmt.Println(cnt)&#125;func countExameScores(scores []int) int &#123;    n := len(scores)    if n &lt;= 1 &#123;        return 0    &#125;    minScore : ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/22/Interview-experience-KingSoft-WPS/" title="面经：金山办公服务端开发">面经：金山办公服务端开发</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-22T04:56:12.000Z" title="发表于 2023-09-22 12:56:12">2023-09-22</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%9D%A2%E7%BB%8F/">面经</a></span></div><div class="content">一面总共分为三个环节
+
+自我介绍
+简历提问
+算法考查
+
+自我介绍首先自我介绍了一下
+提问环节先是问一下比较基础的八股，然后逐渐变难的
+IP层有哪些协议？
+DNS 用来根据域名进行网络查询
+ARP 根据IP查询点之间的mac地址
+DHCP 自动分配IP地址
+NAT 私有地址转换为外网地址
+ICMP 确认IP包是否成功送达到目标地址
+IGMP
+
+讲一下TCP的三次握手TCP三次握手即客户端和服务端连接时，两个者进行三次沟通的过程
+
+客户端发送SYNC + 随机seq序列号X
+服务端监听到后回复ACK+SYNC ACK num&#x3D; X+1 SeqNum &#x3D; Y 
+客户端收到后， 回复ACK Ack num &#x3D; Y+1
+
+为什么TCP连接要有seq序列号？
+在TCP三次握手中保证了三次握手检查，不会有历史连接干扰
+在传输时能进行报文的控制，方便进行拥塞控制、丢失重传、流量控制
+
+讲一下四次挥手TCP 四次挥手是客户端和服务端断开，进行的一个操作，保证TCP连接的正常断开
+假设客户端主动关闭的时候
+
+客户端发送FIN请求 seq &#x3D; x、ack &#x3D; ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/21/go-complicate-interview-key-point/" title="GO：并发编程 面试重点">GO：并发编程 面试重点</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-21T07:36:09.000Z" title="发表于 2023-09-21 15:36:09">2023-09-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">Mutex是什么？怎么go中使用？Mutex 是go语言中的一种互斥锁，作用是给临界区的数据加锁，保证一次只能有一个协程去访问某个数据
+在go语言中，通过sync.Mutex实现Mutex锁，Mutex内部是一个结构体
+1234type Mutex struct &#123;	state int32	sema  uint32&#125;
+通过Locker来保证互斥锁， 实战一下
+1234567891011121314151617181920212223242526package mainimport (	&quot;fmt&quot;	&quot;sync&quot;)func main() &#123;	// mutex锁	mutex := sync.Mutex&#123;&#125;	var wg sync.WaitGroup	res := 0	for i := 0; i &lt; 1000; i++ &#123;		wg.Add(1)		go func() &#123;			defer wg.Done()			// 如果不加会是一个无法确定的输出			mutex.Lock()		 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/avatar.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">xiaohei</div><div class="author-info__description">那一年沉淀ing</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/07/interview-os-networkSystem/" title="面试总结：操作系统之网络系统">面试总结：操作系统之网络系统</a><time datetime="2023-10-07T13:41:10.000Z" title="发表于 2023-10-07 21:41:10">2023-10-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/07/interview-docker-key-point/" title="面试重点：docker常见面试题">面试重点：docker常见面试题</a><time datetime="2023-10-07T04:48:41.000Z" title="发表于 2023-10-07 12:48:41">2023-10-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/04/go-reflect-try/" title="GO：反射实战编程">GO：反射实战编程</a><time datetime="2023-10-04T01:34:45.000Z" title="发表于 2023-10-04 09:34:45">2023-10-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/03/interview-tcp-reliability/" title="面试重点：TCP如何保证可靠性">面试重点：TCP如何保证可靠性</a><time datetime="2023-10-03T09:32:21.000Z" title="发表于 2023-10-03 17:32:21">2023-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/30/interview-serialization/" title="面试重点：序列化">面试重点：序列化</a><time datetime="2023-09-30T11:52:47.000Z" title="发表于 2023-09-30 19:52:47">2023-09-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%AB%E8%82%A1/"><span class="card-category-list-name">八股</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/"><span class="card-category-list-name">八股文</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AC%94%E8%AF%95/"><span class="card-category-list-name">笔试</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AE%97%E6%B3%95/"><span class="card-category-list-name">算法</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/"><span class="card-category-list-name">编程实战</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%9D%A2%E7%BB%8F/"><span class="card-category-list-name">面经</span><span class="card-category-list-count">1</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%BF%AB%E6%8E%92/" style="font-size: 1.1em; color: #999">快排</a> <a href="/tags/%E6%8C%81%E4%B9%85%E5%8C%96/" style="font-size: 1.1em; color: #999">持久化</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 1.1em; color: #999">序列化</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 1.1em; color: #999">线程</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.1em; color: #999">设计模式</a> <a href="/tags/funPlus/" style="font-size: 1.1em; color: #999">funPlus</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 1.1em; color: #999">进程</a> <a href="/tags/channel/" style="font-size: 1.1em; color: #999">channel</a> <a href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" style="font-size: 1.1em; color: #999">排序算法</a> <a href="/tags/mysql/" style="font-size: 1.23em; color: #999ea6">mysql</a> <a href="/tags/%E9%94%81/" style="font-size: 1.1em; color: #999">锁</a> <a href="/tags/%E7%BE%8E%E5%9B%A2/" style="font-size: 1.1em; color: #999">美团</a> <a href="/tags/redis/" style="font-size: 1.37em; color: #99a4b2">redis</a> <a href="/tags/HTTP/" style="font-size: 1.1em; color: #999">HTTP</a> <a href="/tags/docker/" style="font-size: 1.1em; color: #999">docker</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 1.1em; color: #999">日志</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.1em; color: #999">并发编程</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 1.37em; color: #99a4b2">笔试</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 1.1em; color: #999">服务端开发</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">并发安全</a> <a href="/tags/%E9%80%94%E8%99%8E/" style="font-size: 1.1em; color: #999">途虎</a> <a href="/tags/reflect/" style="font-size: 1.1em; color: #999">reflect</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.1em; color: #999">网络系统</a> <a href="/tags/Channel/" style="font-size: 1.1em; color: #999">Channel</a> <a href="/tags/%E5%A0%86%E6%8E%92%E5%BA%8F/" style="font-size: 1.1em; color: #999">堆排序</a> <a href="/tags/Golang/" style="font-size: 1.5em; color: #99a9bf">Golang</a> <a href="/tags/%E5%8D%8F%E7%A8%8B/" style="font-size: 1.1em; color: #999">协程</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.23em; color: #999ea6">计算机网络</a> <a href="/tags/%E5%A0%86/" style="font-size: 1.1em; color: #999">堆</a> <a href="/tags/golang/" style="font-size: 1.1em; color: #999">golang</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" style="font-size: 1.1em; color: #999">分布式锁</a> <a href="/tags/%E9%9D%A2%E7%BB%8F/" style="font-size: 1.1em; color: #999">面经</a> <a href="/tags/TCP/" style="font-size: 1.23em; color: #999ea6">TCP</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.1em; color: #999">操作系统</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/10/"><span class="card-archive-list-date">十月 2023</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/09/"><span class="card-archive-list-date">九月 2023</span><span class="card-archive-list-count">19</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">23</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-10-08T12:32:12.899Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By xiaohei</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

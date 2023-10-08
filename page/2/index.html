@@ -1,7 +1,320 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>小黑的随笔</title><meta name="author" content="xiaohei"><meta name="copyright" content="xiaohei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="那一年沉淀ing">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小黑的随笔">
+<meta property="og:url" content="http://xiaoheinotes.com/page/2/index.html">
+<meta property="og:site_name" content="小黑的随笔">
+<meta property="og:description" content="那一年沉淀ing">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xiaoheinotes.com/images/avatar.gif">
+<meta property="article:author" content="xiaohei">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xiaoheinotes.com/images/avatar.gif"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://xiaoheinotes.com/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '小黑的随笔',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-10-08 20:32:13'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
 
-block content
-  include ./includes/mixins/post-ui.pug
-  #recent-posts.recent-posts
-    +postUI
-    include includes/pagination.pug
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="小黑的随笔" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/avatar.gif" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="小黑的随笔"><span class="site-name">小黑的随笔</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">小黑的随笔</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/21/interview-TCP-key-point/" title="面试重点知识点：TCP连接相关">面试重点知识点：TCP连接相关</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-21T03:24:42.000Z" title="发表于 2023-09-21 11:24:42">2023-09-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">本文主要参考小林coding
+TCP 基本认识TCP头格式有哪些？说几个重点的
+
+seq 序列号：解决网络包乱序问题
+确认应答号：解决丢包问题
+控制位：表示状态
+ACK：确认应答
+SYN：建立连接
+RST：异常断开
+FIN: 正常结束
+
+
+
+TCP工作了哪一层？为什么这么多应用层都用它？TCP工作在传输层，为应用层服务。大多数应用层都用它的原因是因为IP层只保证两点之间的连接，但是无法保证整个报文的正常交付，所以需要提升一个层面去监督IP的传输过程。保证传输的可靠性
+TCP是什么？一种传输协议，它有以下三个特点
+
+面向连接： 一对一连接
+可靠的： 保证报文的正常交互
+基于字节流的： 字节流传输，可能会出现粘包的问题
+
+什么是TCP连接？TCP 连接简单来说就是用于保证可靠性和流量控制的一些状态，总共有三个
+
+socket： 保证两个主机之间能够连接
+序列号： 保证了不会乱序
+窗口大小： 实现流量控制
+
+如何确定一个TCP连接？通过四元组
+（源地址，源端口，目的地址，目的端口）
+TCP理论的最大连接数？理论最大连接数 &#x3D; 客户端IP数*服务端端口数
+但是系统的最大并发数是有限制 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/20/tuhuyangche-exam/" title="笔试题：途虎养车JAVA开发">笔试题：途虎养车JAVA开发</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-20T12:42:06.000Z" title="发表于 2023-09-20 20:42:06">2023-09-20</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AC%94%E8%AF%95/">笔试</a></span></div><div class="content">途虎第三题没写出来，记录一下，复述一下题目大概
+给定一些坐标，这些坐标是城市的坐标，(如果每个坐标在一行或者在一列的话则表示两者是可以互相到达的，此时二者只需建立一个工厂)，现在给定一系列坐标，问最少要建多少个工厂
+1234输入&#123;&#123;0,0&#125;, &#123;0,2&#125;, &#123;2,0&#125;, &#123;1, 1&#125;, &#123;2, 2&#125;&#125;输出2
+
+刚开始钻牛角尖了，老想着用dfs。实际上是不需要的，因为dfs是为了找到下一个可达点的位置。而这里，坐标全部给你了。只需要你遍历一边。维护一个n*m的表来判断能不能到达
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647package mainimport &quot;fmt&quot;func main() &#123;	nums := [][]int&#123;&#123;0, 0&#125;, &#123;0, 2&#125;, &#12 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/20/network-http-study/" title="计算机网络：HTTP知识点遗忘点记录">计算机网络：HTTP知识点遗忘点记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-20T08:35:47.000Z" title="发表于 2023-09-20 16:35:47">2023-09-20</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">记录一下自己HTTP的相关薄弱点。强化一下学习文章内容参考小林coding
+HTTPs 的应用数据如何保证完整性这个问题，主要考查的是，HTTPs构建完对话后，如何去实现数据的传递，因为HTTPs传递消息不会像HTTP那样随意的明文传输，它还需要一个对称加密的过程。这里涉及TLS的两个协议：
+
+TLS握手协议： 四次握手算法，负责协商加密算法和生成对称密钥的。
+TLS记录协议：负责保护应用程序数据并验证其完整性和来源，所以对HTTP数据加密是使用记录协议
+
+TLS记录协议主要负责消息（HTTP数据）的压缩，加密及数据的认证。
+过程如下：
+
+消息分割：消息被分割成多个片段
+片段压缩：消息通过压缩算法进行压缩
+MAC生成：通过Hash算法对压缩片段生成MAC并追加到尾部
+对称加密：通过对称密钥进行加密
+生成报文：由数据类型、版本号、压缩后的长度组成最终报文
+
+HTTP&#x2F;2做了什么优化？HTTP&#x2F;2协议是基于HTTPS的，所以HTTP&#x2F;2的安全性也是有保障的
+
+根据这些图可以看到HTTP&#x2F;2相比于HTTP&#x2F;1.1的一些改进
+
+头部压缩：HPA ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/19/go-channel-various-situations/" title="Go：Channel各种情况下的情况">Go：Channel各种情况下的情况</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-19T02:46:41.000Z" title="发表于 2023-09-19 10:46:41">2023-09-19</time></span></div><div class="content">Channel情况解析Channel 作为go协程编程中必要的一环，理解其原理和各种情况是必要的。如果加以利用这些特性。我们会在工作中可以保证安全的情况下探索各种玩法
+一般我们看到别人讲channel的各种情况，都用文本写了一行又一行。感觉看不太懂，看完下面会忘了上面。所以我自己整理了整理各种情况并用图表示出来。供自己以后进行快速查找和记忆
+
+上图可以很清晰的看到什么流程会导致什么情况。总结一些特殊的情况：
+
+关闭channel 读 返回0
+关闭channel 写、关闭 panic
+channel &#x3D; nil 后关闭会panic
+channel &#x3D; nil channel将无法传递值了，正常使用它进行异步可能会阻塞
+无缓冲读写都会阻塞必须同时进行··
+
+图中阻塞的channel是为了保证异步，如果处理不当，会出现死锁。
+如果所有协程都进入了阻塞态，就会导致go报dealLock错误。所以在这些情况要注意，虽然有一些风险，但也会让我们收益更大。能做的事情更多
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/19/go-heap-coding/" title="GO：如何实现一个堆">GO：如何实现一个堆</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-19T01:10:36.000Z" title="发表于 2023-09-19 09:10:36">2023-09-19</time></span></div><div class="content">一些leetcode算法题中经常用到堆排序去解决问题比如常见
+数组第K大个数658. 找到 K 个最接近的元素Golang 给出了主要的实现堆队列的主要方法，但是由于堆的数据结构都可以使用，所以需要自己去实现一些必要的接口，才能正常使用一个堆
+堆的接口heap.Interface 接口源码
+12345type Interface interface &#123;	sort.Interface	Push(x interface&#123;&#125;) // add x as element Len()	Pop() interface&#123;&#125;   // remove and return element Len() - 1.&#125;
+
+其中sort.Interface 接口源码
+123456789type Interface interface &#123;	// Len is the number of elements in the collection.	Len() int	// Less reports whether the element with	//  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/18/go-channel-coding-sytle/" title="GO：Channel专项面试题">GO：Channel专项面试题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-18T12:55:26.000Z" title="发表于 2023-09-18 20:55:26">2023-09-18</time></span></div><div class="content">协程打印123使用协程多次交替打印123
+1234567891011121314151617181920212223242526272829303132333435363738394041package mainimport (	&quot;fmt&quot;	&quot;sync&quot;)func main() &#123;	var wg sync.WaitGroup	ch1, ch2, ch3 := make(chan struct&#123;&#125;, 0), make(chan struct&#123;&#125;, 0), make(chan struct&#123;&#125;, 0)	wg.Add(3)	go func() &#123;		defer wg.Done()		for i := 0; i &lt; 10; i++ &#123;			&lt;-ch1			fmt.Print(&quot;1&quot;)			ch2 &lt;- struct&#123;&#125;&#123;&#125;		&#125;		&lt;-ch1	&#125;()	go fun ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/18/redis-aof-rdb/" title="Redis持久化实现">Redis持久化实现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-18T08:33:06.000Z" title="发表于 2023-09-18 16:33:06">2023-09-18</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">学习Redis的记录，参考自小林coding
+AOF日志AOF日志简单来讲，就是把所有写操作Redis内容全部在执行后马上追加的AOF日志里。如果下次Redis重新启动，想要恢复，只需要按顺序执行它就能恢复整个记录。
+
+Redis默认情况下是不开启AOF日志的，需要修改redis.conf配置文件的参数修改
+AOF日志是普通的文本文件，但是它通过一种自己的规则来记录的
+
+为什么redis要执行命令后写日志？
+避免额外的检查开销，如果执行的语句有问题，那么也会被写到AOF中。
+不会阻塞当前写操作命令的执行
+
+这样做有什么风险吗？
+因为执行命令和日志记录是分开进行的，如果执行了命令，在写日志的时候宕机，就会导致数据丢失了
+虽然AOF在执行命令后进行追加，不会阻塞当前的命令，但会阻塞之后命令， 因为写日志也是主线程实现的。
+
+‘如果I&#x2F;O硬盘的压力过大，导致写入阻塞，那么AOF写入阻塞，进而导致整个redis阻塞，所以AOF的写回策略也就比较重要了
+AOF写回策略Redis 写入AOF日志的流程如下
+
+跟Redis类似，也是增加一个缓冲区。然后设置一个参数，来保证刷盘速率
+在red ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/17/redis-data-structure/" title="Redis数据结构">Redis数据结构</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-17T08:49:33.000Z" title="发表于 2023-09-17 16:49:33">2023-09-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">Redis 数据类型
+String  字符串 
+List  列表
+Set   集合
+Zset  有序集合
+Hash  哈希
+BitMap
+HyperLogLog
+GEO
+Stream
+
+结合一张图可以大致了解使用情况
+
+各个数据类型的场景
+
+
+结构体类型
+结构体存储的值
+结构体的读写能力
+使用场景
+
+
+
+String
+字符串、整数、浮点数
+对整个字符串或字符串的一部分进行操作，对数进行自增或自减的操作
+缓存对象、常规计数、分布式锁、共享session信息
+
+
+List
+一个链表，每个节点都包含一个字符串
+对链表的两端进行push和pop操作，根据值查找和删除元素
+消息队列（需要自己生成全局ID，不能以消费组的形式消费数据）
+
+
+Hash
+包含键值对的无序散列表
+添加、获取、删除操作
+缓存对象、购物车等
+
+
+Set
+包含字符串的无序集合
+字符串的集合，包含添加、删除、获取。包含计算交集、并集、差集
+聚合计算场景如：点赞、共同关注、抽奖活动
+
+
+Zset
+和散列一样，用于存储键值对
+字符串成员与浮点分数的有序映射，元素排列由分数的大小决定，包含方法有添加、获取、删除单个元素及以分值范围或成 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/17/go-quick-sort/" title="GO：quick-sort实现">GO：quick-sort实现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-17T01:54:38.000Z" title="发表于 2023-09-17 09:54:38">2023-09-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></span></div><div class="content">快排快排思想快速排序: 每次排序会定位出一个位置，左右两边在分别排序。思路大致是这样的。但是不知道网上很多博客里用go实现的都很奇怪。所以决定自己捋捋。强化一下记忆
+
+为了方便起见，每次都取最右边的进行排序（这样不用额外的判断是否是key值）。哨兵元素的选取可能会导致排序退化成冒泡排序
+代码演示代码如下
+1234567891011121314151617181920212223242526272829303132333435package mainimport &quot;fmt&quot;func main() &#123;	s := []int&#123;2, 3, 1, 5, 6, 8&#125;	quickSort(s, 0, len(s)-1)	fmt.Println(s)&#125;func quickSort(nums []int, l, r int) &#123;	if l &lt; r &#123;		pivot := partition(nums, l, r)		quickSort(nums, l, pivot-1)		quickSort(nums, pivot+1 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2023/09/16/mysql-log/" title="Mysql 日志系统">Mysql 日志系统</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-09-16T08:03:52.000Z" title="发表于 2023-09-16 16:03:52">2023-09-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/">八股文</a></span></div><div class="content">Mysql日志系统mysql的三大日志
+
+undo log（回滚日志）： 是innodb存储引擎层生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC
+redo log（重做日志）: 将命令依次记录，用来实现事务的持久性。主要用于掉电等故障恢复
+bin log（归档日志）：是Server层生成的日志，主要用于数据备份和主从复制
+
+undo logundo log 是什么？ 为什么要有undo log？undo log 就是反着的sql命令。你删除了我增。你加我删。保证一会能回滚。因为在mysql中执行增删改的命令时，是隐式的开启事务的。事务如果开启出现了异常也能够正常的回滚。保证了mysql的 A 原子性
+MVCC的实现。mysql多版本并发控制的必须需要undo log 和 ReadView这两个。
+一个undo log的格式日志如下
+
+通过trx_id可以知道该记录被哪个事务修改
+通过roll_pointer指针来将这些undo log串联在一起
+
+
+通过这个版本链可以很好完成MVCC的多版本。同时mysql的两个隔离级别可重复读和读已提交则是由ReadView的方式决定的
+ ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/avatar.gif" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">xiaohei</div><div class="author-info__description">那一年沉淀ing</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/07/interview-os-networkSystem/" title="面试总结：操作系统之网络系统">面试总结：操作系统之网络系统</a><time datetime="2023-10-07T13:41:10.000Z" title="发表于 2023-10-07 21:41:10">2023-10-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/07/interview-docker-key-point/" title="面试重点：docker常见面试题">面试重点：docker常见面试题</a><time datetime="2023-10-07T04:48:41.000Z" title="发表于 2023-10-07 12:48:41">2023-10-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/04/go-reflect-try/" title="GO：反射实战编程">GO：反射实战编程</a><time datetime="2023-10-04T01:34:45.000Z" title="发表于 2023-10-04 09:34:45">2023-10-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/03/interview-tcp-reliability/" title="面试重点：TCP如何保证可靠性">面试重点：TCP如何保证可靠性</a><time datetime="2023-10-03T09:32:21.000Z" title="发表于 2023-10-03 17:32:21">2023-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/30/interview-serialization/" title="面试重点：序列化">面试重点：序列化</a><time datetime="2023-09-30T11:52:47.000Z" title="发表于 2023-09-30 19:52:47">2023-09-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%AB%E8%82%A1/"><span class="card-category-list-name">八股</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%85%AB%E8%82%A1%E6%96%87/"><span class="card-category-list-name">八股文</span><span class="card-category-list-count">12</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AC%94%E8%AF%95/"><span class="card-category-list-name">笔试</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AE%97%E6%B3%95/"><span class="card-category-list-name">算法</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/"><span class="card-category-list-name">编程实战</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%9D%A2%E7%BB%8F/"><span class="card-category-list-name">面经</span><span class="card-category-list-count">1</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%BF%AB%E6%8E%92/" style="font-size: 1.1em; color: #999">快排</a> <a href="/tags/%E6%8C%81%E4%B9%85%E5%8C%96/" style="font-size: 1.1em; color: #999">持久化</a> <a href="/tags/%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 1.1em; color: #999">序列化</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 1.1em; color: #999">线程</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.1em; color: #999">设计模式</a> <a href="/tags/funPlus/" style="font-size: 1.1em; color: #999">funPlus</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 1.1em; color: #999">进程</a> <a href="/tags/channel/" style="font-size: 1.1em; color: #999">channel</a> <a href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" style="font-size: 1.1em; color: #999">排序算法</a> <a href="/tags/mysql/" style="font-size: 1.23em; color: #999ea6">mysql</a> <a href="/tags/%E9%94%81/" style="font-size: 1.1em; color: #999">锁</a> <a href="/tags/%E7%BE%8E%E5%9B%A2/" style="font-size: 1.1em; color: #999">美团</a> <a href="/tags/redis/" style="font-size: 1.37em; color: #99a4b2">redis</a> <a href="/tags/HTTP/" style="font-size: 1.1em; color: #999">HTTP</a> <a href="/tags/docker/" style="font-size: 1.1em; color: #999">docker</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 1.1em; color: #999">日志</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.1em; color: #999">并发编程</a> <a href="/tags/%E7%AC%94%E8%AF%95/" style="font-size: 1.37em; color: #99a4b2">笔试</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 1.1em; color: #999">服务端开发</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">并发安全</a> <a href="/tags/%E9%80%94%E8%99%8E/" style="font-size: 1.1em; color: #999">途虎</a> <a href="/tags/reflect/" style="font-size: 1.1em; color: #999">reflect</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.1em; color: #999">网络系统</a> <a href="/tags/Channel/" style="font-size: 1.1em; color: #999">Channel</a> <a href="/tags/%E5%A0%86%E6%8E%92%E5%BA%8F/" style="font-size: 1.1em; color: #999">堆排序</a> <a href="/tags/Golang/" style="font-size: 1.5em; color: #99a9bf">Golang</a> <a href="/tags/%E5%8D%8F%E7%A8%8B/" style="font-size: 1.1em; color: #999">协程</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.23em; color: #999ea6">计算机网络</a> <a href="/tags/%E5%A0%86/" style="font-size: 1.1em; color: #999">堆</a> <a href="/tags/golang/" style="font-size: 1.1em; color: #999">golang</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" style="font-size: 1.1em; color: #999">分布式锁</a> <a href="/tags/%E9%9D%A2%E7%BB%8F/" style="font-size: 1.1em; color: #999">面经</a> <a href="/tags/TCP/" style="font-size: 1.23em; color: #999ea6">TCP</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.1em; color: #999">操作系统</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/10/"><span class="card-archive-list-date">十月 2023</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/09/"><span class="card-archive-list-date">九月 2023</span><span class="card-archive-list-count">19</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">23</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-10-08T12:32:12.899Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By xiaohei</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
