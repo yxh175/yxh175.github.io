@@ -4,8 +4,8 @@
 
 # Site
 title: 小黑的随笔
-subtitle: ''
-description: 那一年沉淀ing
+subtitle: 月缺不改光  剑折不改刚
+description: 月缺不改光  剑折不改刚
 keywords:
 author: xiaohei
 language: zh-CN
@@ -97,7 +97,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next   #主题改为next
+theme: Butterfly   #主题改为Butterfly
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
