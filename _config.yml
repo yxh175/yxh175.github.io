@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 鼠鼠的随笔
+title: 小黑的随笔
 subtitle: ''
-description: Go开发弱鸡，沉淀ing
+description: 那一年沉淀ing
 keywords:
-author: yxh
+author: xiaohei
 language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: http://xiaoheinotes.com
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
