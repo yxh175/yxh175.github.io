@@ -8,7 +8,7 @@ tags:
 - funPlus
 ---
 
-# FunPlus笔试题
+## FunPlus笔试题
 
 记录一下题目和解答
 
