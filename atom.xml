@@ -6,7 +6,7 @@
   <link href="http://xiaoheinotes.com/atom.xml" rel="self"/>
   
   <link href="http://xiaoheinotes.com/"/>
-  <updated>2023-10-09T13:16:28.784Z</updated>
+  <updated>2023-10-10T13:51:29.778Z</updated>
   <id>http://xiaoheinotes.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>项目总结：电子商城面试必备</title>
+    <link href="http://xiaoheinotes.com/2023/10/10/project-web-mall/"/>
+    <id>http://xiaoheinotes.com/2023/10/10/project-web-mall/</id>
+    <published>2023-10-10T11:16:02.000Z</published>
+    <updated>2023-10-10T13:51:29.778Z</updated>
+    
+    <content type="html"><![CDATA[<p>好久之前做的简单电子商城项目，进行一下回顾，并试着复述一下项目的难点与亮点</p><p>这里有针对这些问题的demo，<a href="https://github.com/yxh175/web-small-demo">电子商城亮点demo</a></p><h2 id="简单介绍一下你的项目的亮点和难点"><a href="#简单介绍一下你的项目的亮点和难点" class="headerlink" title="简单介绍一下你的项目的亮点和难点"></a>简单介绍一下你的项目的亮点和难点</h2><p>电子商城项目是我用go尝试开发的一个简易项目，其中项目主要用到了Gin做路由分布，Gorm做数据库查询。同时使用Redis实现一些相关功能。</p><h3 id="项目亮点"><a href="#项目亮点" class="headerlink" title="项目亮点"></a>项目亮点</h3><ul><li>权限控制及Token续约：使用Gin及jwt-token做权限拦截，并通过双token实现安全性和续期的双重保障</li><li>多级缓存：使用redis做缓存缓解数据库读写压力，同时通过合适的算法保证缓存一致性</li><li>防止超卖：使用redis做分布式锁，防止出现高并发情况下的超卖现象</li></ul><h4 id="权限拦截及双Token的实现"><a href="#权限拦截及双Token的实现" class="headerlink" title="权限拦截及双Token的实现"></a>权限拦截及双Token的实现</h4><p>权限拦截主要通过Gin框架实现</p><p>通过Gin框架的中间件模式，可以实现基本的鉴权功能</p><p>路由函数可以使用<code>r.use</code>或者使用<code>r.group</code>，都可以。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 使用鉴权中间件</span></span><br><span class="line">r.Use(middleware.JWTMiddleware())</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>鉴权中间件如何实现的呢？</p><p>首先先构建jwt-token结构体，然后写两个方法，一个分发，一个验证。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> jwtSecret = []<span class="type">byte</span>(<span class="string">&quot;secret&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> JWTClaims <span class="keyword">struct</span> &#123;</span><br><span class="line">ID       <span class="type">uint</span>   <span class="string">`json:&quot;id&quot;`</span></span><br><span class="line">UserName <span class="type">string</span> <span class="string">`json:&quot;user_name&quot;`</span></span><br><span class="line">jwt.StandardClaims</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GenerateToken 签发用户Token</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GenerateToken</span><span class="params">(id <span class="type">uint</span>, username <span class="type">string</span>)</span></span> (accessToken, refreshToken <span class="type">string</span>, err <span class="type">error</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ParseToken 验证用户token</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParseToken</span><span class="params">(token <span class="type">string</span>)</span></span> (*JWTClaims, <span class="type">error</span>) &#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParseRefreshToken</span><span class="params">(aToken, rToken <span class="type">string</span>)</span></span> (newAToken, newRToken <span class="type">string</span>, err <span class="type">error</span>) &#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>使用jwt-token，它的核心部分是获取token，然后对token做验证，正常就<code>c.Next()</code>放行，否则就要<code>c.Abort()</code>拦截</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">JWTMiddleware</span><span class="params">()</span></span> gin.HandlerFunc &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">code := <span class="number">200</span></span><br><span class="line">accessToken := c.GetHeader(<span class="string">&quot;access-Token&quot;</span>)</span><br><span class="line">        refreshToken := c.GetHeader(<span class="string">&quot;refresh-Token&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.检验token是否有效</span></span><br><span class="line"><span class="keyword">if</span> accessToken == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">code = <span class="number">401</span></span><br><span class="line">c.JSON(<span class="number">200</span>, gin.H&#123;</span><br><span class="line"><span class="string">&quot;status&quot;</span>: code,</span><br><span class="line"><span class="string">&quot;data&quot;</span>:   <span class="string">&quot;token不能为空&quot;</span>,</span><br><span class="line">&#125;)</span><br><span class="line">c.Abort()</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">        accessClaims, err := util.ParseToken(accessToken)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">code = <span class="number">401</span></span><br><span class="line">c.JSON(<span class="number">200</span>, gin.H&#123;</span><br><span class="line"><span class="string">&quot;status&quot;</span>: code,</span><br><span class="line"><span class="string">&quot;data&quot;</span>:   <span class="string">&quot;token异常&quot;</span>,</span><br><span class="line">&#125;)</span><br><span class="line">c.Abort()</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">        <span class="comment">// 2.检验accessToken是否过期</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> accessClaims.ExpiresAt &gt; time.Now().Unix() &#123;</span><br><span class="line">c.Set(<span class="string">&quot;id&quot;</span>, accessClaims.ID)</span><br><span class="line">c.Set(<span class="string">&quot;username&quot;</span>, accessClaims.UserName)</span><br><span class="line">c.Next()</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 双token续约机制</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">c.Set(<span class="string">&quot;id&quot;</span>, claims.ID)</span><br><span class="line">c.Set(<span class="string">&quot;username&quot;</span>, claims.UserName)</span><br><span class="line">c.Next()</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>最后在运行时，可以发现token是会检验的。当accessToken过期时，会根据refreshToken情况决定是否更新Token，更新的Token返回给前端</p><h4 id="双Token的优点"><a href="#双Token的优点" class="headerlink" title="双Token的优点"></a>双Token的优点</h4><ul><li>accessToken的存在，保证了登录态的正常验证，因其过期时间的短暂也保证了帐号的安全性</li><li>refreshToken的存在，保证了用户（即使是非活跃用户）无需在短时间内进行反复的登陆操作来保证登录态的有效性，同时也保证了活跃用户的登录态可以一直存续而不需要进行重新登录，其反复刷新也防止别人获取refreshToken干坏事</li></ul><p>流程图如下</p><p><img src="https://s2.loli.net/2023/10/10/HEqg1vRsxGNJu37.png" alt="双token验证流程"></p><h4 id="无效的Token处理"><a href="#无效的Token处理" class="headerlink" title="无效的Token处理"></a>无效的Token处理</h4><p>refreshToken的无效token会生成的比较多，如何处理呢？</p><ul><li>简单的从浏览器移除</li><li>制作一个token黑名单</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;好久之前做的简单电子商城项目，进行一下回顾，并试着复述一下项目的难点与亮点&lt;/p&gt;
+&lt;p&gt;这里有针对这些问题的demo，&lt;a href=&quot;https://github.com/yxh175/web-small-demo&quot;&gt;电子商城亮点demo&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=</summary>
+      
+    
+    
+    
+    <category term="总结" scheme="http://xiaoheinotes.com/categories/%E6%80%BB%E7%BB%93/"/>
+    
+    
+    <category term="电子商城" scheme="http://xiaoheinotes.com/tags/%E7%94%B5%E5%AD%90%E5%95%86%E5%9F%8E/"/>
+    
+  </entry>
   
   <entry>
     <title>笔试记录：集度</title>
@@ -507,32 +533,6 @@
     <category term="redis" scheme="http://xiaoheinotes.com/tags/redis/"/>
     
     <category term="持久化" scheme="http://xiaoheinotes.com/tags/%E6%8C%81%E4%B9%85%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis数据结构</title>
-    <link href="http://xiaoheinotes.com/2023/09/17/redis-data-structure/"/>
-    <id>http://xiaoheinotes.com/2023/09/17/redis-data-structure/</id>
-    <published>2023-09-17T08:49:33.000Z</published>
-    <updated>2023-09-17T14:02:26.178Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Redis-数据类型"><a href="#Redis-数据类型" class="headerlink" title="Redis 数据类型"></a>Redis 数据类型</h2><ul><li>String  字符串 </li><li>List  列表</li><li>Set   集合</li><li>Zset  有序集合</li><li>Hash  哈希</li><li>BitMap</li><li>HyperLogLog</li><li>GEO</li><li>Stream</li></ul><p>结合一张图可以大致了解使用情况</p><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/redis/%E5%85%AB%E8%82%A1%E6%96%87/key.png" alt="Redis 数据类型"></p><h2 id="各个数据类型的场景"><a href="#各个数据类型的场景" class="headerlink" title="各个数据类型的场景"></a>各个数据类型的场景</h2><table><thead><tr><th>结构体类型</th><th>结构体存储的值</th><th>结构体的读写能力</th><th>使用场景</th></tr></thead><tbody><tr><td>String</td><td>字符串、整数、浮点数</td><td>对整个字符串或字符串的一部分进行操作，对数进行自增或自减的操作</td><td>缓存对象、常规计数、分布式锁、共享session信息</td></tr><tr><td>List</td><td>一个链表，每个节点都包含一个字符串</td><td>对链表的两端进行push和pop操作，根据值查找和删除元素</td><td>消息队列（需要自己生成全局ID，不能以消费组的形式消费数据）</td></tr><tr><td>Hash</td><td>包含键值对的无序散列表</td><td>添加、获取、删除操作</td><td>缓存对象、购物车等</td></tr><tr><td>Set</td><td>包含字符串的无序集合</td><td>字符串的集合，包含添加、删除、获取。包含计算交集、并集、差集</td><td>聚合计算场景如：点赞、共同关注、抽奖活动</td></tr><tr><td>Zset</td><td>和散列一样，用于存储键值对</td><td>字符串成员与浮点分数的有序映射，元素排列由分数的大小决定，包含方法有添加、获取、删除单个元素及以分值范围或成员来获取元素</td><td>排行榜、电话、姓名排序</td></tr><tr><td>BitMap</td><td>一串连续的二进制字节数组</td><td>对每个bit都利用起来，设置值、获取值、指定范围的值</td><td>二值统计场景如 签到打卡</td></tr><tr><td>HyperLogLog</td><td>提供元素</td><td>添加、返回计算估值、合并，根据元素概率提供不精确的去重计数</td><td>UV计数、WordCount等</td></tr><tr><td>GEO</td><td>存储地理位置信息，实现位置计算</td><td>存储、返回位置、返回两点位置、根据位置查询范围</td><td>滴滴打车</td></tr><tr><td>Stream</td><td>消息流和消费者组。消息流是一个有序的消息集合，每个消息都有一个唯一的 ID。消费者组包含多个消费者，它们可以协作地消费消息流中的消息，并通过应答来跟踪处理进度。</td><td>命令比较多，之后总结</td><td>消息队列</td></tr></tbody></table><h2 id="五种常见的数据类型怎么底层实现？"><a href="#五种常见的数据类型怎么底层实现？" class="headerlink" title="五种常见的数据类型怎么底层实现？"></a>五种常见的数据类型怎么底层实现？</h2><h3 id="string-实现"><a href="#string-实现" class="headerlink" title="string 实现"></a>string 实现</h3><p>String底层类型是动态字符串SDS。其特点</p><ul><li>不仅可以保存字符还能保存二进制</li><li>SDS 获取字符串长度的时间复杂度为O(1),存在一个len属性</li><li>Redis 的SDS API是安全二点，拼接字符串不会造成缓冲区溢出，会自动进行扩容</li></ul><h3 id="List-内部实现"><a href="#List-内部实现" class="headerlink" title="List 内部实现"></a>List 内部实现</h3><p>List的底层是双向链表和压缩列表实现</p><ul><li>当链表数量小于512个，列表元素的值都小于64字节，redis会使用压缩列表作为List类型的底层数据结构</li><li>当列表不满足上面要求时，会使用双向链表作为List的底层数据结构</li></ul><p>3.2版本之后统一使用了quickList</p><h3 id="Hash-内部实现"><a href="#Hash-内部实现" class="headerlink" title="Hash 内部实现"></a>Hash 内部实现</h3><p>Hash的底层由压缩列表或哈希表实现</p><ul><li>如果哈希类型元素小于512个，所有字节都小于64KB，Redis会使用压缩列表作为存储方法</li><li>否则会使用hash表实现</li></ul><p>7.0版本之后统一使用listquick实现</p><h3 id="Set-类型内部实现"><a href="#Set-类型内部实现" class="headerlink" title="Set 类型内部实现"></a>Set 类型内部实现</h3><p>Set 类型是由hash表或整数集合实现</p><ul><li>如果set中都是整数且数量小于512则使用整数集合</li><li>否则使用hash表实现</li></ul><h3 id="Zset-类型内部实现"><a href="#Zset-类型内部实现" class="headerlink" title="Zset 类型内部实现"></a>Zset 类型内部实现</h3><p>Zset 内部由压缩列表和跳表实现</p><ul><li>元素小于128个且每个小于64字节使用压缩列表</li><li>否则使用跳表实现</li></ul><p>7.0版本后由listpack实现</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;Redis-数据类型&quot;&gt;&lt;a href=&quot;#Redis-数据类型&quot; class=&quot;headerlink&quot; title=&quot;Redis 数据类型&quot;&gt;&lt;/a&gt;Redis 数据类型&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;String  字符串 &lt;/li&gt;
-&lt;li&gt;List  列表&lt;/</summary>
-      
-    
-    
-    
-    <category term="八股文" scheme="http://xiaoheinotes.com/categories/%E5%85%AB%E8%82%A1%E6%96%87/"/>
-    
-    
-    <category term="redis" scheme="http://xiaoheinotes.com/tags/redis/"/>
     
   </entry>
   
