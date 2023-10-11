@@ -13,7 +13,7 @@ tags:
 ## 芭莎慈善夜明星捐款
 
 核心代码模式
-实际就是![打家劫舍2](https://leetcode.cn/problems/house-robber-ii/)，明星围坐在一起进行捐款
+实际就是[打家劫舍2](https://leetcode.cn/problems/house-robber-ii/)，明星围坐在一起进行捐款
 
 ```go
 func rob(nums []int) int {
