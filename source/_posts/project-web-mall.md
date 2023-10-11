@@ -131,7 +131,258 @@ refreshToken的无效token会生成的比较多，如何处理呢？
 - 简单的从浏览器移除
 - 制作一个token黑名单
 
-
 ### 多级缓存如何实现
 
-首先要实现的Redis缓存
+首先通过`demo.sql`建一个表
+
+```sql
+CREATE SCHEMA cache_demo;
+use cache_demo;
+DROP TABLE if exists products;
+
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    p_id Int Not NULL,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    count INT NOT NULL
+);
+```
+
+本模块在`cache_demo`中实现
+
+首先先做好基本的DB查询。这里DB使用gorm，同时使用连接池和读写分离保证高性能。
+
+```go
+var _db *gorm.DB
+
+func InitMySQL() {
+	// 假装四个读写mysql服务器，进行读写分离, 电商读多写少
+	read1_dsn := "root:1234@tcp(localhost:3306)/cache_demo?parseTime=true"
+	read2_dsn := "root:1234@tcp(localhost:3306)/cache_demo?parseTime=true"
+	write1_dsn := "root:1234@tcp(localhost:3306)/cache_demo?parseTime=true"
+	write2_dsn := "root:1234@tcp(localhost:3306)/cache_demo?parseTime=true"
+
+	db, err := gorm.Open(mysql.Open(write1_dsn), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+	_db = db
+    _db.Use(
+        dbresolver.Register(dbresolver.Config{
+            Sources:  []gorm.Dialector{mysql.Open(write2_dsn)},
+            Replicas: []gorm.Dialector{mysql.Open(read1_dsn), mysql.Open(read2_dsn)},
+            Policy:   dbresolver.RandomPolicy{},
+            // print sources/replicas mode in logger
+            TraceResolverMode: true,
+        }).
+            SetConnMaxIdleTime(time.Hour).
+            SetConnMaxLifetime(24 * time.Hour).
+            SetMaxIdleConns(100).
+            SetMaxOpenConns(200),
+    )
+
+	_db = _db.Set("gorm:table_options", "charset=utf8mb4")
+}
+
+func NewDBClient(ctx context.Context) *gorm.DB {
+	db := _db
+	return db.WithContext(ctx)
+}
+```
+
+基本的增删改查
+
+```go
+type ProductDao struct {
+	*gorm.DB
+}
+
+func NewProductDao(ctx context.Context) *ProductDao {
+	return &ProductDao{NewDBClient(ctx)}
+}
+
+func NewProductDaoByDB(db *gorm.DB) *ProductDao {
+	return &ProductDao{db}
+}
+
+// 获取商品
+func (dao *ProductDao) GetProduct(id uint) (product *model.Product, err error) {
+	...
+}
+
+// CreateProduct 创建商品
+func (dao *ProductDao) CreateProduct(product *model.Product) error {
+	...
+}
+
+// DeleteProduct 删除商品
+func (dao *ProductDao) DeleteProduct(id uint) error {
+	...
+}
+
+// UpdateProduct 更新商品
+func (dao *ProductDao) UpdateProduct(id uint, product *model.Product) error {
+	...
+}
+
+```
+
+通过product_test.go进行测试发现结果符合预期。接下来需要增加基本的缓存。
+
+首先增加本地缓存
+
+`local_cache.go`
+
+```go
+// 缓存数据的结构
+type Cache struct {
+	mu      sync.RWMutex
+	data    map[string]interface{}
+	expires map[string]time.Time
+}
+
+// 创建一个新的缓存
+func NewCache() *Cache {
+	return &Cache{
+		data:    make(map[string]interface{}),
+		expires: make(map[string]time.Time),
+	}
+}
+
+// 向缓存中添加数据
+func (c *Cache) Set(key string, value interface{}, expiration time.Duration) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.data[key] = value
+	c.expires[key] = time.Now().Add(expiration)
+}
+
+// 从缓存中获取数据
+func (c *Cache) Get(key string) (interface{}, bool) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	value, ok := c.data[key]
+	if !ok {
+		return nil, false
+	}
+	expiration, exists := c.expires[key]
+	if !exists || time.Now().Before(expiration) {
+		return value, true
+	}
+	// 数据已过期，从缓存中删除
+	delete(c.data, key)
+	delete(c.expires, key)
+	return nil, false
+}
+
+```
+
+在`local_cache_test.go`中进行测试，可以看到cache缓存的执行时间远小于DB查询
+
+```text
+--------普通DB查询-------
+运行时长：547.3µs
+&{12 2 DB测试 123 33}
+-----------------------
+
+
+-----有缓存DB第一查询-----
+运行时长：519.8µs
+&{6 1 缓存测试 123 33}
+-----------------------
+
+
+-----有缓存缓存查询-----
+运行时长：0s
+&{6 1 缓存测试 123 33}
+-----------------------
+```
+
+当然，验证完了查询问题，还需要设计缓存一致性
+
+缓存一致性是业务层面的设计。所以在业务代码中进行书写。接下来加入`redis_cache`
+
+`redis_cache.go`
+
+```go
+type RedisCache struct {
+	client *redis.Client
+}
+
+// NewRedisCache 创建一个新的 Redis 缓存实例
+func NewRedisCache() *RedisCache {
+	return &RedisCache{
+		client: redis.NewClient(&redis.Options{
+			Addr:     "localhost:6379", // Redis 服务器地址
+			Password: "",               // 如果有密码，设置密码
+			DB:       0,                // 默认数据库
+			PoolSize: 1000,
+		}),
+	}
+}
+
+// Ping 用于测试 Redis 连接
+func (rc *RedisCache) Ping() error {
+	ctx := context.Background()
+	pong, err := rc.client.Ping(ctx).Result()
+	if err != nil {
+		return fmt.Errorf("无法连接到 Redis: %v", err)
+	}
+	fmt.Println("Redis 连接成功:", pong)
+	return nil
+}
+
+// Set 用于设置缓存数据
+func (rc *RedisCache) Set(key, value string, expiration time.Duration) error {
+	ctx := context.Background()
+	err := rc.client.Set(ctx, key, value, expiration).Err()
+	if err != nil {
+		return fmt.Errorf("设置缓存失败: %v", err)
+	}
+	return nil
+}
+
+// Get 用于获取缓存数据
+func (rc *RedisCache) Get(key string) (string, error) {
+	ctx := context.Background()
+	cacheValue, err := rc.client.Get(ctx, key).Result()
+	if err == redis.Nil {
+		return "", err
+	} else if err != nil {
+		return "", fmt.Errorf("获取缓存失败: %v", err)
+	}
+	return cacheValue, nil
+}
+
+// Delete 用于删除缓存数据
+func (rc *RedisCache) Delete(key string) error {
+	ctx := context.Background()
+	err := rc.client.Del(ctx, key).Err()
+	if err != nil {
+		return fmt.Errorf("删除缓存失败: %v", err)
+	}
+	return nil
+}
+```
+
+使用测试函数测试，发现结果符合预期
+
+```text
+--------普通DB查询-------
+运行时长：642.4µs
+&{12 2 DB测试 123 33}
+-----------------------
+
+
+-----有缓存DB第一查询-----
+运行时长：306.4407ms
+&{6 1 缓存测试 123 33}
+-----------------------
+
+
+-----有缓存缓存查询-----
+运行时长：0s
+&{6 1 缓存测试 123 33}
+-----------------------
+```
