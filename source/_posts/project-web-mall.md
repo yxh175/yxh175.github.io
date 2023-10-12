@@ -526,7 +526,7 @@ func (ps *ProductSrv) CreateData(c *gin.Context) (err error) {
 		return err
 	}
 	err = ps.redisCache.Set(uniqueKey, string(data), 60*time.Second)
-	if err == nil {
+	if err != nil {
 		return
 	}
 	ps.localCache.Set(uniqueKey, data, 10*time.Second)
@@ -547,7 +547,150 @@ func (ps *ProductSrv) CreateData(c *gin.Context) (err error) {
 
 缓存击穿问题也叫热点Key问题，就是一个被高并发访问并且缓存重建业务较复杂的key突然失效了，大量的请求访问会在瞬间给数据库带来巨大的冲击。
 
-使用逻辑过期的效果一般比较好一点，什么是逻辑过期呢，借用一下黑马一张图解释一下
+这里可以使用互斥锁和逻辑过期去实现
+
+- 互斥锁实现简单，但是高并发情况下会发生阻塞
+
+![互斥锁实现](https://s2.loli.net/2023/10/12/DbsjJFXN5nIYERk.png)
+
+- 逻辑过期实现有点难度，且对redis有一定的内存占用。同时也容易发生脏读
 
 ![逻辑过期](https://s2.loli.net/2023/10/11/eTn7fdLN8iVYlBj.png)
+
+使用逻辑过期的用户体验比较好一点，但是会对内存占用比较高，也会发生脏读的现象。
+
+本次demo准备使用二级缓存，所以可以两个同时使用
+
+对第一层使用逻辑过期，第二层使用互斥锁实现（目前仅实现互斥锁）
+
+在service/Product.go中增加互斥锁相关
+
+```go
+func (ps *ProductSrv) GetData(c *gin.Context, pId uint) (product *model.Product, err error) {
+	uniqueKey := key + fmt.Sprint(pId)
+	// 模拟requestId
+	rand.Seed(time.Now().Unix())
+	requestId := fmt.Sprint(rand.Intn(10000000))
+	// 查本地缓存
+	if value, ok := ps.localCache.Get(uniqueKey); ok {
+		// 一级缓存查询有值
+		product = &model.Product{}
+		err = json.Unmarshal(value.([]byte), product)
+		if err != nil {
+			fmt.Println("反序列化失败:", err)
+			return
+		}
+		return
+	}
+
+	// 否则查二级缓存
+	value, err := ps.redisCache.Get(uniqueKey)
+
+	// 查询异常
+	if err != nil {
+		if err != redis.Nil {
+			return
+		}
+		// 查询无果
+		// 查询数据库中的数据
+		// redis 上锁
+		var locked bool
+		locked, err = ps.redisCache.SetNx(c, lockKey, requestId)
+		defer ps.redisCache.Unlock(c, lockKey, requestId)
+		if err != nil {
+			return
+		}
+		if !locked {
+			time.Sleep(50 * time.Millisecond)
+			return ps.GetData(c, pId)
+		}
+		product, err = dao.NewProductDao(c).GetProduct(pId)
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				// 查询无果
+				return &model.Product{}, nil
+			} else {
+				return
+			}
+		}
+		var jsonData []byte
+		jsonData, err = json.Marshal(*product)
+		if err != nil {
+			fmt.Println("序列化失败:", err)
+			return
+		}
+		// 更新缓存
+		ps.redisCache.Set(uniqueKey, string(jsonData), 60*time.Second)
+		ps.localCache.Set(uniqueKey, string(jsonData), 10*time.Second)
+		return
+	}
+
+	product = &model.Product{}
+	jsonData := []byte(value)
+	err = json.Unmarshal(jsonData, product)
+	if err != nil {
+		fmt.Println("反序列化失败:", err)
+		return
+	}
+	return
+}
+
+```
+
+这里setNx+EX实际还能增加一个守护进程来进行锁的续期，但是我没实现，有读者有能力可以尝试去实现一下。对于用redis实现互斥锁的相关问题，建议大家看一下这篇文章[Go实战：redis分布式锁开发问题](http://xiaoheinotes.com/2023/09/25/redis-distributed-locks/)
+
+#### 缓存穿透
+
+缓存穿透是整个查询流程都被使用，一般是被黑客攻击的常用手段。
+
+常用的解决手段有
+
+- 缓存null值
+- 布隆过滤
+- 增强id的复杂度，避免被猜测id规律
+- 做好数据的基础格式校验
+- 加强用户权限校验
+- 做好热点参数的限流
+
+对于上面两个，可以两个都用，缓存null值比较好实现，只需要在mysql查为空值的时候进行赋值即可。
+
+```go
+    product, err = dao.NewProductDao(c).GetProduct(pId)
+    if err != nil {
+        if err == gorm.ErrRecordNotFound {
+            // 查询无果
+            // 防止缓存穿透
+            ps.localCache.Set(uniqueKey, "", 10*time.Second)
+            ps.redisCache.Set(c, uniqueKey, "", 60*time.Second)
+            return &model.Product{}, nil
+        } else {
+            return
+        }
+    }
+```
+
+这里就相当于是一个null值设置
+
+同时实现布隆过滤，减少缓存的压力
+
+```go
+    import "github.com/bits-and-blooms/bloom"
+
+    ...
+
+	filter := bloom.NewWithEstimates(1000000, 0.01)
+
+	if !filter.Test([]byte(fmt.Sprint(pId))) {
+		return
+	}
+
+```
+
+这里加上了后其他增加的就要做适当的调整
+
+```go
+	n1 := make([]byte, 8)
+	binary.BigEndian.PutUint64(n1, uint64(pid))
+	ps.filter.Add(n1)
+```
 
