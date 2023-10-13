@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://xiaoheinotes.com/2023/10/13/interview-experience-cecloud/</loc>
+    <lastmod>2023-10-13</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/03/interview-tcp-reliability/</loc>
+    <lastmod>2023-10-13</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/09/18/go-channel-coding-sytle/</loc>
+    <lastmod>2023-10-13</lastmod>
+  </url>
+  <url>
     <loc>http://xiaoheinotes.com/2023/10/10/project-web-mall/</loc>
-    <lastmod>2023-10-12</lastmod>
+    <lastmod>2023-10-13</lastmod>
   </url>
   <url>
     <loc>http://xiaoheinotes.com/2023/10/12/interview-k8s-key-point/</loc>
@@ -17,7 +29,7 @@
     <lastmod>2023-10-09</lastmod>
   </url>
   <url>
-    <loc>http://xiaoheinotes.com/2023/09/15/funplus-exam/</loc>
+    <loc>http://xiaoheinotes.com/2023/09/15/exam-funplus/</loc>
     <lastmod>2023-10-09</lastmod>
   </url>
   <url>
@@ -37,10 +49,6 @@
     <lastmod>2023-10-07</lastmod>
   </url>
   <url>
-    <loc>http://xiaoheinotes.com/2023/10/03/interview-tcp-reliability/</loc>
-    <lastmod>2023-10-07</lastmod>
-  </url>
-  <url>
     <loc>http://xiaoheinotes.com/2023/09/30/interview-serialization/</loc>
     <lastmod>2023-10-04</lastmod>
   </url>
@@ -57,7 +65,7 @@
     <lastmod>2023-09-27</lastmod>
   </url>
   <url>
-    <loc>http://xiaoheinotes.com/2023/09/24/design-patterns-keypoint-todo/</loc>
+    <loc>http://xiaoheinotes.com/2023/09/24/keypoint-design-patterns-todo/</loc>
     <lastmod>2023-09-25</lastmod>
   </url>
   <url>
@@ -82,10 +90,6 @@
   </url>
   <url>
     <loc>http://xiaoheinotes.com/2023/09/19/go-heap-coding/</loc>
-    <lastmod>2023-09-19</lastmod>
-  </url>
-  <url>
-    <loc>http://xiaoheinotes.com/2023/09/18/go-channel-coding-sytle/</loc>
     <lastmod>2023-09-19</lastmod>
   </url>
   <url>

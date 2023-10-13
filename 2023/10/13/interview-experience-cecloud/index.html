@@ -1,0 +1,185 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>面试经验：中国电子云后端开发 | 小黑的随笔</title><meta name="author" content="xiaohei"><meta name="copyright" content="xiaohei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="记录一下2023年10月13日中国电子云一面流程，整体流程很快，自我介绍，挖实习挖项目，问了一点点八股，然后就是反问环节，正式面试的时候整个流程17min，有点KPI的意思，反问的时候和面试官聊了很多，面试官人挺好的讲的很清楚。 从个人性格、学校经历、实习经历三个点进行自我介绍我听得完直接按照自己之前背的个人介绍说了出来 挖实习从什么角度去考虑重构的单体服务转到微服务上去 OCR实现流程的简单的A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试经验：中国电子云后端开发">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/10/13/interview-experience-cecloud/index.html">
+<meta property="og:site_name" content="小黑的随笔">
+<meta property="og:description" content="记录一下2023年10月13日中国电子云一面流程，整体流程很快，自我介绍，挖实习挖项目，问了一点点八股，然后就是反问环节，正式面试的时候整个流程17min，有点KPI的意思，反问的时候和面试官聊了很多，面试官人挺好的讲的很清楚。 从个人性格、学校经历、实习经历三个点进行自我介绍我听得完直接按照自己之前背的个人介绍说了出来 挖实习从什么角度去考虑重构的单体服务转到微服务上去 OCR实现流程的简单的A">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/10/13/QnksFYuVKzCDlPh.png">
+<meta property="article:published_time" content="2023-10-13T09:15:06.000Z">
+<meta property="article:modified_time" content="2023-10-13T12:24:36.468Z">
+<meta property="article:author" content="xiaohei">
+<meta property="article:tag" content="面经">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/10/13/QnksFYuVKzCDlPh.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://xiaoheinotes.com/2023/10/13/interview-experience-cecloud/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '面试经验：中国电子云后端开发',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-13 20:24:36'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="小黑的随笔" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2023/10/13/MD2x49mQE76wJgu.png')"><nav id="nav"><span id="blog-info"><a href="/" title="小黑的随笔"><span class="site-name">小黑的随笔</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">面试经验：中国电子云后端开发</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-13T09:15:06.000Z" title="发表于 2023-10-13 17:15:06">2023-10-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-13T12:24:36.468Z" title="更新于 2023-10-13 20:24:36">2023-10-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E7%BB%8F/">面经</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="面试经验：中国电子云后端开发"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>记录一下2023年10月13日中国电子云一面流程，整体流程很快，自我介绍，挖实习挖项目，问了一点点八股，然后就是反问环节，正式面试的时候整个流程17min，有点KPI的意思，反问的时候和面试官聊了很多，面试官人挺好的讲的很清楚。</p>
+<h2 id="从个人性格、学校经历、实习经历三个点进行自我介绍"><a href="#从个人性格、学校经历、实习经历三个点进行自我介绍" class="headerlink" title="从个人性格、学校经历、实习经历三个点进行自我介绍"></a>从个人性格、学校经历、实习经历三个点进行自我介绍</h2><p>我听得完直接按照自己之前背的个人介绍说了出来</p>
+<h2 id="挖实习"><a href="#挖实习" class="headerlink" title="挖实习"></a>挖实习</h2><h3 id="从什么角度去考虑重构的"><a href="#从什么角度去考虑重构的" class="headerlink" title="从什么角度去考虑重构的"></a>从什么角度去考虑重构的</h3><p>单体服务转到微服务上去</p>
+<h3 id="OCR实现流程的"><a href="#OCR实现流程的" class="headerlink" title="OCR实现流程的"></a>OCR实现流程的</h3><p>简单的API调用，然后就说了其他的点</p>
+<h3 id="还有什么商业模型？"><a href="#还有什么商业模型？" class="headerlink" title="还有什么商业模型？"></a>还有什么商业模型？</h3><p>无，感觉面试官对实习做的东西不是很满意</p>
+<h2 id="挖项目"><a href="#挖项目" class="headerlink" title="挖项目"></a>挖项目</h2><h3 id="双token-怎么实现的，为什么要双Token？"><a href="#双token-怎么实现的，为什么要双Token？" class="headerlink" title="双token 怎么实现的，为什么要双Token？"></a>双token 怎么实现的，为什么要双Token？</h3><p>双Token是AccessToken和RefreshToken两个token，通过两个token分别记录</p>
+<h3 id="gin框架怎么使用的获取这两个token"><a href="#gin框架怎么使用的获取这两个token" class="headerlink" title="gin框架怎么使用的获取这两个token"></a>gin框架怎么使用的获取这两个token</h3><p>通过中间件拦截，在中间件里的c.getHeader获取的</p>
+<h3 id="怎么保证安全性的？"><a href="#怎么保证安全性的？" class="headerlink" title="怎么保证安全性的？"></a>怎么保证安全性的？</h3><p>安全性并不能绝对的保证，但是可以让他更安全。需要获取两个AccessToken和RefreshToken。AccessToken的过期时间短，RefreshToken的过期时间更长。<br>假设有人偷取了我的两个Token，但是RefreshToken的自动刷新也会</p>
+<h3 id="和单Token续约不行吗？"><a href="#和单Token续约不行吗？" class="headerlink" title="和单Token续约不行吗？"></a>和单Token续约不行吗？</h3><p>单Token续约存在一些问题，因为实际上的业务存在两种Token续约的情况，一个是用户不断的点击去续约Token，但是还有一种情况比如说用户一天内没有登录，或者一段时间没有操作。那这时候单Token就会有一些尬尴的处境</p>
+<ul>
+<li>过期时间设置过长，会导致token无法保证安全性</li>
+<li>过期时间设置过短，会导致token过期，导致用户长时间不操作需要频繁的去进行登录</li>
+</ul>
+<h2 id="八股"><a href="#八股" class="headerlink" title="八股"></a>八股</h2><h3 id="channel底层怎么实现的？"><a href="#channel底层怎么实现的？" class="headerlink" title="channel底层怎么实现的？"></a>channel底层怎么实现的？</h3><p>如下是channel的底层代码，可以看到它是一个<code>hchan</code>结构体</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> hchan <span class="keyword">struct</span> &#123;</span><br><span class="line">    qcount   <span class="type">uint</span>           <span class="comment">// 队列中的数据个数</span></span><br><span class="line">    dataqsiz <span class="type">uint</span>           <span class="comment">// 环形队列的大小，channel本身是一个环形队列</span></span><br><span class="line">    buf      unsafe.Pointer <span class="comment">// 存放实际数据的指针，用unsafe.Pointer存放地址，为了避免gc</span></span><br><span class="line">    elemsize <span class="type">uint16</span> </span><br><span class="line">    closed   <span class="type">uint32</span> <span class="comment">// 标识channel是否关闭</span></span><br><span class="line">    elemtype *_type <span class="comment">// 数据 元素类型</span></span><br><span class="line">    sendx    <span class="type">uint</span>   <span class="comment">// send的 index</span></span><br><span class="line">    recvx    <span class="type">uint</span>   <span class="comment">// recv 的 index</span></span><br><span class="line">    recvq    waitq  <span class="comment">// 阻塞在 recv 的队列</span></span><br><span class="line">    sendq    waitq  <span class="comment">// 阻塞在 send 的队列</span></span><br><span class="line"></span><br><span class="line">    lock mutex  <span class="comment">// 锁 </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单的用一个图去解释这<code>hchan</code>的主要参数的关系</p>
+<p><img src="https://s2.loli.net/2023/10/13/fqWkzD4RJXP8CYa.png" alt="channel底层"></p>
+<p>主要的是一个环形队列，去保存传输的缓存数据</p>
+<p><code>sendx</code>和<code>recvx</code>表示这两个环形队列的位置<br><code>recvq</code>和<code>sendq</code>表示两个等待队列的当前指针</p>
+<h3 id="两个协程之间如何通信？"><a href="#两个协程之间如何通信？" class="headerlink" title="两个协程之间如何通信？"></a>两个协程之间如何通信？</h3><p>平时写的时候是使用channel进行通信。通过make创建对应类型的channel进行通信</p>
+<h3 id="GMP调度怎么实现的"><a href="#GMP调度怎么实现的" class="headerlink" title="GMP调度怎么实现的"></a>GMP调度怎么实现的</h3><p>基本的</p>
+<ul>
+<li>G Goroutine 的缩写，每次 go func() 都代表一个 G，无限制，但受内存影响。使用 struct runtime.g，包含了当前 goroutine 的状态、堆栈、上下文</li>
+<li>M 工作线程(OS thread)也被称为 Machine，使用 struct runtime.m，所有 M 是有线程栈的。M 的默认数量限制是 10000（来源），可以通过debug.SetMaxThreads修改。</li>
+<li>P Processor，是一个抽象的概念，并不是真正的物理 CPU，P 表示执行 Go 代码所需的资源，可以通过 GOMAXPROCS 进行修改。当 M 执行 Go 代码时，会先关联 P。当 M 空闲或者处在系统调用时，就需要 P</li>
+</ul>
+<p>这个博客里讲的很好，之前也是看着这个理解GMP的调度。可以参考一下<a target="_blank" rel="noopener" href="https://blog.csdn.net/xmcy001122/article/details/119392934">GMP调度模式</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaoheinotes.com">xiaohei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaoheinotes.com/2023/10/13/interview-experience-cecloud/">http://xiaoheinotes.com/2023/10/13/interview-experience-cecloud/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://xiaoheinotes.com" target="_blank">小黑的随笔</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E7%BB%8F/">面经</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/10/13/QnksFYuVKzCDlPh.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/10/12/interview-k8s-key-point/" title="面试重点：k8s相关面试题"><img class="cover" src="https://s2.loli.net/2023/10/12/ibQxlXJZOyY8aKu.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">面试重点：k8s相关面试题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/09/22/Interview-experience-KingSoft-WPS/" title="面经：金山办公服务端开发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-22</div><div class="title">面经：金山办公服务端开发</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">xiaohei</div><div class="author-info__description">宁静致远</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/yxh175"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/yxh175" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1759788845@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">学习写博客啦</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E4%B8%AA%E4%BA%BA%E6%80%A7%E6%A0%BC%E3%80%81%E5%AD%A6%E6%A0%A1%E7%BB%8F%E5%8E%86%E3%80%81%E5%AE%9E%E4%B9%A0%E7%BB%8F%E5%8E%86%E4%B8%89%E4%B8%AA%E7%82%B9%E8%BF%9B%E8%A1%8C%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">从个人性格、学校经历、实习经历三个点进行自我介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%96%E5%AE%9E%E4%B9%A0"><span class="toc-number">2.</span> <span class="toc-text">挖实习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E4%BB%80%E4%B9%88%E8%A7%92%E5%BA%A6%E5%8E%BB%E8%80%83%E8%99%91%E9%87%8D%E6%9E%84%E7%9A%84"><span class="toc-number">2.1.</span> <span class="toc-text">从什么角度去考虑重构的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OCR%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B%E7%9A%84"><span class="toc-number">2.2.</span> <span class="toc-text">OCR实现流程的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%95%86%E4%B8%9A%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">还有什么商业模型？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%96%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.</span> <span class="toc-text">挖项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8Ctoken-%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%8CToken%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">双token 怎么实现的，为什么要双Token？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gin%E6%A1%86%E6%9E%B6%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E7%9A%84%E8%8E%B7%E5%8F%96%E8%BF%99%E4%B8%A4%E4%B8%AAtoken"><span class="toc-number">3.2.</span> <span class="toc-text">gin框架怎么使用的获取这两个token</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E5%AE%89%E5%85%A8%E6%80%A7%E7%9A%84%EF%BC%9F"><span class="toc-number">3.3.</span> <span class="toc-text">怎么保证安全性的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%92%8C%E5%8D%95Token%E7%BB%AD%E7%BA%A6%E4%B8%8D%E8%A1%8C%E5%90%97%EF%BC%9F"><span class="toc-number">3.4.</span> <span class="toc-text">和单Token续约不行吗？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E8%82%A1"><span class="toc-number">4.</span> <span class="toc-text">八股</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#channel%E5%BA%95%E5%B1%82%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">channel底层怎么实现的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E5%8D%8F%E7%A8%8B%E4%B9%8B%E9%97%B4%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%EF%BC%9F"><span class="toc-number">4.2.</span> <span class="toc-text">两个协程之间如何通信？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GMP%E8%B0%83%E5%BA%A6%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="toc-number">4.3.</span> <span class="toc-text">GMP调度怎么实现的</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/10/13/interview-experience-cecloud/" title="面试经验：中国电子云后端开发"><img src="https://s2.loli.net/2023/10/13/QnksFYuVKzCDlPh.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="面试经验：中国电子云后端开发"/></a><div class="content"><a class="title" href="/2023/10/13/interview-experience-cecloud/" title="面试经验：中国电子云后端开发">面试经验：中国电子云后端开发</a><time datetime="2023-10-13T09:15:06.000Z" title="发表于 2023-10-13 17:15:06">2023-10-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/12/interview-k8s-key-point/" title="面试重点：k8s相关面试题"><img src="https://s2.loli.net/2023/10/12/ibQxlXJZOyY8aKu.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="面试重点：k8s相关面试题"/></a><div class="content"><a class="title" href="/2023/10/12/interview-k8s-key-point/" title="面试重点：k8s相关面试题">面试重点：k8s相关面试题</a><time datetime="2023-10-12T03:23:56.000Z" title="发表于 2023-10-12 11:23:56">2023-10-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/10/project-web-mall/" title="项目总结：电子商城面试必备">项目总结：电子商城面试必备</a><time datetime="2023-10-10T11:16:02.000Z" title="发表于 2023-10-10 19:16:02">2023-10-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/09/exam-jidu/" title="笔试记录：集度"><img src="https://s2.loli.net/2023/10/09/zkQG12UoBTr5lYO.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="笔试记录：集度"/></a><div class="content"><a class="title" href="/2023/10/09/exam-jidu/" title="笔试记录：集度">笔试记录：集度</a><time datetime="2023-10-09T13:03:15.000Z" title="发表于 2023-10-09 21:03:15">2023-10-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/09/exam-qianxin/" title="笔试记录：奇安信"><img src="https://s2.loli.net/2023/10/09/ZV7ls5CPmbKwYJI.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="笔试记录：奇安信"/></a><div class="content"><a class="title" href="/2023/10/09/exam-qianxin/" title="笔试记录：奇安信">笔试记录：奇安信</a><time datetime="2023-10-09T07:53:38.000Z" title="发表于 2023-10-09 15:53:38">2023-10-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By xiaohei</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
