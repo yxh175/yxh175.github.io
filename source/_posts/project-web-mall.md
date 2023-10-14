@@ -20,6 +20,7 @@ tags:
 - 权限控制及Token续约：使用Gin及jwt-token做权限拦截，并通过双token实现安全性和续期的双重保障
 - 多级缓存：使用redis做缓存缓解数据库读写压力，同时通过合适的算法保证缓存一致性
 - 防止超卖：使用redis做分布式锁，防止出现高并发情况下的超卖现象
+- ELK日志监控：通过定制化 Zap 实现多输出源，同时将日志输出到 Console （Standard IO） 与 MQ 中，再配置 Logstash Input 使其读取 MQ 中的日志并写入 ES 中，最后在 Kibana 中展示。
 
 ### 权限拦截及双Token的实现
 
@@ -718,3 +719,101 @@ func (ps *ProductSrv) GetData(c *gin.Context, pId uint) (product *model.Product,
 
 - lua + redis锁
 
+
+
+### Zap及ELK日志分析实践
+
+系统通过Zap生成日志，推送到`Message Queue`中，之后再配置`logstash`将其写入到`ES`中，最后在`Kibana`中展示流程图如下
+
+![ELK流程图](https://s2.loli.net/2023/10/14/baCn8HQ4o6ZEweu.png)
+
+#### 定制化Zap实现
+
+
+首先创建 logger，其有一个输出到 `console` 的 `zapcore`。和一个添加同步日志到 `redis` 的 `zapcore`，通过 `zapcore.AddSync` 可以将一个实现 `io.Writer` 接口的对象转为 `zap` 需要的 `WriteSyncer`。
+
+`util/logger/logger.go`
+
+```go
+package logger
+
+import (
+	"gin-mall/elk_demo/util/rwriter"
+	"os"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
+
+func NewLogger(rw *rwriter.RedisWriter) *zap.Logger {
+
+	// 设置日志级别
+	lowPriority := zap.LevelEnablerFunc(func(l zapcore.Level) bool {
+		return l >= zapcore.DebugLevel
+	})
+
+	// 使用json格式日志
+	jsonEnc := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+	stdCore := zapcore.NewCore(jsonEnc, zapcore.Lock(os.Stdout), lowPriority)
+
+	// rw实现io.Writer的接口
+	syncer := zapcore.AddSync(rw)
+	redisCore := zapcore.NewCore(jsonEnc, syncer, lowPriority)
+
+	// 集成多个内核
+	core := zapcore.NewTee(stdCore, redisCore)
+
+	// Logger 输出console且标识调用代码行
+	return zap.New(core).WithOptions(zap.AddCaller())
+}
+```
+
+以及一个`redisWriter`
+
+`rwriter/rediswriter.go`
+
+```go
+package rwriter
+
+import (
+	"context"
+	"sync"
+
+	"github.com/redis/go-redis/v9"
+)
+
+var rWriter *RedisWriter
+var once sync.Once
+
+type RedisWriter struct {
+	cli     *redis.Client
+	listKey string
+	c       context.Context
+}
+
+func (w *RedisWriter) Write(p []byte) (int, error) {
+	n, err := w.cli.RPush(w.c, w.listKey, p).Result()
+	return int(n), err
+}
+
+// NewRedisWriter
+func NewRedisWriter() *RedisWriter {
+	once.Do(func() {
+		rWriter = &RedisWriter{
+			cli: redis.NewClient(&redis.Options{
+				Addr:     "localhost:6379", // Redis 服务器地址
+				Password: "",               // 如果有密码，设置密码
+				DB:       0,                // 默认数据库
+				PoolSize: 1000,
+			}),
+			listKey: "log_queue",
+			c:       context.Background(),
+		}
+	})
+	return rWriter
+}
+```
+
+通过运行Test函数，可以看一下Redis中是否更新
+
+#### 搭建ELK环境
