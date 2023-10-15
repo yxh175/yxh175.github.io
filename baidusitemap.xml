@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://xiaoheinotes.com/2023/10/10/project-web-mall/</loc>
+    <lastmod>2023-10-15</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/09/exam-jidu/</loc>
+    <lastmod>2023-10-13</lastmod>
+  </url>
+  <url>
     <loc>http://xiaoheinotes.com/2023/10/13/interview-experience-cecloud/</loc>
     <lastmod>2023-10-13</lastmod>
   </url>
@@ -13,20 +21,12 @@
     <lastmod>2023-10-13</lastmod>
   </url>
   <url>
-    <loc>http://xiaoheinotes.com/2023/10/10/project-web-mall/</loc>
-    <lastmod>2023-10-13</lastmod>
-  </url>
-  <url>
     <loc>http://xiaoheinotes.com/2023/10/12/interview-k8s-key-point/</loc>
     <lastmod>2023-10-12</lastmod>
   </url>
   <url>
     <loc>http://xiaoheinotes.com/2023/10/09/exam-qianxin/</loc>
     <lastmod>2023-10-11</lastmod>
-  </url>
-  <url>
-    <loc>http://xiaoheinotes.com/2023/10/09/exam-jidu/</loc>
-    <lastmod>2023-10-09</lastmod>
   </url>
   <url>
     <loc>http://xiaoheinotes.com/2023/09/15/exam-funplus/</loc>
