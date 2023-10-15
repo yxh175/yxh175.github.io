@@ -2,6 +2,8 @@
 title: 面试经验：好未来凉经
 date: 2023-10-15 16:42:29
 cover: https://s2.loli.net/2023/10/15/NKiPej9xS1gZGEO.png
+categories:
+- 面经
 tags:
 - 面经
 ---
