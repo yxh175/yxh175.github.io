@@ -719,6 +719,26 @@ func (ps *ProductSrv) GetData(c *gin.Context, pId uint) (product *model.Product,
 
 - lua + redis锁
 
+通过lua脚本在redis之中进行原子性的操作，并在redis中进行订单的逻辑判断，最后把订单通过stream进行消息队列的分发，实现数据库的持久化。
+
+
+
+#### lua脚本特性
+
+原子性，这个是大家对lua脚本在redis中的第一印象，保证原子性的主要原因还是Redis采用了单线程执行模型。也就是说，当Redis执行Lua脚本时，Redis会把Lua脚本作为一个整体并把它当作一个任务加入到一个队列中，然后单线程按照队列的顺序依次执行这些任务，在执行过程中Lua脚本是不会被其他命令或请求打断，因此可以保证每个任务的执行都是原子性的。
+
+#### 如何用go去加载lua脚本呢？
+
+可以使用go-redis去执行`.lua`脚本
+
+通过script.Load得到对应的lua脚本
+
+```go
+// createScript 通过加载[]byte{}加载lua脚本
+script := createScript()
+sha, err := script.Load(ctx, client).Result()
+```
+
 
 
 ### Zap及ELK日志分析实践
@@ -728,7 +748,6 @@ func (ps *ProductSrv) GetData(c *gin.Context, pId uint) (product *model.Product,
 ![ELK流程图](https://s2.loli.net/2023/10/14/baCn8HQ4o6ZEweu.png)
 
 #### 定制化Zap实现
-
 
 首先创建 logger，其有一个输出到 `console` 的 `zapcore`。和一个添加同步日志到 `redis` 的 `zapcore`，通过 `zapcore.AddSync` 可以将一个实现 `io.Writer` 接口的对象转为 `zap` 需要的 `WriteSyncer`。
 
