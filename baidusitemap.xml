@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://xiaoheinotes.com/2023/09/25/redis-distributed-locks/</loc>
+    <lastmod>2023-10-16</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/15/interview-experience-tal/</loc>
+    <lastmod>2023-10-16</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/04/go-reflect-try/</loc>
+    <lastmod>2023-10-16</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/15/exam-yaxinanquan/</loc>
+    <lastmod>2023-10-16</lastmod>
+  </url>
+  <url>
     <loc>http://xiaoheinotes.com/2023/10/10/project-web-mall/</loc>
     <lastmod>2023-10-15</lastmod>
   </url>
@@ -55,14 +71,6 @@
   <url>
     <loc>http://xiaoheinotes.com/2023/09/21/interview-TCP-key-point/</loc>
     <lastmod>2023-10-04</lastmod>
-  </url>
-  <url>
-    <loc>http://xiaoheinotes.com/2023/10/04/go-reflect-try/</loc>
-    <lastmod>2023-10-04</lastmod>
-  </url>
-  <url>
-    <loc>http://xiaoheinotes.com/2023/09/25/redis-distributed-locks/</loc>
-    <lastmod>2023-09-27</lastmod>
   </url>
   <url>
     <loc>http://xiaoheinotes.com/2023/09/24/keypoint-design-patterns-todo/</loc>
