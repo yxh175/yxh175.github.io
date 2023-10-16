@@ -6,7 +6,7 @@
   <link href="http://xiaoheinotes.com/atom.xml" rel="self"/>
   
   <link href="http://xiaoheinotes.com/"/>
-  <updated>2023-10-16T01:40:41.929Z</updated>
+  <updated>2023-10-16T09:28:45.127Z</updated>
   <id>http://xiaoheinotes.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>面试重点：系统调度算法</title>
+    <link href="http://xiaoheinotes.com/2023/10/16/keypoint-scheduling-algorithm/"/>
+    <id>http://xiaoheinotes.com/2023/10/16/keypoint-scheduling-algorithm/</id>
+    <published>2023-10-16T02:03:03.000Z</published>
+    <updated>2023-10-16T09:28:45.127Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文主要参考<a href="https://xiaolincoding.com/os/5_schedule/schedule.html#%E9%AB%98%E5%93%8D%E5%BA%94%E6%AF%94%E4%BC%98%E5%85%88%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95">小林coding</a></p><p>操作系统存在三大调度</p><ul><li>进程调度：对于CPU使用的调度</li><li>页面置换：对于虚拟内存的调度</li><li>磁盘调度：对于硬盘的调度</li></ul><p>对进程调度做一个大致的总结</p><h2 id="进程调度算法"><a href="#进程调度算法" class="headerlink" title="进程调度算法"></a>进程调度算法</h2><p>对CPU的调度，解决问题的出发点是如何最好的任务的执行时间和等待时间</p><h3 id="先来先服务调度算法"><a href="#先来先服务调度算法" class="headerlink" title="先来先服务调度算法"></a>先来先服务调度算法</h3><p>最简单的一个调度算法，非抢占的先来先服务算法。</p><p>依照队列排序的顺序，先来就先服务。但是这个时候会出现一个问题，就是长作业会占用CPU较长的时间，而导致后面短作业的等待时间会很长</p><p>基于这种缺点，于是最短作业优先调度就被提出来了</p><h3 id="最短作业优先调度算法"><a href="#最短作业优先调度算法" class="headerlink" title="最短作业优先调度算法"></a>最短作业优先调度算法</h3><p>最短作业调度算法是一种典型的贪心算法，它会优先选择运行时间最短的进程来运行，提高系统的吞吐量</p><p>缺点也显而易见，就是对长作业会形成一个饥饿现象，极端情况下，大量繁琐且不重要的短作业会导致长作业无法被CPU调度</p><p>可以看到两者都没法很好的去平衡短作业和长作业之间的关系</p><h3 id="高响应比优先调度算法"><a href="#高响应比优先调度算法" class="headerlink" title="高响应比优先调度算法"></a>高响应比优先调度算法</h3><p>为了权衡短作业和长作业之间的调度问题，提出了高相应比优先调度算法，其主要基于一个等待时间和要求服务时间的计算得出一个优先权，通过优先权下一个调度的对象</p><p><img src="https://s2.loli.net/2023/10/16/ZcCNF953bx1z8su.png" alt="高响应比优先调度算法"></p><h3 id="时间片轮转调度算法"><a href="#时间片轮转调度算法" class="headerlink" title="时间片轮转调度算法"></a>时间片轮转调度算法</h3><p>当然除了非抢占式，还存在并发系统中的时间片轮转调度算法，每个进程被分配一个时间段，称为时间片，即允许该进程在该时间段中运行。</p><ul><li>如果时间运行结束那么将会把此进程从CPU中释放出来，并把CPU分配到另外一个进程</li><li>如果出现阻塞或结束，则马上进行切换</li></ul><p><img src="https://s2.loli.net/2023/10/16/QIoYVmw3DhPt4OK.png" alt="时间片轮转"></p><p>对于运行时间的设置也是一个关键问题</p><ul><li>时间片设置过长，退化成先来先服务调度算法</li><li>时间片设置过短，导致CPU执行过多的进程上下文切换，降低了CPU效率</li></ul><p>通常设置一个<code>20ms-50ms</code>的值是一个合理的折中值</p><h3 id="最高优先级调度算法"><a href="#最高优先级调度算法" class="headerlink" title="最高优先级调度算法"></a>最高优先级调度算法</h3><p>时间片轮转调度算法，认为所有的进程的分配时间片应该是相同。但是在实际操作系统，某些进程应该被分配更多的时间片。因为其进程往往是最重要的</p><p>进程的优先级可以分为，静态优先级或动态优先级</p><ul><li>静态优先级：创建进程时，就已经确定了优先级了，然后整个运行时间优先级都不会变化。</li><li>动态优先级：根据进程的动态变化调整优先级，比如如果进程运行时间增加，则降低其优先级，如果进程等待时间（就绪队列的等待时间）增加，则升高其优先级，也就是随着时间的推移增加等待进程的优先级。</li></ul><p>同时该算法也有两种处理高优先级的方法，非抢占式与抢占式</p><ul><li>非抢占式：当就绪队列中出现优先级高的进程，运行完当前进程，再选择优先级高的进程</li><li>抢占式：就绪队列中出现优先级高的进程，当前进程挂起，调度优先级高的进程去运行</li></ul><p>但这样也是有缺点的，即低优先级的进程运行的概率很小</p><h3 id="多级反馈队列调度算法"><a href="#多级反馈队列调度算法" class="headerlink" title="多级反馈队列调度算法"></a>多级反馈队列调度算法</h3><p>对于时间片和最高优先级两种调度算法都有自己的问题</p><ul><li>时间片轮转太过于公平，以至于没有了优先级</li><li>最高优先级又矫枉过正，导致低优先级运行概率小，甚至极端情况会出现不运行的情况</li></ul><p>所以综合两者的问题，提出了多级反馈队列调度算法，其核心要点主要是两个：多级、反馈</p><ul><li>多级：即有多个队列，每个队列的优先级不同，同时优先级越高时间片越短</li><li>反馈：如果有新的进程加入优先级高的队列，立刻停止当前正在运行的进程，转而去运行优先级高的队列</li></ul><p><img src="https://s2.loli.net/2023/10/16/HwRdFW7forJek1Y.png" alt="多级反馈队列"></p><p>它的运行流程是这样的，新进程刚进来是优先最高，时间片最短的。每一次获取时间片结束后都会使他进入下一个优先级低的队列，但是时间片也会被增长。所以该算法很好的<strong>兼顾了长短作业，同时有较好的响应时间</strong></p><h2 id="内存置换算法"><a href="#内存置换算法" class="headerlink" title="内存置换算法"></a>内存置换算法</h2><p>内存置换算法是一个常考点，它主要服务于操作系统中，因为物理内存与硬盘的映射关系存在一定的大小，当CPU访问的页面不在物理内存时，便会产生一个缺页中断，请求操作系统将所缺页调入到物理内存中。与一般的中断区别是：</p><ul><li>缺页中断在指令执行期间产生和处理中断信号，而一般中断在一条指令执行完成后检查和处理中断信号</li><li>缺页中断在返回回去仍然执行该指令，其他中断则是在指向下一指令</li></ul><p>其流程如下：</p><p><img src="https://s2.loli.net/2023/10/16/Y3bU4NxeIknfljv.png" alt="内存置换算法"></p><ol><li>Load指令去查找页表</li><li>页表状态位为无效的，触发中断请求</li><li>操作系统查找磁盘对应页面位置</li><li>加载到物理内存中</li><li>修改页表项的状态位</li><li>重新执行导致异常的指令</li></ol><h3 id="最佳页面置换算法-OPT"><a href="#最佳页面置换算法-OPT" class="headerlink" title="最佳页面置换算法(OPT)"></a>最佳页面置换算法(OPT)</h3><p>最佳页面置换算法的思路，就是替换掉未来最长时间不访问的页面，但是操作系统往往不知道未来访问的情况，所以这个算法是没法实现的</p><h3 id="先进先出置换算法-FIFO"><a href="#先进先出置换算法-FIFO" class="headerlink" title="先进先出置换算法(FIFO)"></a>先进先出置换算法(FIFO)</h3><p>先进先出就用了一个队列进行模拟，队尾是新的，队头是要被清除的，通常的实现方法是<strong>链表实现</strong></p><h3 id="最近最久未使用-LRU"><a href="#最近最久未使用-LRU" class="headerlink" title="最近最久未使用 LRU"></a>最近最久未使用 LRU</h3><p>删除掉最进最久为使用的，听起来貌似好像很绕，实际换种说法就很容易理解，即选中最长时间没有被访问的页面进行置换。有点类似最佳页面置换算法，但是区别在于是基于已知的页面击中情况进行处理的。</p><p><img src="https://s2.loli.net/2023/10/16/LV7NPC9aSOqucJ8.png" alt="最近最久未使用"></p><p>一般来说它的实现方法，是有一个双向链表加上一个set集合实现。实现的代价是比较大的。队头代表最新访问，队尾代表最久未被访问</p><h3 id="时钟页面置换算法"><a href="#时钟页面置换算法" class="headerlink" title="时钟页面置换算法"></a>时钟页面置换算法</h3><p>那有没有一种即能优化置换的次数，也能方便实现的算法呢？</p><p>时钟页面置换算法就可以两者兼得，它跟 LRU 近似，又是对 FIFO 的一种改进。</p><p>该算法的思路是，把所有的页面都保存在一个类似钟面的「环形链表」中，一个表针指向最老的页面。</p><h3 id="最不常用算法-LFU"><a href="#最不常用算法-LFU" class="headerlink" title="最不常用算法 LFU"></a>最不常用算法 LFU</h3><p>最不常用算法指的发送页面中断时，清除掉访问次数最小的那个页面</p><p>LFU 算法只考虑了频率问题，没考虑时间的问题，比如有些页面在过去时间里访问的频率很高，但是现在已经没有访问了，而当前频繁访问的页面由于没有这些页面访问的次数高，在发生缺页中断时，就会可能会误伤当前刚开始频繁访问，但访问次数还不高的页面。</p><h2 id="磁盘调度算法"><a href="#磁盘调度算法" class="headerlink" title="磁盘调度算法"></a>磁盘调度算法</h2><p>机械硬盘是转盘的结构，像唱片一样的指针去查询磁盘。磁盘调度算法是要做什么呢？</p><p>当系统请求访问如下序列：</p><p>98，183，37，122，14，124，65，67</p><p>初始磁头在某个位置，需要一个算法来调度指针去按一定的顺序查找</p><h3 id="先来先服务"><a href="#先来先服务" class="headerlink" title="先来先服务"></a>先来先服务</h3><p>最简单也是最容易想到的，直接按照序列读写</p><h3 id="最短寻道时间优先"><a href="#最短寻道时间优先" class="headerlink" title="最短寻道时间优先"></a>最短寻道时间优先</h3><p>典型的贪心算法，每次找队列中离自己指针距离最近的一个，但是这种算法可能会存在饥饿现象，如果是动态的序列，新来的总是最近的，会导致旧的无法被读取到</p><h3 id="扫描算法"><a href="#扫描算法" class="headerlink" title="扫描算法"></a>扫描算法</h3><p>磁头在一个方向上移动，访问所有未完成的请求，直到磁头到达该方向上的最后磁道，才调换方向，这就是扫描算法</p><p>扫描调度算法性能较好，不会产生饥饿现象，但是存在这样的问题，中间部分的磁道会比较占便宜，中间部分相比其他部分响应的频率会比较多，也就是说每个磁道的响应频率存在差异。</p><h3 id="循环扫描算法"><a href="#循环扫描算法" class="headerlink" title="循环扫描算法"></a>循环扫描算法</h3><p>如果说扫描算法存在磁道的响应频率差异，那么公平点，就直接单向扫描呗</p><p>循环扫描（Circular Scan, CSCAN ）规定：只有磁头朝某个特定方向移动时，才处理磁道访问请求，而返回时直接快速移动至最靠边缘的磁道，也就是复位磁头，这个过程是很快的，并且返回中途不处理任何请求，该算法的特点，就是磁道只响应一个方向上的请求。</p><h3 id="LOOK-与-C-LOOK算法"><a href="#LOOK-与-C-LOOK算法" class="headerlink" title="LOOK 与 C-LOOK算法"></a>LOOK 与 C-LOOK算法</h3><p>相信大家在看到扫描算法和循环扫描算法都会疑惑， 为什么指针一定要到边界才能反向呢。有点算法基础的同学肯定马上想到了，通过两个最大最小值，去确定实际要扫描的区间范围，而不需要去移动到磁盘的最始端或最末端，反向移动的途中会响应请求</p><p>所以LOOK算法是针对扫描算法进行的优化，确定区间范围，只在指定范围移动即可</p><p>C-LOOK算法则是针对循环扫描算法进行的优化，和LOOK算法思想类似，不够是单向的扫描</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;本文主要参考&lt;a href=&quot;https://xiaolincoding.com/os/5_schedule/schedule.html#%E9%AB%98%E5%93%8D%E5%BA%94%E6%AF%94%E4%BC%98%E5%85%88%E8%B0%83%E5%B</summary>
+      
+    
+    
+    
+    <category term="八股" scheme="http://xiaoheinotes.com/categories/%E5%85%AB%E8%82%A1/"/>
+    
+    
+    <category term="调度算法" scheme="http://xiaoheinotes.com/tags/%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title>笔试记录：亚信安全</title>
@@ -470,9 +494,9 @@
     <category term="八股文" scheme="http://xiaoheinotes.com/categories/%E5%85%AB%E8%82%A1%E6%96%87/"/>
     
     
-    <category term="TCP" scheme="http://xiaoheinotes.com/tags/TCP/"/>
-    
     <category term="计算机网络" scheme="http://xiaoheinotes.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    <category term="TCP" scheme="http://xiaoheinotes.com/tags/TCP/"/>
     
   </entry>
   
@@ -501,32 +525,6 @@
     <category term="笔试" scheme="http://xiaoheinotes.com/tags/%E7%AC%94%E8%AF%95/"/>
     
     <category term="途虎" scheme="http://xiaoheinotes.com/tags/%E9%80%94%E8%99%8E/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>计算机网络：HTTP知识点遗忘点记录</title>
-    <link href="http://xiaoheinotes.com/2023/09/20/network-http-study/"/>
-    <id>http://xiaoheinotes.com/2023/09/20/network-http-study/</id>
-    <published>2023-09-20T08:35:47.000Z</published>
-    <updated>2023-09-21T03:02:10.417Z</updated>
-    
-    <content type="html"><![CDATA[<p>记录一下自己HTTP的相关薄弱点。强化一下学习<br>文章内容参考<a href="https://xiaolincoding.com/network/2_http/http_interview.html#https-%E6%98%AF%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E7%9A%84-%E5%85%B6%E9%97%B4%E4%BA%A4%E4%BA%92%E4%BA%86%E4%BB%80%E4%B9%88">小林coding</a></p><h2 id="HTTPs-的应用数据如何保证完整性"><a href="#HTTPs-的应用数据如何保证完整性" class="headerlink" title="HTTPs 的应用数据如何保证完整性"></a>HTTPs 的应用数据如何保证完整性</h2><p>这个问题，主要考查的是，HTTPs构建完对话后，如何去实现数据的传递，因为HTTPs传递消息不会像HTTP那样随意的明文传输，它还需要一个对称加密的过程。<br>这里涉及TLS的两个协议：</p><ul><li>TLS握手协议： 四次握手算法，负责协商加密算法和生成对称密钥的。</li><li>TLS记录协议：负责保护应用程序数据并验证其完整性和来源，所以对HTTP数据加密是使用记录协议</li></ul><p>TLS记录协议主要负责消息（HTTP数据）的压缩，加密及数据的认证。<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/%E8%AE%B0%E5%BD%95%E5%8D%8F%E8%AE%AE.png" alt="TLS处理信息的过程"></p><p>过程如下：</p><ul><li>消息分割：消息被分割成多个片段</li><li>片段压缩：消息通过压缩算法进行压缩</li><li>MAC生成：通过Hash算法对压缩片段生成MAC并追加到尾部</li><li>对称加密：通过对称密钥进行加密</li><li>生成报文：由数据类型、版本号、压缩后的长度组成最终报文</li></ul><h2 id="HTTP-2做了什么优化？"><a href="#HTTP-2做了什么优化？" class="headerlink" title="HTTP&#x2F;2做了什么优化？"></a>HTTP&#x2F;2做了什么优化？</h2><p>HTTP&#x2F;2协议是基于HTTPS的，所以HTTP&#x2F;2的安全性也是有保障的</p><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/25-HTTP2.png" alt="HTTP各版本架构"></p><p>根据这些图可以看到HTTP&#x2F;2相比于HTTP&#x2F;1.1的一些改进</p><ul><li>头部压缩：<code>HPACK</code>算法，通过维护一个头信息对应信息表，用索引号来表示字段。</li><li>二进制格式： 头信息和body都采用二进制传输</li><li>并发传输：引用Stream概念，多个Stream在一条TCP中复用。通过Stream ID 让接收方变得排序，服务端可以乱序发送</li><li>服务器推送：服务器会主动向客户端推送可能会用到的资源</li></ul><h2 id="HTTP-2有什么缺陷？"><a href="#HTTP-2有什么缺陷？" class="headerlink" title="HTTP&#x2F;2有什么缺陷？"></a>HTTP&#x2F;2有什么缺陷？</h2><p>HTTP&#x2F;2 通过Stream的并发能力，虽然解决了HTTP&#x2F;1队头阻塞的问题，但还是存在TCP的队头阻塞。因为HTTP&#x2F;2是基于TCP的。TCP 是字节流协议，TCP 层必须保证收到的字节数据是完整且连续的，这样内核才会将缓冲区里的数据返回给 HTTP 应用，那么当「前 1 个字节数据」没有到达时，后收到的字节数据只能存放在内核缓冲区里，只有等到这 1 个字节数据到达时，HTTP&#x2F;2 应用层才能从内核中拿到数据，这就是 HTTP&#x2F;2 队头阻塞问题。</p><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/network/quic/http2%E9%98%BB%E5%A1%9E.jpeg" alt="stream丢失片段"></p><p>当通过TCP发送多个包的时候，如果有一个包在网络中丢失，那么就会导致之后的内容会在内核中缓存。直到丢失的包收到。应用层才能在内核中取到结果<br><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/%E7%BD%91%E7%BB%9C/http3/tcp%E9%98%9F%E5%A4%B4%E9%98%BB%E5%A1%9E.gif" alt="内核运行图"></p><p>所以，一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的所有的 HTTP 请求都必须等待这个丢了的包被重传回来。</p><h2 id="HTTP-3-做了哪些优化？"><a href="#HTTP-3-做了哪些优化？" class="headerlink" title="HTTP&#x2F;3 做了哪些优化？"></a>HTTP&#x2F;3 做了哪些优化？</h2><p>我们看到HTTP&#x2F;2做了很大的努力，让HTTP层面不出现队头阻塞，但是还是在TCP层上折了腰。<br>所以HTTP&#x2F;3将底层修改为UDP协议。</p><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP/27-HTTP3.png" alt="HTTP各版本"></p><p>基于UDP的quick协议可以实现可靠传输。</p><p>那么HTTP&#x2F;3的三个优点就是</p><ul><li>无队头阻塞：同样是多路复用但是不会像HTTP&#x2F;2那样当stream某个出现丢失时阻塞。UDP中多个Stream之间没有依赖</li><li>更快的建立连接：因为QUIC协议里包含了TLS协议。所以直接握手就可以了</li><li>连接迁移：基于TCP的连接，强调了地址和端口号。如果二者有一点变化就需要重新连接，代价很高。而基于UDP的不需要</li></ul><h2 id="quick协议怎么让UDP实现可靠传输的？"><a href="#quick协议怎么让UDP实现可靠传输的？" class="headerlink" title="quick协议怎么让UDP实现可靠传输的？"></a>quick协议怎么让UDP实现可靠传输的？</h2><p>HTTP&#x2F;3的整体视角是这样的</p><p><img src="https://cdn.xiaolincoding.com//mysql/other/http3-over-quic-protocol-works.png" alt="HTTP/3整体情况"></p><ul><li>Packet Header  分别包含了Long Packet Header 和 Short Packet Header两种实现方法，前者在首次连接时使用，后者用于日常传输</li><li>QUIC FrameHeader 在一个Packet中会存放多个Frame数据， 这个Frame数据内容大致如下<br><img src="https://cdn.xiaolincoding.com//mysql/other/536298d2c54a43b699026bffe0f85010.png" alt="Frame内容"></li></ul><p>通过StreamID、Offset保证数据的有序性，length指明了Frame数据的长度</p><h3 id="quic-ID-是什么样的，和TCP一样吗？"><a href="#quic-ID-是什么样的，和TCP一样吗？" class="headerlink" title="quic ID 是什么样的，和TCP一样吗？"></a>quic ID 是什么样的，和TCP一样吗？</h3><p>不是，quicID 在UDP中严格递增的，为了保证RTT（往返延时时间的无歧义测量）,所以让它严格递增，这也顺便解决了TCP中RTT歧义性导致重发事件概率增大</p><h3 id="为什么QUIC-不会队头阻塞？"><a href="#为什么QUIC-不会队头阻塞？" class="headerlink" title="为什么QUIC 不会队头阻塞？"></a>为什么QUIC 不会队头阻塞？</h3><p>HTTP&#x2F;2 队头阻塞的原因是因为TCP, 虽然在应用层的层面上解决队头阻塞问题，但是在其Stream是基于TCP的，TCP滑动窗口的阻塞会导致队头阻塞。而HTTP&#x2F;3是基于UDP的，UDP会为每个Stream单独弄一个窗口。这样各个Stream之间是不会互相影响的</p><h3 id="QUIC-如何做到流量控制？"><a href="#QUIC-如何做到流量控制？" class="headerlink" title="QUIC 如何做到流量控制？"></a>QUIC 如何做到流量控制？</h3><p>和TCP原理类似，TCP流量控制是通过接收方告诉发送方，它的接收窗口有多大，从而让发送方计算发送速率</p><p>QUIC 实现流量控制的方式</p><ul><li>通过window_update 帧告知窗口大小</li><li>通过BlockFrame 帧告知阻塞</li></ul><p>同时和HTTP&#x2F;2不同的是Stream每个都是单独的窗口，所以要进行两个流量控制</p><ul><li>Stream流量控制， 对每个Stream的窗口进行限制</li><li>Connection 连接控制，对Stream总的连接大小进行限制，防止超过缓存</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;记录一下自己HTTP的相关薄弱点。强化一下学习&lt;br&gt;文章内容参考&lt;a href=&quot;https://xiaolincoding.com/network/2_http/http_interview.html#https-%E6%98%AF%E5%A6%82%E4%BD%95%</summary>
-      
-    
-    
-    
-    <category term="八股文" scheme="http://xiaoheinotes.com/categories/%E5%85%AB%E8%82%A1%E6%96%87/"/>
-    
-    
-    <category term="计算机网络" scheme="http://xiaoheinotes.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    <category term="HTTP" scheme="http://xiaoheinotes.com/tags/HTTP/"/>
     
   </entry>
   

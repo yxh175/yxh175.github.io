@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://xiaoheinotes.com/2023/10/16/keypoint-scheduling-algorithm/</loc>
+    
+    <lastmod>2023-10-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://xiaoheinotes.com/2023/09/25/redis-distributed-locks/</loc>
     
     <lastmod>2023-10-16</lastmod>
@@ -369,14 +378,14 @@
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/%E7%BE%8E%E5%9B%A2/</loc>
+    <loc>http://xiaoheinotes.com/tags/funPlus/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/funPlus/</loc>
+    <loc>http://xiaoheinotes.com/tags/%E7%BE%8E%E5%9B%A2/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -390,13 +399,6 @@
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/channel/</loc>
-    <lastmod>2023-10-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://xiaoheinotes.com/tags/Channel/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -404,7 +406,7 @@
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
+    <loc>http://xiaoheinotes.com/tags/channel/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -425,7 +427,7 @@
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/reflect/</loc>
+    <loc>http://xiaoheinotes.com/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -440,6 +442,27 @@
   
   <url>
     <loc>http://xiaoheinotes.com/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2023-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://xiaoheinotes.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2023-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://xiaoheinotes.com/tags/TCP/</loc>
+    <lastmod>2023-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://xiaoheinotes.com/tags/reflect/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -474,13 +497,6 @@
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/TCP/</loc>
-    <lastmod>2023-10-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://xiaoheinotes.com/tags/golang/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -495,6 +511,13 @@
   </url>
   
   <url>
+    <loc>http://xiaoheinotes.com/tags/%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2023-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://xiaoheinotes.com/tags/%E6%97%A5%E5%BF%97/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -502,14 +525,14 @@
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <loc>http://xiaoheinotes.com/tags/HTTP/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/tags/HTTP/</loc>
+    <loc>http://xiaoheinotes.com/tags/%E7%94%B5%E5%AD%90%E5%95%86%E5%9F%8E/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -524,13 +547,6 @@
   
   <url>
     <loc>http://xiaoheinotes.com/tags/%E6%8C%81%E4%B9%85%E5%8C%96/</loc>
-    <lastmod>2023-10-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://xiaoheinotes.com/tags/%E7%94%B5%E5%AD%90%E5%95%86%E5%9F%8E/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -574,14 +590,14 @@
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/</loc>
+    <loc>http://xiaoheinotes.com/categories/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://xiaoheinotes.com/categories/%E7%AE%97%E6%B3%95/</loc>
+    <loc>http://xiaoheinotes.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/</loc>
     <lastmod>2023-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
