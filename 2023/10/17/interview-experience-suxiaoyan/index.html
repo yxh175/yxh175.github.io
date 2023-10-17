@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>面试经验：苏小妍 | 小黑的随笔</title><meta name="author" content="xiaohei"><meta name="copyright" content="xiaohei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="2023年10月17日golang开发工程师 苏小妍一面 注意：一定要检查自己的腾讯会议的名字，不要是自己的本人的名字。否则真的很尴尬。甚至有可能因此挂掉。 总共有两个面试官，一个主面试官，一个副面试官。 主面试官问的语言层面（很偏、感觉大受震撼），副面试官问的是实习与其他八股相关 主面试官slice 中nil和空的区别？ slice是nil的时候是没有指向任何实例的 slice为空的时候，是可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试经验：苏小妍">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/10/17/interview-experience-suxiaoyan/index.html">
+<meta property="og:site_name" content="小黑的随笔">
+<meta property="og:description" content="2023年10月17日golang开发工程师 苏小妍一面 注意：一定要检查自己的腾讯会议的名字，不要是自己的本人的名字。否则真的很尴尬。甚至有可能因此挂掉。 总共有两个面试官，一个主面试官，一个副面试官。 主面试官问的语言层面（很偏、感觉大受震撼），副面试官问的是实习与其他八股相关 主面试官slice 中nil和空的区别？ slice是nil的时候是没有指向任何实例的 slice为空的时候，是可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png">
+<meta property="article:published_time" content="2023-10-17T08:20:10.000Z">
+<meta property="article:modified_time" content="2023-10-17T11:30:34.826Z">
+<meta property="article:author" content="xiaohei">
+<meta property="article:tag" content="面经">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://xiaoheinotes.com/2023/10/17/interview-experience-suxiaoyan/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '面试经验：苏小妍',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-17 19:30:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="小黑的随笔" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2023/10/09/Y2EknVqJy5fWgpr.png')"><nav id="nav"><span id="blog-info"><a href="/" title="小黑的随笔"><span class="site-name">小黑的随笔</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">面试经验：苏小妍</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-17T08:20:10.000Z" title="发表于 2023-10-17 16:20:10">2023-10-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-17T11:30:34.826Z" title="更新于 2023-10-17 19:30:34">2023-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E7%BB%8F/">面经</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="面试经验：苏小妍"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>2023年10月17日golang开发工程师 苏小妍一面</p>
+<p><strong>注意</strong>：一定要检查自己的腾讯会议的名字，不要是自己的本人的名字。否则真的很尴尬。甚至有可能因此挂掉。</p>
+<p>总共有两个面试官，一个主面试官，一个副面试官。</p>
+<p>主面试官问的语言层面（很偏、感觉大受震撼），副面试官问的是实习与其他八股相关</p>
+<h2 id="主面试官"><a href="#主面试官" class="headerlink" title="主面试官"></a>主面试官</h2><h3 id="slice-中nil和空的区别？"><a href="#slice-中nil和空的区别？" class="headerlink" title="slice 中nil和空的区别？"></a>slice 中nil和空的区别？</h3><ul>
+<li>slice是nil的时候是没有指向任何实例的</li>
+<li>slice为空的时候，是可以存在slice的，只不过这个slice里面是空的</li>
+</ul>
+<h3 id="一个nil的slice的在序列化会出现什么？"><a href="#一个nil的slice的在序列化会出现什么？" class="headerlink" title="一个nil的slice的在序列化会出现什么？"></a>一个nil的slice的在序列化会出现什么？</h3><p>一个nil的slice在序列化的时候理论上来说会出现空指针异常，不多说测一测</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestSliceJson</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> sNil []<span class="type">int</span></span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;sNil is&quot;</span>, sNil == <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// res是[]byte类型</span></span><br><span class="line">	res, err := json.Marshal(sNil)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="type">string</span>(res))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行结果</span></span><br><span class="line"><span class="comment">// === RUN   TestSliceJson</span></span><br><span class="line"><span class="comment">// sNil is true</span></span><br><span class="line"><span class="comment">// null</span></span><br><span class="line"><span class="comment">// --- PASS: TestSliceJson (0.00s)</span></span><br><span class="line"><span class="comment">// PASS</span></span><br></pre></td></tr></table></figure>
+
+<p>发现输出结果是null，绷不住了我回答的是空指针异常</p>
+<h3 id="slice-遍历时，append会出现死循环吗？"><a href="#slice-遍历时，append会出现死循环吗？" class="headerlink" title="slice 遍历时，append会出现死循环吗？"></a>slice 遍历时，append会出现死循环吗？</h3><p>当使用range遍历时和使用<code>for i := 0; i &lt; len(s); i ++</code> </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestSliceAppend</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">	s := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// range</span></span><br><span class="line">	<span class="keyword">for</span> i, v := <span class="keyword">range</span> s &#123;</span><br><span class="line">		fmt.Println(v)</span><br><span class="line">		s = <span class="built_in">append</span>(s, i)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 普通for循环</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(s) &amp;&amp; i &lt; <span class="number">100</span>; i++ &#123;</span><br><span class="line">		s = <span class="built_in">append</span>(s, i)</span><br><span class="line">		fmt.Println(s[i])</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// range</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 普通for循环</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 0</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 0</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="comment">// 7</span></span><br><span class="line"><span class="comment">// 8</span></span><br><span class="line"><span class="comment">// 9</span></span><br><span class="line"><span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到range是不会出现死循环，但是普通的for循环就会死循环。</p>
+<p>机理上不同的原因是：</p>
+<ul>
+<li>range range相当于是快照，一种值拷贝所以不会感知到append的结果</li>
+<li>for 相当于是对i的控制，每一次会进行一种对比</li>
+</ul>
+<h3 id="map是并发安全的吗？"><a href="#map是并发安全的吗？" class="headerlink" title="map是并发安全的吗？"></a>map是并发安全的吗？</h3><p>不是，为了解决这种并发安全问题，通常使用<code>sync.Map</code>或者使用<code>sync.RWMutex</code>进行锁之间的冲突解决</p>
+<h3 id="sync-Map底层原理？"><a href="#sync-Map底层原理？" class="headerlink" title="sync.Map底层原理？"></a>sync.Map底层原理？</h3><p>给自己挖坑了，没答上来</p>
+<p>百度一下这篇文章写的很详细<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000043764275">Sync.Map底层</a></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Map <span class="keyword">struct</span> &#123;</span><br><span class="line">   mu Mutex <span class="comment">// 锁，保证写操作及dirty晋升为read的线程安全</span></span><br><span class="line"></span><br><span class="line">   read atomic.Value <span class="comment">// readOnly 只读map</span></span><br><span class="line"></span><br><span class="line">   dirty <span class="keyword">map</span>[any]*entry <span class="comment">// 脏map，当内部有数据时就一定包含read中的数据</span></span><br><span class="line"></span><br><span class="line">   misses <span class="type">int</span> <span class="comment">// read未命中次数，当达到一定次数时会触发dirty中的护具晋升到read</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到主要的思想是一个锁，一个<code>read map</code>和<code>dirty map</code>，当内部有数据时，一定包含read中的数据。<br>&#96;</p>
+<h3 id="dirtyMap是什么-sync-Map的底层-？"><a href="#dirtyMap是什么-sync-Map的底层-？" class="headerlink" title="dirtyMap是什么(sync.Map的底层)？"></a>dirtyMap是什么(sync.Map的底层)？</h3><p>底层没看T-T</p>
+<h3 id="defer-会修改return的返回值吗"><a href="#defer-会修改return的返回值吗" class="headerlink" title="defer 会修改return的返回值吗"></a>defer 会修改return的返回值吗</h3><p>跟面试官说了一下整体的顺序，如果是一个变量，是会修改返回的值</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestXxx</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;test1: &quot;</span>, deferTest1())</span><br><span class="line">	fmt.Println(<span class="string">&quot;test2: &quot;</span>, deferTest2())</span><br><span class="line">	fmt.Println(<span class="string">&quot;test3: &quot;</span>, deferTest3())</span><br><span class="line">	fmt.Println(<span class="string">&quot;test4: &quot;</span>, deferTest4())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deferTest1</span><span class="params">()</span></span> (x <span class="type">int</span>) &#123;</span><br><span class="line">	x = <span class="number">0</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		x = <span class="number">100</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deferTest2</span><span class="params">()</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	x := <span class="number">0</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		x = <span class="number">100</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deferTest3</span><span class="params">()</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	x := <span class="number">0</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">(r <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">		r = <span class="number">100</span></span><br><span class="line">	&#125;(x)</span><br><span class="line">	<span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deferTest4</span><span class="params">()</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	x := <span class="number">0</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">(r *<span class="type">int</span>)</span></span> &#123;</span><br><span class="line">		*r = <span class="number">100</span></span><br><span class="line">	&#125;(&amp;x)</span><br><span class="line">	<span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出结果</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// test1:  100</span></span><br><span class="line"><span class="comment">// test2:  0</span></span><br><span class="line"><span class="comment">// test3:  0</span></span><br><span class="line"><span class="comment">// test4:  0</span></span><br></pre></td></tr></table></figure>
+
+<p>之后大概测试了一下，发现只有在返回值是在刚开始就确定好的话，就会导致返回结果被修改</p>
+<h2 id="副面试官"><a href="#副面试官" class="headerlink" title="副面试官"></a>副面试官</h2><h3 id="链表反转如何实现（简述算法思路）？"><a href="#链表反转如何实现（简述算法思路）？" class="headerlink" title="链表反转如何实现（简述算法思路）？"></a>链表反转如何实现（简述算法思路）？</h3><p>pre 记录前节点<br>now 记录当前节点<br>nxt 记录下一个节点</p>
+<p>依次前推</p>
+<h3 id="挖实习"><a href="#挖实习" class="headerlink" title="挖实习"></a>挖实习</h3><h3 id="问docker和k8s是什么，他们之间的关系？"><a href="#问docker和k8s是什么，他们之间的关系？" class="headerlink" title="问docker和k8s是什么，他们之间的关系？"></a>问docker和k8s是什么，他们之间的关系？</h3><p>Docker和K8S之间是一种协同的关系，Docker负责应用级的容器构建、打包，K8S负责容器编排和容器管理</p>
+<h3 id="docker和虚拟机的区别？"><a href="#docker和虚拟机的区别？" class="headerlink" title="docker和虚拟机的区别？"></a>docker和虚拟机的区别？</h3><p>往深的讲了，面试官说不用讲这么深，简单说一下就行了</p>
+<h3 id="从使用角度来说"><a href="#从使用角度来说" class="headerlink" title="从使用角度来说"></a>从使用角度来说</h3><ul>
+<li>结构不同</li>
+<li>部署速度</li>
+<li>可移植性</li>
+<li>隔离性</li>
+</ul>
+<h3 id="K8S是做什么的，有没有使用过"><a href="#K8S是做什么的，有没有使用过" class="headerlink" title="K8S是做什么的，有没有使用过"></a>K8S是做什么的，有没有使用过</h3><p>容器编排的，之前在公司使用过，不过是一件部署的</p>
+<p>全程17分钟，很快哈哈，光速挂难道？</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaoheinotes.com">xiaohei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaoheinotes.com/2023/10/17/interview-experience-suxiaoyan/">http://xiaoheinotes.com/2023/10/17/interview-experience-suxiaoyan/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://xiaoheinotes.com" target="_blank">小黑的随笔</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E7%BB%8F/">面经</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/10/17/interview-experience-jidu/" title="面试经验：集度"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">面试经验：集度</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/09/22/Interview-experience-KingSoft-WPS/" title="面经：金山办公服务端开发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-22</div><div class="title">面经：金山办公服务端开发</div></div></a></div><div><a href="/2023/10/17/interview-experience-jidu/" title="面试经验：集度"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-17</div><div class="title">面试经验：集度</div></div></a></div><div><a href="/2023/10/13/interview-experience-cecloud/" title="面试经验：中国电子云后端开发"><img class="cover" src="https://s2.loli.net/2023/10/13/QnksFYuVKzCDlPh.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-13</div><div class="title">面试经验：中国电子云后端开发</div></div></a></div><div><a href="/2023/10/15/interview-experience-tal/" title="面试经验：好未来凉经"><img class="cover" src="https://s2.loli.net/2023/10/15/NKiPej9xS1gZGEO.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-15</div><div class="title">面试经验：好未来凉经</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">xiaohei</div><div class="author-info__description">宁静致远</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/yxh175"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/yxh175" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1759788845@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">学习写博客啦</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E9%9D%A2%E8%AF%95%E5%AE%98"><span class="toc-number">1.</span> <span class="toc-text">主面试官</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#slice-%E4%B8%ADnil%E5%92%8C%E7%A9%BA%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">slice 中nil和空的区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%AAnil%E7%9A%84slice%E7%9A%84%E5%9C%A8%E5%BA%8F%E5%88%97%E5%8C%96%E4%BC%9A%E5%87%BA%E7%8E%B0%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">一个nil的slice的在序列化会出现什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#slice-%E9%81%8D%E5%8E%86%E6%97%B6%EF%BC%8Cappend%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%AD%BB%E5%BE%AA%E7%8E%AF%E5%90%97%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">slice 遍历时，append会出现死循环吗？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#map%E6%98%AF%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F"><span class="toc-number">1.4.</span> <span class="toc-text">map是并发安全的吗？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sync-Map%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">1.5.</span> <span class="toc-text">sync.Map底层原理？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dirtyMap%E6%98%AF%E4%BB%80%E4%B9%88-sync-Map%E7%9A%84%E5%BA%95%E5%B1%82-%EF%BC%9F"><span class="toc-number">1.6.</span> <span class="toc-text">dirtyMap是什么(sync.Map的底层)？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#defer-%E4%BC%9A%E4%BF%AE%E6%94%B9return%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC%E5%90%97"><span class="toc-number">1.7.</span> <span class="toc-text">defer 会修改return的返回值吗</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%AF%E9%9D%A2%E8%AF%95%E5%AE%98"><span class="toc-number">2.</span> <span class="toc-text">副面试官</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E8%A1%A8%E5%8F%8D%E8%BD%AC%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%88%E7%AE%80%E8%BF%B0%E7%AE%97%E6%B3%95%E6%80%9D%E8%B7%AF%EF%BC%89%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">链表反转如何实现（简述算法思路）？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%96%E5%AE%9E%E4%B9%A0"><span class="toc-number">2.2.</span> <span class="toc-text">挖实习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AEdocker%E5%92%8Ck8s%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%BB%96%E4%BB%AC%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">问docker和k8s是什么，他们之间的关系？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker%E5%92%8C%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">2.4.</span> <span class="toc-text">docker和虚拟机的区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E4%BD%BF%E7%94%A8%E8%A7%92%E5%BA%A6%E6%9D%A5%E8%AF%B4"><span class="toc-number">2.5.</span> <span class="toc-text">从使用角度来说</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84%EF%BC%8C%E6%9C%89%E6%B2%A1%E6%9C%89%E4%BD%BF%E7%94%A8%E8%BF%87"><span class="toc-number">2.6.</span> <span class="toc-text">K8S是做什么的，有没有使用过</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/17/interview-experience-suxiaoyan/" title="面试经验：苏小妍">面试经验：苏小妍</a><time datetime="2023-10-17T08:20:10.000Z" title="发表于 2023-10-17 16:20:10">2023-10-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/17/interview-experience-jidu/" title="面试经验：集度">面试经验：集度</a><time datetime="2023-10-17T07:21:47.000Z" title="发表于 2023-10-17 15:21:47">2023-10-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/16/go-map-keypoint/" title="GO底层剖析：Map底层实现">GO底层剖析：Map底层实现</a><time datetime="2023-10-16T10:42:00.000Z" title="发表于 2023-10-16 18:42:00">2023-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/16/keypoint-scheduling-algorithm/" title="面试重点：系统调度算法"><img src="https://s2.loli.net/2023/10/16/OgxkBQ56DeNvMqT.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="面试重点：系统调度算法"/></a><div class="content"><a class="title" href="/2023/10/16/keypoint-scheduling-algorithm/" title="面试重点：系统调度算法">面试重点：系统调度算法</a><time datetime="2023-10-16T02:03:03.000Z" title="发表于 2023-10-16 10:03:03">2023-10-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/15/exam-yaxinanquan/" title="笔试记录：亚信安全">笔试记录：亚信安全</a><time datetime="2023-10-15T12:26:14.000Z" title="发表于 2023-10-15 20:26:14">2023-10-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By xiaohei</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
