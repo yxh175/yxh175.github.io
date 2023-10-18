@@ -6,7 +6,7 @@
   <link href="http://xiaoheinotes.com/atom.xml" rel="self"/>
   
   <link href="http://xiaoheinotes.com/"/>
-  <updated>2023-10-17T11:30:34.826Z</updated>
+  <updated>2023-10-18T14:02:43.566Z</updated>
   <id>http://xiaoheinotes.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>面试经验：金山办公二面</title>
+    <link href="http://xiaoheinotes.com/2023/10/18/interview-experience-KingSoft-Wps-2/"/>
+    <id>http://xiaoheinotes.com/2023/10/18/interview-experience-KingSoft-Wps-2/</id>
+    <published>2023-10-18T10:37:08.000Z</published>
+    <updated>2023-10-18T14:02:43.566Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录一下2023年10月18日金山办公二面，总体体验良好，有一些没答上来，继被苏小妍语言层面冲击后，又被冲击了一次。水平还是有很大的差距啊</p><h2 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h2><p>简单的进行一个自我介绍</p><h2 id="GO语言场景题"><a href="#GO语言场景题" class="headerlink" title="GO语言场景题"></a>GO语言场景题</h2><p>这一块我以为当时苏小妍问过之后，恶补之后能够坦然应对，没想到还是被拷打了。</p><h3 id="new-和-make的区别"><a href="#new-和-make的区别" class="headerlink" title="new 和 make的区别"></a>new 和 make的区别</h3><ul><li>new 返回一个指向该类型内存地址的指针</li><li>slice 返回的还是该类型</li></ul><h3 id="前端传输一个表单，需要对这个表单的字段检查一下，判断字段名称是否超长，怎么检查？"><a href="#前端传输一个表单，需要对这个表单的字段检查一下，判断字段名称是否超长，怎么检查？" class="headerlink" title="前端传输一个表单，需要对这个表单的字段检查一下，判断字段名称是否超长，怎么检查？"></a>前端传输一个表单，需要对这个表单的字段检查一下，判断字段名称是否超长，怎么检查？</h3><p>刚开始有点不理解这个说法，和面试官梳理了一下。感觉是有坑的。</p><h3 id="写代码中是传指针还是传值好？"><a href="#写代码中是传指针还是传值好？" class="headerlink" title="写代码中是传指针还是传值好？"></a>写代码中是传指针还是传值好？</h3><h3 id="defer-是在return之前还是之后？"><a href="#defer-是在return之前还是之后？" class="headerlink" title="defer 是在return之前还是之后？"></a>defer 是在return之前还是之后？</h3><h3 id="多个defer会怎么样？"><a href="#多个defer会怎么样？" class="headerlink" title="多个defer会怎么样？"></a>多个defer会怎么样？</h3><h3 id="defer函数的值，会被之后影响吗？"><a href="#defer函数的值，会被之后影响吗？" class="headerlink" title="defer函数的值，会被之后影响吗？"></a>defer函数的值，会被之后影响吗？</h3><h3 id="defer之间执行多个函数是什么顺序？"><a href="#defer之间执行多个函数是什么顺序？" class="headerlink" title="defer之间执行多个函数是什么顺序？"></a>defer之间执行多个函数是什么顺序？</h3><h3 id="为什么说go是天然高并发？"><a href="#为什么说go是天然高并发？" class="headerlink" title="为什么说go是天然高并发？"></a>为什么说go是天然高并发？</h3><h3 id="内存泄漏是什么？"><a href="#内存泄漏是什么？" class="headerlink" title="内存泄漏是什么？"></a>内存泄漏是什么？</h3><h3 id="之前有没有遇到过，要怎么解决？"><a href="#之前有没有遇到过，要怎么解决？" class="headerlink" title="之前有没有遇到过，要怎么解决？"></a>之前有没有遇到过，要怎么解决？</h3><h2 id="八股及业务场景"><a href="#八股及业务场景" class="headerlink" title="八股及业务场景"></a>八股及业务场景</h2><h3 id="GMP讲一下？"><a href="#GMP讲一下？" class="headerlink" title="GMP讲一下？"></a>GMP讲一下？</h3><h3 id="如果一个协程进来之后它是怎么处理的？"><a href="#如果一个协程进来之后它是怎么处理的？" class="headerlink" title="如果一个协程进来之后它是怎么处理的？"></a>如果一个协程进来之后它是怎么处理的？</h3><h3 id="什么是跨域？"><a href="#什么是跨域？" class="headerlink" title="什么是跨域？"></a>什么是跨域？</h3><h3 id="http-和-https算跨域吗？"><a href="#http-和-https算跨域吗？" class="headerlink" title="http 和 https算跨域吗？"></a>http 和 https算跨域吗？</h3><h3 id="跨域问题怎么解决呢？"><a href="#跨域问题怎么解决呢？" class="headerlink" title="跨域问题怎么解决呢？"></a>跨域问题怎么解决呢？</h3><h3 id="协作文档怎么实现的？"><a href="#协作文档怎么实现的？" class="headerlink" title="协作文档怎么实现的？"></a>协作文档怎么实现的？</h3><h3 id="docker和k8s是什么？"><a href="#docker和k8s是什么？" class="headerlink" title="docker和k8s是什么？"></a>docker和k8s是什么？</h3><h3 id="有没有用过k8s？"><a href="#有没有用过k8s？" class="headerlink" title="有没有用过k8s？"></a>有没有用过k8s？</h3><h3 id="k8s内部是怎么通信的？"><a href="#k8s内部是怎么通信的？" class="headerlink" title="k8s内部是怎么通信的？"></a>k8s内部是怎么通信的？</h3><h3 id="target-node、节点是什么？"><a href="#target-node、节点是什么？" class="headerlink" title="target_node、节点是什么？"></a>target_node、节点是什么？</h3><h3 id="git-一般怎么用？"><a href="#git-一般怎么用？" class="headerlink" title="git 一般怎么用？"></a>git 一般怎么用？</h3><h3 id="rebase呢，-有了解过是干什么的"><a href="#rebase呢，-有了解过是干什么的" class="headerlink" title="rebase呢， 有了解过是干什么的"></a>rebase呢， 有了解过是干什么的</h3><h3 id="说一下url的键入到浏览器的流程？"><a href="#说一下url的键入到浏览器的流程？" class="headerlink" title="说一下url的键入到浏览器的流程？"></a>说一下url的键入到浏览器的流程？</h3><h3 id="dns中A、B、C类地址"><a href="#dns中A、B、C类地址" class="headerlink" title="dns中A、B、C类地址"></a>dns中A、B、C类地址</h3><h3 id="Mysql有哪些数据引擎"><a href="#Mysql有哪些数据引擎" class="headerlink" title="Mysql有哪些数据引擎"></a>Mysql有哪些数据引擎</h3><h3 id="有哪些锁？"><a href="#有哪些锁？" class="headerlink" title="有哪些锁？"></a>有哪些锁？</h3><h3 id="主键索引和唯一索引的区别？"><a href="#主键索引和唯一索引的区别？" class="headerlink" title="主键索引和唯一索引的区别？"></a>主键索引和唯一索引的区别？</h3><h3 id="mysql慢查询有了解过吗？"><a href="#mysql慢查询有了解过吗？" class="headerlink" title="mysql慢查询有了解过吗？"></a>mysql慢查询有了解过吗？</h3><h3 id="mysql慢查询怎么优化？"><a href="#mysql慢查询怎么优化？" class="headerlink" title="mysql慢查询怎么优化？"></a>mysql慢查询怎么优化？</h3><h3 id="怎么知道索引有没有生效？"><a href="#怎么知道索引有没有生效？" class="headerlink" title="怎么知道索引有没有生效？"></a>怎么知道索引有没有生效？</h3><h3 id="redis有没有用过，怎么实现一个redis分布式锁？"><a href="#redis有没有用过，怎么实现一个redis分布式锁？" class="headerlink" title="redis有没有用过，怎么实现一个redis分布式锁？"></a>redis有没有用过，怎么实现一个redis分布式锁？</h3><h3 id="redis-有哪些数据类型"><a href="#redis-有哪些数据类型" class="headerlink" title="redis 有哪些数据类型"></a>redis 有哪些数据类型</h3><h2 id="反问"><a href="#反问" class="headerlink" title="反问"></a>反问</h2><h3 id="部门是怎么分配的？"><a href="#部门是怎么分配的？" class="headerlink" title="部门是怎么分配的？"></a>部门是怎么分配的？</h3><h3 id="技术栈问题？"><a href="#技术栈问题？" class="headerlink" title="技术栈问题？"></a>技术栈问题？</h3>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;记录一下2023年10月18日金山办公二面，总体体验良好，有一些没答上来，继被苏小妍语言层面冲击后，又被冲击了一次。水平还是有很大的差距啊&lt;/p&gt;
+&lt;h2 id=&quot;自我介绍&quot;&gt;&lt;a href=&quot;#自我介绍&quot; class=&quot;headerlink&quot; title=&quot;自我介绍&quot;&gt;&lt;</summary>
+      
+    
+    
+    
+    <category term="面经" scheme="http://xiaoheinotes.com/categories/%E9%9D%A2%E7%BB%8F/"/>
+    
+    
+    <category term="面经" scheme="http://xiaoheinotes.com/tags/%E9%9D%A2%E7%BB%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>面试经验：苏小妍</title>
@@ -493,38 +518,6 @@
     <category term="笔试" scheme="http://xiaoheinotes.com/tags/%E7%AC%94%E8%AF%95/"/>
     
     <category term="美团" scheme="http://xiaoheinotes.com/tags/%E7%BE%8E%E5%9B%A2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>面经：金山办公服务端开发</title>
-    <link href="http://xiaoheinotes.com/2023/09/22/Interview-experience-KingSoft-WPS/"/>
-    <id>http://xiaoheinotes.com/2023/09/22/Interview-experience-KingSoft-WPS/</id>
-    <published>2023-09-22T04:56:12.000Z</published>
-    <updated>2023-09-22T10:59:53.600Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="一面"><a href="#一面" class="headerlink" title="一面"></a>一面</h2><p>总共分为三个环节</p><ul><li>自我介绍</li><li>简历提问</li><li>算法考查</li></ul><h3 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h3><p>首先自我介绍了一下</p><h3 id="提问环节"><a href="#提问环节" class="headerlink" title="提问环节"></a>提问环节</h3><p>先是问一下比较基础的八股，然后逐渐变难的</p><h4 id="IP层有哪些协议？"><a href="#IP层有哪些协议？" class="headerlink" title="IP层有哪些协议？"></a>IP层有哪些协议？</h4><ul><li>DNS 用来根据域名进行网络查询</li><li>ARP 根据IP查询点之间的mac地址</li><li>DHCP 自动分配IP地址</li><li>NAT 私有地址转换为外网地址</li><li>ICMP 确认IP包是否成功送达到目标地址</li><li>IGMP</li></ul><h4 id="讲一下TCP的三次握手"><a href="#讲一下TCP的三次握手" class="headerlink" title="讲一下TCP的三次握手"></a>讲一下TCP的三次握手</h4><p>TCP三次握手即客户端和服务端连接时，两个者进行三次沟通的过程</p><ul><li>客户端发送SYNC + 随机seq序列号X</li><li>服务端监听到后回复ACK+SYNC ACK num&#x3D; X+1 SeqNum &#x3D; Y </li><li>客户端收到后， 回复ACK Ack num &#x3D; Y+1</li></ul><h4 id="为什么TCP连接要有seq序列号？"><a href="#为什么TCP连接要有seq序列号？" class="headerlink" title="为什么TCP连接要有seq序列号？"></a>为什么TCP连接要有seq序列号？</h4><ul><li>在TCP三次握手中保证了三次握手检查，不会有历史连接干扰</li><li>在传输时能进行报文的控制，方便进行拥塞控制、丢失重传、流量控制</li></ul><h4 id="讲一下四次挥手"><a href="#讲一下四次挥手" class="headerlink" title="讲一下四次挥手"></a>讲一下四次挥手</h4><p>TCP 四次挥手是客户端和服务端断开，进行的一个操作，保证TCP连接的正常断开</p><p>假设客户端主动关闭的时候</p><ul><li>客户端发送FIN请求 seq &#x3D; x、ack &#x3D; y</li><li>服务端收到FIN请求，回复ACK seq &#x3D; y 、ack &#x3D; x+1，进入Close_Wait并结束进程，进行最后的资源释放</li><li>等资源处理完毕后，发送FIN seq &#x3D; y、ack &#x3D; x + 1</li><li>此时客户端会进入Time_Wait状态发送ACK  seq &#x3D; x + 1， ack &#x3D; y + 1</li></ul><p>发送成功后，两者就进行了正常关闭</p><h4 id="为什么要有Time-Wait状态？"><a href="#为什么要有Time-Wait状态？" class="headerlink" title="为什么要有Time_Wait状态？"></a>为什么要有Time_Wait状态？</h4><ul><li>防止历史连接的数据影响新的连接，要让本次报文中的数据尽可能的在网络中消失掉。</li><li>保证被关闭的一方能够正确的关闭，多次监听服务端的消息，如果服务端再次发送关闭请求到客户端，说明自己的发送失败了。需要确保对方成功关闭</li></ul><h4 id="HTTP协议中一般有哪些状态码"><a href="#HTTP协议中一般有哪些状态码" class="headerlink" title="HTTP协议中一般有哪些状态码"></a>HTTP协议中一般有哪些状态码</h4><ul><li>1XX 属于提示信息，协议处理的中间态，一般用到的比较少</li><li>2XX 表示成功处理客户端的请求，是我们最想看到的如：200、204</li><li>3XX 表示资源发生了变动，如：301、302、304</li><li>4XX 表示客户端发送的报文有误如 404 资源不存在</li><li>5XX 表示服务端内部异常 如 500、501、502、503</li></ul><h4 id="499-状态码是做什么的有了解吗？"><a href="#499-状态码是做什么的有了解吗？" class="headerlink" title="499 状态码是做什么的有了解吗？"></a>499 状态码是做什么的有了解吗？</h4><p>这个没答上来。回答了说平时只了解过40x左右的。开发的时候没怎么见过</p><p>随后搜索：<br>499， Client Closed Request<br>这个表示客户端主动断开连接<br>是指一次http请求在客户端指定的时间内没有返回响应，此时客户端会主动断开连接，此时表象为客户端无响应返回，而nginx的日志会status code 499</p><h4 id="讲一下HTTPS的协议？"><a href="#讲一下HTTPS的协议？" class="headerlink" title="讲一下HTTPS的协议？"></a>讲一下HTTPS的协议？</h4><p>HTTPS 是基于HTTP的明文传输与不安全。所以在TCP三次握手后增加了TSL层作数据安全性的保证，通过TSL四次握手进行对称密钥的生成，实现对话过程中的加密。HTTPS可以保证主要用来保证信息的机密性、摘要算法的方式实现完整性、数字证书解决被冒充的方法</p><h4 id="HTTPS-能被抓包吗？"><a href="#HTTPS-能被抓包吗？" class="headerlink" title="HTTPS 能被抓包吗？"></a>HTTPS 能被抓包吗？</h4><p>我理解错了他的意思，以为问的是HTTPS能被窃听吗，所以回答成了：在保证对话密钥不被窃取，证书没有伪造的情况下。是不会被抓包的</p><p>理论答案：<br>可以通过抓包调试，通过抓包工具，并在手机中放好证书。保证系统能使用这个证书的情况下，就可以抓取到Https的内容</p><h4 id="有没有用过HTTPS抓包？"><a href="#有没有用过HTTPS抓包？" class="headerlink" title="有没有用过HTTPS抓包？"></a>有没有用过HTTPS抓包？</h4><p>当时脑子抽抽了，以为把抓包的意思理解错了，说没有T-T 实际上还是有的</p><p>正确回答：<br>通过抓包工具，把证书下载好，设置拦截端口号并拦截所发送的请求。即可得到解密后的包</p><h4 id="Golang-的GMP调度模式？"><a href="#Golang-的GMP调度模式？" class="headerlink" title="Golang 的GMP调度模式？"></a>Golang 的GMP调度模式？</h4><p>可以参考这篇文档<a href="https://juejin.cn/post/7044741465930465311">Go GMP</a>的图解，讲的非常清楚。为了方便，我就直接用他的图了</p><p>golang 的GMP调度老生常谈了</p><ul><li>G goroutine 代表程序中的协程</li><li>M machine 代表内核线程</li><li>P process 代表处理器</li></ul><p>P 会有一些本地队列，根据MAXPROCES 确定P的数量，P本地有个本地队列，用来存放协程。通过调用M来使用协程能够在M上运行。这样能保证M的线程能够多次复用，而且更加轻量。<br>为了保证协程资源分配的均匀提出了两个机制</p><ul><li>hand off 机制当本地线程M1因为G进行的系统调用阻塞时，线程释放绑定的P， 把P转移给其他空闲的M0执行</li></ul><p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3df5d4f14311450dada8f4d6da82b896~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt="hand off 机制"></p><ul><li>work stealing 机制</li></ul><p>当本线程无G可运行时，从其他线程绑定的P窃取G，而不是直接销毁线程</p><p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5b7c21037ed401292ec01aadfd906ea~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt="work stealing 机制"></p><h4 id="怎么保证一个协程能一直占用一个CPU？"><a href="#怎么保证一个协程能一直占用一个CPU？" class="headerlink" title="怎么保证一个协程能一直占用一个CPU？"></a>怎么保证一个协程能一直占用一个CPU？</h4><p>加自旋锁让协程一直占用CPU。</p><h4 id="golang-怎么保证多个协程对int64进行增加不异常？"><a href="#golang-怎么保证多个协程对int64进行增加不异常？" class="headerlink" title="golang 怎么保证多个协程对int64进行增加不异常？"></a>golang 怎么保证多个协程对int64进行增加不异常？</h4><ul><li>sync.Mutex 互斥锁</li><li>sync.RWMutex 读写锁</li><li>Atomic.AddInt64() CAS锁</li></ul><h4 id="看你写了JAVA，-问你一点JAVA？"><a href="#看你写了JAVA，-问你一点JAVA？" class="headerlink" title="看你写了JAVA， 问你一点JAVA？"></a>看你写了JAVA， 问你一点JAVA？</h4><p>直接说不会T-T，学的皮毛，遂跳过</p><h4 id="Mysql-索引结构是什么样的？"><a href="#Mysql-索引结构是什么样的？" class="headerlink" title="Mysql 索引结构是什么样的？"></a>Mysql 索引结构是什么样的？</h4><p>B+树，是一种m度的树。它的特点就是在非叶子节点不会存放值。并且所有的值都会存放在叶子节点上，并用双向链表进行连接</p><h4 id="为什么要用B-树做索引"><a href="#为什么要用B-树做索引" class="headerlink" title="为什么要用B+树做索引"></a>为什么要用B+树做索引</h4><ul><li>插入和删除效率</li><li>范围查询更加方便</li></ul><h4 id="怎么用redis实现一个分布式锁？"><a href="#怎么用redis实现一个分布式锁？" class="headerlink" title="怎么用redis实现一个分布式锁？"></a>怎么用redis实现一个分布式锁？</h4><p>通过Set NX PX&#x2F;EX 两个字段保证分布式锁只有一个能加和超时自动清楚</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET lock_key unique_value NX PX 10000 </span><br></pre></td></tr></table></figure><h4 id="怎么删除这个分布式锁？"><a href="#怎么删除这个分布式锁？" class="headerlink" title="怎么删除这个分布式锁？"></a>怎么删除这个分布式锁？</h4><p>通过判断lock_key value 是否是一个客户端。要保证执行操作的客户端就是加锁的客户端，所以解锁的时候要先判断 unique_value是否是当前客户端，是的话就删除锁</p><h4 id="怎么保证原子性？"><a href="#怎么保证原子性？" class="headerlink" title="怎么保证原子性？"></a>怎么保证原子性？</h4><p>通过Lua脚本实现</p><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 释放锁时，先比较 unique_value 是否相等，避免锁的误释放</span><br><span class="line"><span class="keyword">if</span> redis.call(<span class="string">&quot;get&quot;</span>,KEYS[<span class="number">1</span>]) == ARGV[<span class="number">1</span>] <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> redis.call(<span class="string">&quot;del&quot;</span>,KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure><h4 id="Redis-有Stop-The-World的发生吗？"><a href="#Redis-有Stop-The-World的发生吗？" class="headerlink" title="Redis 有Stop The World的发生吗？"></a>Redis 有Stop The World的发生吗？</h4><p>刚开始听说STW以为是听错了。我说Redis没有STW的发生。他问一下我确定吗，Redis毕竟是一个单线程的。我一听就问他说的是不是主线程阻塞的问题。他说是就开始回答正常八股了</p><p>Redis 主线程会被大Key：Value阻塞主线程。因为在写日志的时候，大Key 导致的刷盘时间长，从而阻塞了主进程。这里<a href="https://xiaolincoding.com/redis/storage/bigkey_aof_rdb.html#%E5%A4%A7-key-%E5%AF%B9-aof-%E9%87%8D%E5%86%99%E5%92%8C-rdb-%E7%9A%84%E5%BD%B1%E5%93%8D">小林coding</a>讲的很详细</p><hr><p>这里八股就问差不多了，然后就问一些简单的算法题，只需要说思路就行</p><h4 id="100-个-10万数据的顺序表，怎么合并成一个新的顺序表？"><a href="#100-个-10万数据的顺序表，怎么合并成一个新的顺序表？" class="headerlink" title="100 个 10万数据的顺序表，怎么合并成一个新的顺序表？"></a>100 个 10万数据的顺序表，怎么合并成一个新的顺序表？</h4><p><a href="https://leetcode.cn/problems/merge-sorted-array/">合并两个有序数组</a>，直接说了，问是什么时间复杂度<br>O（100n） ？</p><p>不是太确定，说是对的</p><h4 id="长URL-映射到短URL"><a href="#长URL-映射到短URL" class="headerlink" title="长URL 映射到短URL"></a>长URL 映射到短URL</h4><p>刚开始不知道问的什么意思，说了半天也没理解，最后问了答案才知道是啥意思。<br>就是一个长URL通过62位编码转换成短URL，网上有相关的解释，不放了</p><h4 id="问项目、问实习"><a href="#问项目、问实习" class="headerlink" title="问项目、问实习"></a>问项目、问实习</h4><p>这里还行，挖的不是很深，感觉面试官只要觉得这里你是懂得就不深究，很松。</p><h3 id="反问"><a href="#反问" class="headerlink" title="反问"></a>反问</h3><h4 id="第二题是什么意思？答案是什么"><a href="#第二题是什么意思？答案是什么" class="headerlink" title="第二题是什么意思？答案是什么"></a>第二题是什么意思？答案是什么</h4><h4 id="部门的技术栈是Golang吗？"><a href="#部门的技术栈是Golang吗？" class="headerlink" title="部门的技术栈是Golang吗？"></a>部门的技术栈是Golang吗？</h4>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;一面&quot;&gt;&lt;a href=&quot;#一面&quot; class=&quot;headerlink&quot; title=&quot;一面&quot;&gt;&lt;/a&gt;一面&lt;/h2&gt;&lt;p&gt;总共分为三个环节&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;自我介绍&lt;/li&gt;
-&lt;li&gt;简历提问&lt;/li&gt;
-&lt;li&gt;算法考查&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 </summary>
-      
-    
-    
-    
-    <category term="面经" scheme="http://xiaoheinotes.com/categories/%E9%9D%A2%E7%BB%8F/"/>
-    
-    
-    <category term="面经" scheme="http://xiaoheinotes.com/tags/%E9%9D%A2%E7%BB%8F/"/>
-    
-    <category term="服务端开发" scheme="http://xiaoheinotes.com/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
