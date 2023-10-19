@@ -2,7 +2,7 @@
 title: 面试经验：民生科技
 date: 2023-10-19 18:11:42
 cover: https://s2.loli.net/2023/10/19/MKzUVZ391xBkbln.png
-tog_img: https://s2.loli.net/2023/10/09/Y2EknVqJy5fWgpr.png
+top_img: https://s2.loli.net/2023/10/09/Y2EknVqJy5fWgpr.png
 categories:
 - 面经
 tags:
