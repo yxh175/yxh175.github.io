@@ -6,7 +6,7 @@
   <link href="http://xiaoheinotes.com/atom.xml" rel="self"/>
   
   <link href="http://xiaoheinotes.com/"/>
-  <updated>2023-10-19T10:37:20.984Z</updated>
+  <updated>2023-10-19T10:42:44.849Z</updated>
   <id>http://xiaoheinotes.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://xiaoheinotes.com/2023/10/19/interview-experience-CMB/"/>
     <id>http://xiaoheinotes.com/2023/10/19/interview-experience-CMB/</id>
     <published>2023-10-19T10:11:42.000Z</published>
-    <updated>2023-10-19T10:37:20.984Z</updated>
+    <updated>2023-10-19T10:42:44.849Z</updated>
     
     <content type="html"><![CDATA[<p>记录2023年10月19日的民生科技的线下面试</p><h2 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h2><h2 id="八股"><a href="#八股" class="headerlink" title="八股"></a>八股</h2><h3 id="java-三大特点都是什么？"><a href="#java-三大特点都是什么？" class="headerlink" title="java 三大特点都是什么？"></a>java 三大特点都是什么？</h3><h3 id="java-有哪些集合类的对象？"><a href="#java-有哪些集合类的对象？" class="headerlink" title="java 有哪些集合类的对象？"></a>java 有哪些集合类的对象？</h3><h3 id="list-和-ArrayList的区别？"><a href="#list-和-ArrayList的区别？" class="headerlink" title="list 和 ArrayList的区别？"></a>list 和 ArrayList的区别？</h3><h3 id="java-并发安全的集合？"><a href="#java-并发安全的集合？" class="headerlink" title="java 并发安全的集合？"></a>java 并发安全的集合？</h3><h3 id="concurrentHashMap-底层实现？"><a href="#concurrentHashMap-底层实现？" class="headerlink" title="concurrentHashMap 底层实现？"></a>concurrentHashMap 底层实现？</h3><h3 id="介绍一下实习？"><a href="#介绍一下实习？" class="headerlink" title="介绍一下实习？"></a>介绍一下实习？</h3><h3 id="怎么去划分这些微服务？"><a href="#怎么去划分这些微服务？" class="headerlink" title="怎么去划分这些微服务？"></a>怎么去划分这些微服务？</h3><h3 id="微服务有什么坏处？"><a href="#微服务有什么坏处？" class="headerlink" title="微服务有什么坏处？"></a>微服务有什么坏处？</h3><h3 id="怎么去解决？"><a href="#怎么去解决？" class="headerlink" title="怎么去解决？"></a>怎么去解决？</h3><h3 id="mysql-事务隔离级别？"><a href="#mysql-事务隔离级别？" class="headerlink" title="mysql 事务隔离级别？"></a>mysql 事务隔离级别？</h3><h3 id="mysql的默认隔离级别是什么？"><a href="#mysql的默认隔离级别是什么？" class="headerlink" title="mysql的默认隔离级别是什么？"></a>mysql的默认隔离级别是什么？</h3><h3 id="mysql-三大日志及其作用？"><a href="#mysql-三大日志及其作用？" class="headerlink" title="mysql 三大日志及其作用？"></a>mysql 三大日志及其作用？</h3><h3 id="一个update-语句在mysql中执行，这个日志的生成顺序？"><a href="#一个update-语句在mysql中执行，这个日志的生成顺序？" class="headerlink" title="一个update 语句在mysql中执行，这个日志的生成顺序？"></a>一个update 语句在mysql中执行，这个日志的生成顺序？</h3><h3 id="redis-的几种数据结构及使用场景？"><a href="#redis-的几种数据结构及使用场景？" class="headerlink" title="redis 的几种数据结构及使用场景？"></a>redis 的几种数据结构及使用场景？</h3><h2 id="反问"><a href="#反问" class="headerlink" title="反问"></a>反问</h2><h3 id="主要业务是做什么？"><a href="#主要业务是做什么？" class="headerlink" title="主要业务是做什么？"></a>主要业务是做什么？</h3><h3 id="工作地点是在哪里？"><a href="#工作地点是在哪里？" class="headerlink" title="工作地点是在哪里？"></a>工作地点是在哪里？</h3>]]></content>
     
