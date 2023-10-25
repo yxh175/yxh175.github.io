@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://xiaoheinotes.com/2023/10/25/keypoint-mysql-isolation/</loc>
+    <lastmod>2023-10-25</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/23/go-protobuf-learn/</loc>
+    <lastmod>2023-10-25</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/23/project-im-talk/</loc>
+    <lastmod>2023-10-25</lastmod>
+  </url>
+  <url>
+    <loc>http://xiaoheinotes.com/2023/10/21/go-recover-keypoint/</loc>
+    <lastmod>2023-10-22</lastmod>
+  </url>
+  <url>
     <loc>http://xiaoheinotes.com/2023/10/18/interview-experience-KingSoft-Wps-2/</loc>
     <lastmod>2023-10-20</lastmod>
   </url>
