@@ -1,6 +1,8 @@
 ---
 title: 面试经验：天翼云
 date: 2023-10-26 16:42:52
+cover: https://s2.loli.net/2023/10/26/JlFnMI3XCHRKOT5.png
+top_img: https://s2.loli.net/2023/10/09/Y2EknVqJy5fWgpr.png
 categories:
 - 面经
 tags:
