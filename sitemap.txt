@@ -1,3 +1,4 @@
+http://xiaoheinotes.com/2023/10/28/go-equal-judge-something-funny/
 http://xiaoheinotes.com/2023/10/26/interview-experience-ctyun/
 http://xiaoheinotes.com/2023/10/25/keypoint-mysql-isolation/
 http://xiaoheinotes.com/2023/10/23/go-protobuf-learn/
@@ -42,8 +43,6 @@ http://xiaoheinotes.com/tags/index.html
 http://xiaoheinotes.com/categories/index.html
 http://xiaoheinotes.com/2023/09/14/My-New-Post/
 http://xiaoheinotes.com/
-http://xiaoheinotes.com/tags/%E9%9D%A2%E7%BB%8F/
-http://xiaoheinotes.com/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%BC%80%E5%8F%91/
 http://xiaoheinotes.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/
 http://xiaoheinotes.com/tags/%E8%BF%9B%E7%A8%8B/
 http://xiaoheinotes.com/tags/%E7%BA%BF%E7%A8%8B/
@@ -56,8 +55,10 @@ http://xiaoheinotes.com/tags/funPlus/
 http://xiaoheinotes.com/tags/%E7%BE%8E%E5%9B%A2/
 http://xiaoheinotes.com/tags/Golang/
 http://xiaoheinotes.com/tags/Channel/
-http://xiaoheinotes.com/tags/channel/
 http://xiaoheinotes.com/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/
+http://xiaoheinotes.com/tags/channel/
+http://xiaoheinotes.com/tags/%E5%BA%95%E5%B1%82%E5%89%96%E6%9E%90/
+http://xiaoheinotes.com/tags/%E6%8C%87%E9%92%88/
 http://xiaoheinotes.com/tags/%E5%A0%86/
 http://xiaoheinotes.com/tags/%E5%A0%86%E6%8E%92%E5%BA%8F/
 http://xiaoheinotes.com/tags/%E5%AE%9E%E6%88%98/
@@ -67,6 +68,7 @@ http://xiaoheinotes.com/tags/reflect/
 http://xiaoheinotes.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/
 http://xiaoheinotes.com/tags/TCP/
 http://xiaoheinotes.com/tags/docker/
+http://xiaoheinotes.com/tags/%E9%9D%A2%E7%BB%8F/
 http://xiaoheinotes.com/tags/k8s/
 http://xiaoheinotes.com/tags/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/
 http://xiaoheinotes.com/tags/%E5%BA%8F%E5%88%97%E5%8C%96/
@@ -80,11 +82,13 @@ http://xiaoheinotes.com/tags/redis/
 http://xiaoheinotes.com/tags/%E6%8C%81%E4%B9%85%E5%8C%96/
 http://xiaoheinotes.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/
 http://xiaoheinotes.com/tags/%E9%80%94%E8%99%8E/
-http://xiaoheinotes.com/categories/%E9%9D%A2%E7%BB%8F/
+http://xiaoheinotes.com/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%BC%80%E5%8F%91/
 http://xiaoheinotes.com/categories/%E5%85%AB%E8%82%A1%E6%96%87/
 http://xiaoheinotes.com/categories/%E7%AC%94%E8%AF%95/
+http://xiaoheinotes.com/categories/GO/
 http://xiaoheinotes.com/categories/%E5%85%AB%E8%82%A1/
 http://xiaoheinotes.com/categories/%E7%AE%97%E6%B3%95/
 http://xiaoheinotes.com/categories/Golang/
 http://xiaoheinotes.com/categories/%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/
+http://xiaoheinotes.com/categories/%E9%9D%A2%E7%BB%8F/
 http://xiaoheinotes.com/categories/%E6%80%BB%E7%BB%93/

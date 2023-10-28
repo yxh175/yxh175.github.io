@@ -1,0 +1,188 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GO底层：薛定谔的指针 | 小黑的随笔</title><meta name="author" content="xiaohei"><meta name="copyright" content="xiaohei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="问题出现今天在Golang交流群划水，突然看到一个哥们提出了这么一个问题  嗯？这又是Go的什么坑，让俺瞅一瞅，先简单的复现一下 1234567891011121314151617package mainimport &quot;fmt&quot;type A struct&amp;#123;&amp;#125;func main() &amp;#123;	a :&#x3D; &amp;A&amp;#123;&amp;#125;	b :&#x3D; &amp;am">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GO底层：薛定谔的指针">
+<meta property="og:url" content="http://xiaoheinotes.com/2023/10/28/go-equal-judge-something-funny/index.html">
+<meta property="og:site_name" content="小黑的随笔">
+<meta property="og:description" content="问题出现今天在Golang交流群划水，突然看到一个哥们提出了这么一个问题  嗯？这又是Go的什么坑，让俺瞅一瞅，先简单的复现一下 1234567891011121314151617package mainimport &quot;fmt&quot;type A struct&amp;#123;&amp;#125;func main() &amp;#123;	a :&#x3D; &amp;A&amp;#123;&amp;#125;	b :&#x3D; &amp;am">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/10/28/WNqXGb82tSnl7yA.png">
+<meta property="article:published_time" content="2023-10-28T08:18:21.000Z">
+<meta property="article:modified_time" content="2023-10-28T10:48:20.969Z">
+<meta property="article:author" content="xiaohei">
+<meta property="article:tag" content="底层剖析">
+<meta property="article:tag" content="指针">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/10/28/WNqXGb82tSnl7yA.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://xiaoheinotes.com/2023/10/28/go-equal-judge-something-funny/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GO底层：薛定谔的指针',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-28 18:48:20'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="小黑的随笔" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2023/10/09/Y2EknVqJy5fWgpr.png')"><nav id="nav"><span id="blog-info"><a href="/" title="小黑的随笔"><span class="site-name">小黑的随笔</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">GO底层：薛定谔的指针</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-28T08:18:21.000Z" title="发表于 2023-10-28 16:18:21">2023-10-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-28T10:48:20.969Z" title="更新于 2023-10-28 18:48:20">2023-10-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/GO/">GO</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="GO底层：薛定谔的指针"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h2><p>今天在<code>Golang</code>交流群划水，突然看到一个哥们提出了这么一个问题</p>
+<p><img src="https://s2.loli.net/2023/10/28/ZaoFyBdmIHufsl8.png" alt="奇怪的返回"></p>
+<p>嗯？这又是Go的什么坑，让俺瞅一瞅，先简单的复现一下</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := &amp;A&#123;&#125;</span><br><span class="line">	b := &amp;A&#123;&#125;</span><br><span class="line">	c := &amp;A&#123;&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(a == b, b == c)</span><br><span class="line">	fmt.Println(a, b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// true false</span></span><br><span class="line"><span class="comment">// &amp;&#123;&#125; &amp;&#123;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>不带<code>fmt.Println(a, b)</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := &amp;A&#123;&#125;</span><br><span class="line">	b := &amp;A&#123;&#125;</span><br><span class="line">	c := &amp;A&#123;&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(a == b, b == c)</span><br><span class="line">	<span class="comment">// fmt.Println(a, b)</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// false false</span></span><br></pre></td></tr></table></figure>
+
+<p>好家伙，这瞬间让我想到了薛定谔的猫。不观测它，它的状态是未知的，观测的一瞬间状态坍缩到一个确定的值 🐂。还好这种事情是在我们程序发生，想观测这里的原因还不是手到擒来。</p>
+<h2 id="剖析"><a href="#剖析" class="headerlink" title="剖析"></a>剖析</h2><p>其实看到这个问题，有一定<code>Go</code>底层基础的肯定上来猜个大概，这跟内存逃逸肯定没跑了。</p>
+<h3 id="验证思路"><a href="#验证思路" class="headerlink" title="验证思路"></a>验证思路</h3><p>猜测是空结构体的指针在<code>GC</code>的优化导致的异常。而这正是因为我们调用Println观测导致的。既然不能用fmt包去看，要观测这个问题，其实还可以用雪藏的<code>println</code>去解决, <code>println</code>是<code>Go</code>在实现自举的时候供开发人员打印使用的，后续并不能保证其能正常工作。如果想了解和<code>fmt</code>包的不同，可以看看这个知乎问题<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/335186436">Golang中fmt.Println和直接println有什么区别？</a></p>
+<p>所以我们改一下代码看看</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := &amp;A&#123;&#125;</span><br><span class="line">	b := &amp;A&#123;&#125;</span><br><span class="line">	c := &amp;A&#123;&#125;</span><br><span class="line">	d := &amp;A&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">println</span>(<span class="string">&quot;a, b的地址： &quot;</span>, a, b)</span><br><span class="line">	fmt.Println(b == a)</span><br><span class="line">	fmt.Printf(<span class="string">&quot;c, d 的地址：%p\t%p\t%t\n&quot;</span>, c, d, c == d)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// a, b的地址：  0xc00007df2f 0xc00007df2f</span></span><br><span class="line"><span class="comment">// false</span></span><br><span class="line"><span class="comment">// c, d 的地址：0x5d9540	0x5d9540	true</span></span><br></pre></td></tr></table></figure>
+
+<p>明明是一起创建，为什么a,b的地址是一类，但是又是<code>false</code>，c、d的地址又是一类，两者又是true。奇怪奇怪。这时候我下意识的想到。既然后者的<code>fmt.Println()</code>中的调用导致了，指针不同，有没有可能是编译器的问题。考虑到<code>fmt</code>中大量的反射相关方法的调用。编译器优化的<strong>逃逸分析</strong>，然后<code>println</code>是栈上指针的比较，<code>fmt.Println</code>是堆上指针的比较。这多半没跑了，剩下的就是验证了。</p>
+<h3 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h3><p>如果不理解逃逸分析是什么，可以先看一下这篇文章<a target="_blank" rel="noopener" href="https://geektutu.com/post/hpg-escape-analysis.html">逃逸分析</a>。简单来讲，编译器决定内存分配位置的方式，就称之为逃逸分析(escape analysis)。逃逸分析由编译器完成，作用于编译阶段。</p>
+<p>我们试着使用go的逃逸分析指令去观测一下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run -gcflags=&quot;-m -l&quot; main.go</span><br></pre></td></tr></table></figure>
+
+<p>得到这样的结果</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># command-line-arguments</span><br><span class="line">.\main.go:8:7: &amp;A&#123;&#125; does not escape</span><br><span class="line">.\main.go:9:7: &amp;A&#123;&#125; does not escape</span><br><span class="line">.\main.go:10:7: &amp;A&#123;&#125; escapes to heap</span><br><span class="line">.\main.go:11:7: &amp;A&#123;&#125; escapes to heap</span><br><span class="line">.\main.go:14:13: ... argument does not escape</span><br><span class="line">.\main.go:14:16: b == a escapes to heap</span><br><span class="line">.\main.go:15:12: ... argument does not escape</span><br><span class="line">.\main.go:15:54: c == d escapes to heap</span><br><span class="line">a, b的地址：  0xc000109f2f 0xc000109f2f</span><br><span class="line">false</span><br><span class="line">c, d 的地址：0xe89560   0xe89560        true</span><br></pre></td></tr></table></figure>
+
+<p>可以看到8、9 两行的创建没有逃逸，10、11则逃逸到堆上了。那么两者出现区别的原因看来是找到了。那为什么两者的值又不相同呢？</p>
+<h3 id="为什么逃逸后相等"><a href="#为什么逃逸后相等" class="headerlink" title="为什么逃逸后相等"></a>为什么逃逸后相等</h3><p>这个主要和<code>go</code>的<code>gc</code>优化有关，对于一个空结构体，<code>go</code>是如何优化的大家可以看这篇文章的详细部分<a target="_blank" rel="noopener" href="https://juejin.cn/post/6908733156707287048">Go 最细节篇 — 空结构体是什么?</a>。我简单取其中重要的部分</p>
+<p><img src="https://s2.loli.net/2023/10/28/2AjHfwv1xzSFhJK.png" alt="内存管理特殊处理"></p>
+<p>所以空<code>struct</code>在逃逸后本质上指向了<code>zerobase</code>，其两者比较就是相等的，返回了<code>true</code>。</p>
+<h3 id="为什么不逃逸不相等"><a href="#为什么不逃逸不相等" class="headerlink" title="为什么不逃逸不相等"></a>为什么不逃逸不相等</h3><p>这里其实我也并不理解，因为我们看到输出，两个a、b两个指针实际上值是相同的，但是仍然是<code>false</code>。这其中肯定有其他原因。查看<code>golang</code>的<a target="_blank" rel="noopener" href="https://go.dev/ref/spec#Comparison_operators">语言规范</a>中可以看到这样一段描述</p>
+<p><img src="https://s2.loli.net/2023/10/28/u7XRlBqSGgNyoi8.png" alt="go语言规范"></p>
+<p>注意这句话<code>Pointer types are comparable. Two pointer values are equal if they point to the same variable or if both have value . Pointers to distinct zero-size variables may or may not be equal. nil</code></p>
+<p>也就是说在没逃逸的场景下，两个空<code>struct</code>的比较动作，并不是真的在比较。实际上已经在代码优化阶段被直接优化掉，转为了<code>false</code>。所以<code>a==b</code>两者实际没有进行比较，直接返回的false</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaoheinotes.com">xiaohei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaoheinotes.com/2023/10/28/go-equal-judge-something-funny/">http://xiaoheinotes.com/2023/10/28/go-equal-judge-something-funny/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://xiaoheinotes.com" target="_blank">小黑的随笔</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BA%95%E5%B1%82%E5%89%96%E6%9E%90/">底层剖析</a><a class="post-meta__tags" href="/tags/%E6%8C%87%E9%92%88/">指针</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/10/28/WNqXGb82tSnl7yA.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/10/26/interview-experience-ctyun/" title="面试经验：天翼云"><img class="cover" src="https://s2.loli.net/2023/10/26/JlFnMI3XCHRKOT5.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">面试经验：天翼云</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/10/09/zMq3IpbYRx65jWs.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">xiaohei</div><div class="author-info__description">宁静致远</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/yxh175"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/yxh175" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1759788845@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">学习写博客啦</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%87%BA%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">问题出现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%96%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E6%80%9D%E8%B7%AF"><span class="toc-number">2.1.</span> <span class="toc-text">验证思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90"><span class="toc-number">2.2.</span> <span class="toc-text">逃逸分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%83%E9%80%B8%E5%90%8E%E7%9B%B8%E7%AD%89"><span class="toc-number">2.3.</span> <span class="toc-text">为什么逃逸后相等</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E9%80%83%E9%80%B8%E4%B8%8D%E7%9B%B8%E7%AD%89"><span class="toc-number">2.4.</span> <span class="toc-text">为什么不逃逸不相等</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/10/28/go-equal-judge-something-funny/" title="GO底层：薛定谔的指针"><img src="https://s2.loli.net/2023/10/28/WNqXGb82tSnl7yA.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GO底层：薛定谔的指针"/></a><div class="content"><a class="title" href="/2023/10/28/go-equal-judge-something-funny/" title="GO底层：薛定谔的指针">GO底层：薛定谔的指针</a><time datetime="2023-10-28T08:18:21.000Z" title="发表于 2023-10-28 16:18:21">2023-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/26/interview-experience-ctyun/" title="面试经验：天翼云"><img src="https://s2.loli.net/2023/10/26/JlFnMI3XCHRKOT5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="面试经验：天翼云"/></a><div class="content"><a class="title" href="/2023/10/26/interview-experience-ctyun/" title="面试经验：天翼云">面试经验：天翼云</a><time datetime="2023-10-26T08:42:52.000Z" title="发表于 2023-10-26 16:42:52">2023-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/25/keypoint-mysql-isolation/" title="Mysql：事务隔离详解">Mysql：事务隔离详解</a><time datetime="2023-10-25T02:31:36.000Z" title="发表于 2023-10-25 10:31:36">2023-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/23/go-protobuf-learn/" title="GO实战：Protobuf简单使用">GO实战：Protobuf简单使用</a><time datetime="2023-10-23T07:13:47.000Z" title="发表于 2023-10-23 15:13:47">2023-10-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/10/23/project-im-talk/" title="项目总结：IM聊天业务架构">项目总结：IM聊天业务架构</a><time datetime="2023-10-23T02:11:55.000Z" title="发表于 2023-10-23 10:11:55">2023-10-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By xiaohei</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
